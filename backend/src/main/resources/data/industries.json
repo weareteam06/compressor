@@ -1,0 +1,74 @@
+﻿[
+  {
+    "id": "ind-manufacturing",
+    "slug": "manufacturing",
+    "name": "Manufacturing",
+    "shortDescription": "Reliable FAS compressed air for production lines, tools, fixtures, and plant utilities.",
+    "fullDescription": "firstAir FAS rotary screw compressors support everyday manufacturing needs with air cooled packages, IE3 high efficient motors, maintenance friendly access, and practical 8 to 10 bar operation.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS37-400x400.png",
+    "applications": ["Pneumatic tools", "Machine operation", "Assembly lines", "General plant air"],
+    "recommendedProducts": ["FAS-11", "FAS-15", "FAS-18", "FAS-22", "FAS-30", "FAS-37"],
+    "challenges": [
+      { "title": "Continuous Air Demand", "solution": "Select FAS models by kW and maximum air discharge to match daily plant air requirements." },
+      { "title": "Maintenance Access", "solution": "FAS packages use maintenance friendly layouts for practical service work." }
+    ]
+  },
+  {
+    "id": "ind-workshops",
+    "slug": "workshops",
+    "name": "Workshops",
+    "shortDescription": "Compact FAS compressors for repair shops, fabrication bays, and small production areas.",
+    "fullDescription": "For workshops and light industrial users, smaller FAS models provide dependable compressed air in a compact air cooled package with V-belt drive construction.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS7-400x400.png",
+    "applications": ["Air tools", "Tyre inflation", "Fabrication", "Painting support"],
+    "recommendedProducts": ["FAS-4", "FAS-6", "FAS-8", "FAS-11"],
+    "challenges": [
+      { "title": "Limited Floor Space", "solution": "Use compact FAS packages from 4 kW to 11 kW for workshop air." },
+      { "title": "Simple Ownership", "solution": "Air cooled design and IE3 motors keep operation practical and economical." }
+    ]
+  },
+  {
+    "id": "ind-automotive",
+    "slug": "automotive",
+    "name": "Automotive",
+    "shortDescription": "Compressed air for service centers, component manufacturing, and pneumatic shop tools.",
+    "fullDescription": "firstAir FAS compressors help automotive users run air tools, service bays, assembly tasks, and support equipment with steady compressed air delivery.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS15-400x400.png",
+    "applications": ["Service bays", "Assembly tools", "Body shops", "Component manufacturing"],
+    "recommendedProducts": ["FAS-8", "FAS-11", "FAS-15", "FAS-18"],
+    "challenges": [
+      { "title": "Variable Tool Usage", "solution": "Choose a FAS model with enough free air delivery for peak shop demand." },
+      { "title": "Dependability", "solution": "IE3 motor and rotary screw package design supports daily service operation." }
+    ]
+  },
+  {
+    "id": "ind-packaging",
+    "slug": "packaging",
+    "name": "Packaging",
+    "shortDescription": "Plant air for packaging machines, actuators, and pneumatic handling systems.",
+    "fullDescription": "Packaging operations need dependable plant air for repetitive machine cycles. The FAS range provides selectable power and discharge capacity from compact to heavy duty packages.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS22-400x400.png",
+    "applications": ["Packaging machines", "Actuators", "Material handling", "Process air"],
+    "recommendedProducts": ["FAS-15", "FAS-18", "FAS-22", "FAS-30"],
+    "challenges": [
+      { "title": "Machine Uptime", "solution": "Match compressor capacity with connected packaging equipment and duty cycle." },
+      { "title": "Energy Efficiency", "solution": "IE3 motors help support economical operation in repeated-cycle applications." }
+    ]
+  },
+  {
+    "id": "ind-general-plant-air",
+    "slug": "general-plant-air",
+    "name": "General Plant Air",
+    "shortDescription": "A broad FAS selection for utility compressed air across industrial facilities.",
+    "fullDescription": "From 3 kW to 37 kW, firstAir FAS compressors cover general plant air needs with straightforward model selection, 8 to 10 bar operating pressure, and clear technical data.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS30-400x400.png",
+    "applications": ["Factory utilities", "Maintenance air", "Pneumatic controls", "General industrial air"],
+    "recommendedProducts": ["FAS-4", "FAS-6", "FAS-8", "FAS-11", "FAS-15", "FAS-18", "FAS-22", "FAS-30", "FAS-37"],
+    "challenges": [
+      { "title": "Right Sizing", "solution": "Use the product page filters and technical data to select by power and air discharge." },
+      { "title": "Local Support", "solution": "Use the dealer network to connect with an authorized firstAir representative." }
+    ]
+  }
+]
+
+

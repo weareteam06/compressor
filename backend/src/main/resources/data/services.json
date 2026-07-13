@@ -1,0 +1,47 @@
+[
+  {
+    "id": "srv-product-selection",
+    "slug": "compressor-selection",
+    "name": "Compressor Selection",
+    "shortDescription": "Help choosing the correct FAS model by power, flow, duty, and application.",
+    "fullDescription": "firstAir support helps customers compare FAS models from 3 kW to 37 kW using maximum air discharge, operating pressure, package dimensions, and application requirements.",
+    "iconName": "Gauge",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS37-400x400.png",
+    "benefits": ["Model comparison", "Power and flow guidance", "Application matching", "Dealer coordination"],
+    "process": [
+      { "step": 1, "title": "Requirement Review", "description": "Collect pressure, air demand, duty cycle, and site details." },
+      { "step": 2, "title": "Model Shortlist", "description": "Compare FAS models by kW and maximum air discharge." },
+      { "step": 3, "title": "Quote Support", "description": "Connect the customer with sales or an authorized dealer." }
+    ]
+  },
+  {
+    "id": "srv-installation",
+    "slug": "installation-support",
+    "name": "Installation Support",
+    "shortDescription": "Guidance for compressor placement, ventilation, electrical readiness, and commissioning.",
+    "fullDescription": "Installation support helps customers prepare the site for air cooled FAS compressor packages, including ventilation, clearance, electrical connection, and safe commissioning checks.",
+    "iconName": "Wrench",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS22-400x400.png",
+    "benefits": ["Site readiness guidance", "Commissioning support", "Ventilation review", "Installation checklist"],
+    "process": [
+      { "step": 1, "title": "Site Check", "description": "Review space, ventilation, and power availability." },
+      { "step": 2, "title": "Installation", "description": "Coordinate equipment placement and connection." },
+      { "step": 3, "title": "Commissioning", "description": "Verify start-up, pressure, and operating conditions." }
+    ]
+  },
+  {
+    "id": "srv-maintenance",
+    "slug": "maintenance-support",
+    "name": "Maintenance Support",
+    "shortDescription": "Maintenance guidance and service planning for FAS rotary screw compressors.",
+    "fullDescription": "The FAS range is designed for maintenance friendly access. Service support helps customers plan inspections, parts replacement, and routine compressor care.",
+    "iconName": "ShieldCheck",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS15-400x400.png",
+    "benefits": ["Maintenance planning", "Parts guidance", "Dealer service coordination", "Warranty support"],
+    "process": [
+      { "step": 1, "title": "Inspection", "description": "Review operating hours and compressor condition." },
+      { "step": 2, "title": "Service Plan", "description": "Plan routine service items and genuine parts." },
+      { "step": 3, "title": "Support", "description": "Coordinate with the dealer network for service work." }
+    ]
+  }
+]

@@ -1,0 +1,866 @@
+[
+  {
+    "id": "fas4",
+    "categoryId": "cat-air-compressors",
+    "model": "FAS-4",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FAS",
+    "description": "4 kW air cooled rotary screw compressor with 9-19 CFM free air delivery.",
+    "longDescription": "The FAS-4 is an air cooled single stage rotary screw compressor with 4 kW power, 9-19 CFM free air delivery, and 7-16 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS-4-400x400.png",
+    "powerHp": 5,
+    "powerKw": 4,
+    "pressureMin": 7,
+    "pressureMax": 16,
+    "flowRateCfm": "9-19",
+    "flowRateM3Min": "0.52",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "V-belt drive",
+      "Working pressure 7 to 16 kg/cm2(g)",
+      "Free air delivery 9 to 19 CFM",
+      "Motor nominal power 4 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F",
+      "Also available with 200 liter air receiver (FAS 4-R) and 200 liter air receiver + Dryer (FAS 4-AT)"
+    ],
+    "specifications": [
+      {
+        "value": "4 kW",
+        "label": "Power"
+      },
+      {
+        "value": "9-19 CFM",
+        "label": "Free air delivery"
+      },
+      {
+        "value": "7-16 kg/cm2(g)",
+        "label": "Working pressure"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Workshops",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FAS-4-11.pdf"
+  },
+  {
+    "id": "fas6",
+    "categoryId": "cat-air-compressors",
+    "model": "FAS-6",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FAS",
+    "description": "5.5 kW air cooled rotary screw compressor with 13-28 CFM free air delivery.",
+    "longDescription": "The FAS-6 is an air cooled single stage rotary screw compressor with 5.5 kW power, 13-28 CFM free air delivery, and 7-16 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS6-400x400.png",
+    "powerHp": 7.5,
+    "powerKw": 5.5,
+    "pressureMin": 7,
+    "pressureMax": 16,
+    "flowRateCfm": "13-28",
+    "flowRateM3Min": "0.76",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "V-belt drive",
+      "Working pressure 7 to 16 kg/cm2(g)",
+      "Free air delivery 13 to 28 CFM",
+      "Motor nominal power 5.5 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F",
+      "Also available with 200 liter air receiver (FAS 6-R) and 200 liter air receiver + Dryer (FAS 6-AT)"
+    ],
+    "specifications": [
+      {
+        "value": "5.5 kW",
+        "label": "Power"
+      },
+      {
+        "value": "13-28 CFM",
+        "label": "Free air delivery"
+      },
+      {
+        "value": "7-16 kg/cm2(g)",
+        "label": "Working pressure"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Workshops",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FAS-4-11.pdf"
+  },
+  {
+    "id": "fas7",
+    "categoryId": "cat-air-compressors",
+    "model": "FAS-8",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FAS",
+    "description": "7.5 kW air cooled rotary screw compressor with 21-39 CFM free air delivery.",
+    "longDescription": "The FAS-8 is an air cooled single stage rotary screw compressor with 7.5 kW power, 21-39 CFM free air delivery, and 7-16 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS7-400x400.png",
+    "powerHp": 10,
+    "powerKw": 7.5,
+    "pressureMin": 7,
+    "pressureMax": 16,
+    "flowRateCfm": "21-39",
+    "flowRateM3Min": "1.15",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "V-belt drive",
+      "Working pressure 7 to 16 kg/cm2(g)",
+      "Free air delivery 21 to 39 CFM",
+      "Motor nominal power 7.5 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F",
+      "Also available with 270 liter air receiver (FAS 8-R) and 200 liter air receiver + Dryer (FAS 8-AT)"
+    ],
+    "specifications": [
+      {
+        "value": "7.5 kW",
+        "label": "Power"
+      },
+      {
+        "value": "21-39 CFM",
+        "label": "Free air delivery"
+      },
+      {
+        "value": "7-16 kg/cm2(g)",
+        "label": "Working pressure"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FAS-4-11.pdf"
+  },
+  {
+    "id": "fas11",
+    "categoryId": "cat-air-compressors",
+    "model": "FAS-11",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FAS",
+    "description": "11 kW air cooled rotary screw compressor with 35-62 CFM free air delivery.",
+    "longDescription": "The FAS-11 is an air cooled single stage rotary screw compressor with 11 kW power, 35-62 CFM free air delivery, and 7-16 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS11-400x400.png",
+    "powerHp": 15,
+    "powerKw": 11,
+    "pressureMin": 7,
+    "pressureMax": 16,
+    "flowRateCfm": "35-62",
+    "flowRateM3Min": "1.74",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "V-belt drive",
+      "Working pressure 7 to 16 kg/cm2(g)",
+      "Free air delivery 35 to 62 CFM",
+      "Motor nominal power 11 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F",
+      "Also available with 270 liter air receiver (FAS11-R) and 200 liter air receiver + Dryer (FAS 11-AT)"
+    ],
+    "specifications": [
+      {
+        "value": "11 kW",
+        "label": "Power"
+      },
+      {
+        "value": "35-62 CFM",
+        "label": "Free air delivery"
+      },
+      {
+        "value": "7-16 kg/cm2(g)",
+        "label": "Working pressure"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FAS-4-11.pdf"
+  },
+  {
+    "id": "fas11he",
+    "categoryId": "cat-air-compressors",
+    "model": "FAS-11(HE)",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FAS",
+    "description": "11 kW air cooled rotary screw compressor with 40-76 CFM free air delivery.",
+    "longDescription": "The FAS-11(HE) is an air cooled single stage rotary screw compressor with 11 kW power, 40-76 CFM free air delivery, and 7-16 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS11-400x400.png",
+    "powerHp": 15,
+    "powerKw": 11,
+    "pressureMin": 7,
+    "pressureMax": 16,
+    "flowRateCfm": "40-76",
+    "flowRateM3Min": "",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "V-belt drive",
+      "Working pressure 7 to 16 kg/cm2(g)",
+      "Free air delivery 40 to 76 CFM",
+      "Motor nominal power 11 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F"
+    ],
+    "specifications": [
+      {
+        "value": "11 kW",
+        "label": "Power"
+      },
+      {
+        "value": "40-76 CFM",
+        "label": "Free air delivery"
+      },
+      {
+        "value": "7-16 kg/cm2(g)",
+        "label": "Working pressure"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FAS-4-11.pdf"
+  },
+  {
+    "id": "fas15",
+    "categoryId": "cat-air-compressors",
+    "model": "FAS-15",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FAS",
+    "description": "15 kW air cooled rotary screw compressor with 51-108 CFM free air delivery.",
+    "longDescription": "The FAS-15 is an air cooled single stage rotary screw compressor with 15 kW power, 51-108 CFM free air delivery, and 5-16 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS15-400x400.png",
+    "powerHp": 20,
+    "powerKw": 15,
+    "pressureMin": 5,
+    "pressureMax": 16,
+    "flowRateCfm": "51-108",
+    "flowRateM3Min": "",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "Working pressure 5 to 16 kg/cm2(g)",
+      "Free air delivery 51-108 CFM",
+      "Motor nominal power 15 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F"
+    ],
+    "specifications": [
+      {
+        "label": "Power",
+        "value": "15 kW"
+      },
+      {
+        "label": "Free air delivery",
+        "value": "51-108 CFM"
+      },
+      {
+        "label": "Working pressure",
+        "value": "5-16 kg/cm2(g)"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FAS-15-250KW.pdf"
+  },
+  {
+    "id": "fas18",
+    "categoryId": "cat-air-compressors",
+    "model": "FAS-18",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FAS",
+    "description": "18.5 kW air cooled rotary screw compressor with 60-131 CFM free air delivery.",
+    "longDescription": "The FAS-18 is an air cooled single stage rotary screw compressor with 18.5 kW power, 60-131 CFM free air delivery, and 5-16 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS18-400x400.png",
+    "powerHp": 25,
+    "powerKw": 18.5,
+    "pressureMin": 5,
+    "pressureMax": 16,
+    "flowRateCfm": "60-131",
+    "flowRateM3Min": "",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "Working pressure 5 to 16 kg/cm2(g)",
+      "Free air delivery 60-131 CFM",
+      "Motor nominal power 18.5 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F"
+    ],
+    "specifications": [
+      {
+        "label": "Power",
+        "value": "18.5 kW"
+      },
+      {
+        "label": "Free air delivery",
+        "value": "60-131 CFM"
+      },
+      {
+        "label": "Working pressure",
+        "value": "5-16 kg/cm2(g)"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FAS-15-250KW.pdf"
+  },
+  {
+    "id": "fas22",
+    "categoryId": "cat-air-compressors",
+    "model": "FAS-22",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FAS",
+    "description": "22 kW air cooled rotary screw compressor with 78-145 CFM free air delivery.",
+    "longDescription": "The FAS-22 is an air cooled single stage rotary screw compressor with 22 kW power, 78-145 CFM free air delivery, and 5-16 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS22-400x400.png",
+    "powerHp": 30,
+    "powerKw": 22,
+    "pressureMin": 5,
+    "pressureMax": 16,
+    "flowRateCfm": "78-145",
+    "flowRateM3Min": "",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "Working pressure 5 to 16 kg/cm2(g)",
+      "Free air delivery 78-145 CFM",
+      "Motor nominal power 22 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F"
+    ],
+    "specifications": [
+      {
+        "label": "Power",
+        "value": "22 kW"
+      },
+      {
+        "label": "Free air delivery",
+        "value": "78-145 CFM"
+      },
+      {
+        "label": "Working pressure",
+        "value": "5-16 kg/cm2(g)"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FAS-15-250KW.pdf"
+  },
+  {
+    "id": "fas30",
+    "categoryId": "cat-air-compressors",
+    "model": "FAS-30",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FAS",
+    "description": "30 kW air cooled rotary screw compressor with 102-212 CFM free air delivery.",
+    "longDescription": "The FAS-30 is an air cooled single stage rotary screw compressor with 30 kW power, 102-212 CFM free air delivery, and 5-16 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS30-400x400.png",
+    "powerHp": 40,
+    "powerKw": 30,
+    "pressureMin": 5,
+    "pressureMax": 16,
+    "flowRateCfm": "102-212",
+    "flowRateM3Min": "",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "Working pressure 5 to 16 kg/cm2(g)",
+      "Free air delivery 102-212 CFM",
+      "Motor nominal power 30 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F"
+    ],
+    "specifications": [
+      {
+        "label": "Power",
+        "value": "30 kW"
+      },
+      {
+        "label": "Free air delivery",
+        "value": "102-212 CFM"
+      },
+      {
+        "label": "Working pressure",
+        "value": "5-16 kg/cm2(g)"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FAS-15-250KW.pdf"
+  },
+  {
+    "id": "fas37",
+    "categoryId": "cat-air-compressors",
+    "model": "FAS-37",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FAS",
+    "description": "37 kW air cooled rotary screw compressor with 134-263 CFM free air delivery.",
+    "longDescription": "The FAS-37 is an air cooled single stage rotary screw compressor with 37 kW power, 134-263 CFM free air delivery, and 5-16 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS37-400x400.png",
+    "powerHp": 50,
+    "powerKw": 37,
+    "pressureMin": 5,
+    "pressureMax": 16,
+    "flowRateCfm": "134-263",
+    "flowRateM3Min": "",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "Working pressure 5 to 16 kg/cm2(g)",
+      "Free air delivery 134-263 CFM",
+      "Motor nominal power 37 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F"
+    ],
+    "specifications": [
+      {
+        "label": "Power",
+        "value": "37 kW"
+      },
+      {
+        "label": "Free air delivery",
+        "value": "134-263 CFM"
+      },
+      {
+        "label": "Working pressure",
+        "value": "5-16 kg/cm2(g)"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FAS-15-250KW.pdf"
+  },
+  {
+    "id": "fas45",
+    "categoryId": "cat-air-compressors",
+    "model": "FAS-45",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FAS",
+    "description": "45 kW air cooled rotary screw compressor with 171-304 CFM free air delivery.",
+    "longDescription": "The FAS-45 is an air cooled single stage rotary screw compressor with 45 kW power, 171-304 CFM free air delivery, and 5-16 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS37-400x400.png",
+    "powerHp": 60,
+    "powerKw": 45,
+    "pressureMin": 5,
+    "pressureMax": 16,
+    "flowRateCfm": "171-304",
+    "flowRateM3Min": "",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "Working pressure 5 to 16 kg/cm2(g)",
+      "Free air delivery 171-304 CFM",
+      "Motor nominal power 45 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F"
+    ],
+    "specifications": [
+      {
+        "label": "Power",
+        "value": "45 kW"
+      },
+      {
+        "label": "Free air delivery",
+        "value": "171-304 CFM"
+      },
+      {
+        "label": "Working pressure",
+        "value": "5-16 kg/cm2(g)"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FAS-15-250KW.pdf"
+  },
+  {
+    "id": "fas55",
+    "categoryId": "cat-air-compressors",
+    "model": "FAS-55",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FAS",
+    "description": "55 kW air cooled rotary screw compressor with 207-415 CFM free air delivery.",
+    "longDescription": "The FAS-55 is an air cooled single stage rotary screw compressor with 55 kW power, 207-415 CFM free air delivery, and 5-16 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS37-400x400.png",
+    "powerHp": 75,
+    "powerKw": 55,
+    "pressureMin": 5,
+    "pressureMax": 16,
+    "flowRateCfm": "207-415",
+    "flowRateM3Min": "",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "Working pressure 5 to 16 kg/cm2(g)",
+      "Free air delivery 207-415 CFM",
+      "Motor nominal power 55 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F"
+    ],
+    "specifications": [
+      {
+        "label": "Power",
+        "value": "55 kW"
+      },
+      {
+        "label": "Free air delivery",
+        "value": "207-415 CFM"
+      },
+      {
+        "label": "Working pressure",
+        "value": "5-16 kg/cm2(g)"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FAS-15-250KW.pdf"
+  },
+  {
+    "id": "fas75",
+    "categoryId": "cat-air-compressors",
+    "model": "FAS-75",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FAS",
+    "description": "75 kW air cooled rotary screw compressor with 279-540 CFM free air delivery.",
+    "longDescription": "The FAS-75 is an air cooled single stage rotary screw compressor with 75 kW power, 279-540 CFM free air delivery, and 5-16 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS37-400x400.png",
+    "powerHp": 100,
+    "powerKw": 75,
+    "pressureMin": 5,
+    "pressureMax": 16,
+    "flowRateCfm": "279-540",
+    "flowRateM3Min": "",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "Working pressure 5 to 16 kg/cm2(g)",
+      "Free air delivery 279-540 CFM",
+      "Motor nominal power 75 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F"
+    ],
+    "specifications": [
+      {
+        "label": "Power",
+        "value": "75 kW"
+      },
+      {
+        "label": "Free air delivery",
+        "value": "279-540 CFM"
+      },
+      {
+        "label": "Working pressure",
+        "value": "5-16 kg/cm2(g)"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FAS-15-250KW.pdf"
+  },
+  {
+    "id": "fsg270a",
+    "categoryId": "cat-air-compressors",
+    "model": "FSG270A",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FSG",
+    "description": "45 kW air cooled rotary screw compressor with 268-275 CFM free air delivery.",
+    "longDescription": "The FSG270A is an air cooled single stage rotary screw compressor with 45 kW power, 268-275 CFM free air delivery, and 7-8 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS37-400x400.png",
+    "powerHp": 60,
+    "powerKw": 45,
+    "pressureMin": 7,
+    "pressureMax": 8,
+    "flowRateCfm": "268-275",
+    "flowRateM3Min": "",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "Working pressure 7 to 8 kg/cm2(g)",
+      "Free air delivery 268-275 CFM",
+      "Motor nominal power 45 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F"
+    ],
+    "specifications": [
+      {
+        "label": "Power",
+        "value": "45 kW"
+      },
+      {
+        "label": "Free air delivery",
+        "value": "268-275 CFM"
+      },
+      {
+        "label": "Working pressure",
+        "value": "7-8 kg/cm2(g)"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FSG-45-185KW.pdf"
+  },
+  {
+    "id": "fsg340a",
+    "categoryId": "cat-air-compressors",
+    "model": "FSG340A",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FSG",
+    "description": "55 kW air cooled rotary screw compressor with 286-378 CFM free air delivery.",
+    "longDescription": "The FSG340A is an air cooled single stage rotary screw compressor with 55 kW power, 286-378 CFM free air delivery, and 7-12 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS37-400x400.png",
+    "powerHp": 75,
+    "powerKw": 55,
+    "pressureMin": 7,
+    "pressureMax": 12,
+    "flowRateCfm": "286-378",
+    "flowRateM3Min": "",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "Working pressure 7 to 12 kg/cm2(g)",
+      "Free air delivery 286-378 CFM",
+      "Motor nominal power 55 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F"
+    ],
+    "specifications": [
+      {
+        "label": "Power",
+        "value": "55 kW"
+      },
+      {
+        "label": "Free air delivery",
+        "value": "286-378 CFM"
+      },
+      {
+        "label": "Working pressure",
+        "value": "7-12 kg/cm2(g)"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FSG-45-185KW.pdf"
+  },
+  {
+    "id": "fsg460a",
+    "categoryId": "cat-air-compressors",
+    "model": "FSG460A",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FSG",
+    "description": "75 kW air cooled rotary screw compressor with 364-498 CFM free air delivery.",
+    "longDescription": "The FSG460A is an air cooled single stage rotary screw compressor with 75 kW power, 364-498 CFM free air delivery, and 7-12 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS37-400x400.png",
+    "powerHp": 100,
+    "powerKw": 75,
+    "pressureMin": 7,
+    "pressureMax": 12,
+    "flowRateCfm": "364-498",
+    "flowRateM3Min": "",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "Working pressure 7 to 12 kg/cm2(g)",
+      "Free air delivery 364-498 CFM",
+      "Motor nominal power 75 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F"
+    ],
+    "specifications": [
+      {
+        "label": "Power",
+        "value": "75 kW"
+      },
+      {
+        "label": "Free air delivery",
+        "value": "364-498 CFM"
+      },
+      {
+        "label": "Working pressure",
+        "value": "7-12 kg/cm2(g)"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FSG-45-185KW.pdf"
+  },
+  {
+    "id": "fsg760a",
+    "categoryId": "cat-air-compressors",
+    "model": "FSG760A",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FSG",
+    "description": "110 kW air cooled rotary screw compressor with 727-745 CFM free air delivery.",
+    "longDescription": "The FSG760A is an air cooled single stage rotary screw compressor with 110 kW power, 727-745 CFM free air delivery, and 7-10 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS37-400x400.png",
+    "powerHp": 150,
+    "powerKw": 110,
+    "pressureMin": 7,
+    "pressureMax": 10,
+    "flowRateCfm": "727-745",
+    "flowRateM3Min": "",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "Working pressure 7 to 10 kg/cm2(g)",
+      "Free air delivery 727-745 CFM",
+      "Motor nominal power 110 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F"
+    ],
+    "specifications": [
+      {
+        "label": "Power",
+        "value": "110 kW"
+      },
+      {
+        "label": "Free air delivery",
+        "value": "727-745 CFM"
+      },
+      {
+        "label": "Working pressure",
+        "value": "7-10 kg/cm2(g)"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FSG-45-185KW.pdf"
+  },
+  {
+    "id": "fsg860a",
+    "categoryId": "cat-air-compressors",
+    "model": "FSG860A",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FSG",
+    "description": "132 kW air cooled rotary screw compressor with 646-890 CFM free air delivery.",
+    "longDescription": "The FSG860A is an air cooled single stage rotary screw compressor with 132 kW power, 646-890 CFM free air delivery, and 7-12 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS37-400x400.png",
+    "powerHp": 175,
+    "powerKw": 132,
+    "pressureMin": 7,
+    "pressureMax": 12,
+    "flowRateCfm": "646-890",
+    "flowRateM3Min": "",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "Working pressure 7 to 12 kg/cm2(g)",
+      "Free air delivery 646-890 CFM",
+      "Motor nominal power 132 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F"
+    ],
+    "specifications": [
+      {
+        "label": "Power",
+        "value": "132 kW"
+      },
+      {
+        "label": "Free air delivery",
+        "value": "646-890 CFM"
+      },
+      {
+        "label": "Working pressure",
+        "value": "7-12 kg/cm2(g)"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FSG-45-185KW.pdf"
+  },
+  {
+    "id": "fsg1060a",
+    "categoryId": "cat-air-compressors",
+    "model": "FSG1060A",
+    "name": "Air cooled single stage rotary screw compressor",
+    "series": "FSG",
+    "description": "185 kW air cooled rotary screw compressor with 876-1130 CFM free air delivery.",
+    "longDescription": "The FSG1060A is an air cooled single stage rotary screw compressor with 185 kW power, 876-1130 CFM free air delivery, and 7-12 kg/cm2(g) working pressure.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS37-400x400.png",
+    "powerHp": 250,
+    "powerKw": 185,
+    "pressureMin": 7,
+    "pressureMax": 12,
+    "flowRateCfm": "876-1130",
+    "flowRateM3Min": "",
+    "features": [
+      "High efficient rotary screw compressor",
+      "Air cooled",
+      "Maintenance friendly design",
+      "Working pressure 7 to 12 kg/cm2(g)",
+      "Free air delivery 876-1130 CFM",
+      "Motor nominal power 185 kW",
+      "IE3 energy efficiency class, Protection Level IP55, Insulation Class Type F"
+    ],
+    "specifications": [
+      {
+        "label": "Power",
+        "value": "185 kW"
+      },
+      {
+        "label": "Free air delivery",
+        "value": "876-1130 CFM"
+      },
+      {
+        "label": "Working pressure",
+        "value": "7-12 kg/cm2(g)"
+      }
+    ],
+    "applications": [
+      "Industrial air",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "brochureUrl": "/catalogs/FSG-45-185KW.pdf"
+  }
+]

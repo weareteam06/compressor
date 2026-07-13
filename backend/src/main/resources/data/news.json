@@ -1,0 +1,26 @@
+[
+  {
+    "id": "news-fas-range",
+    "slug": "fas-air-compressor-range",
+    "title": "firstAir FAS Range Covers 3 kW to 37 kW Compressor Needs",
+    "category": "Announcement",
+    "date": "2026-07-02",
+    "excerpt": "The firstAir FAS lineup provides air cooled single-stage rotary screw compressors for workshops, manufacturing, and general plant air.",
+    "content": "The firstAir FAS range is designed for heavy duty industrial use with IE3 high efficient motors, air cooled packages, maintenance friendly layout, and V-belt driven compressor units. The range includes models from compact 4 kW packages through 37 kW systems.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/banner.jpg",
+    "author": "firstAir Team",
+    "featured": true
+  },
+  {
+    "id": "news-selection-guide",
+    "slug": "choosing-the-right-fas-model",
+    "title": "How to Choose the Right FAS Compressor Model",
+    "category": "Blog",
+    "date": "2026-07-02",
+    "excerpt": "Use power, maximum air discharge, pressure, and application duty to compare FAS models.",
+    "content": "When selecting a firstAir FAS compressor, start with required working pressure and air demand. Compare kW size, maximum air discharge, dimensions, and expected duty. For help, use the dealer network or request a quote from the website.",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS30-400x400.png",
+    "author": "Product Team",
+    "featured": false
+  }
+]

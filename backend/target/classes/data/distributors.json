@@ -1,0 +1,115 @@
+[
+  {
+    "id": "dist-1",
+    "name": "Western Industrial Solutions",
+    "region": "West",
+    "contactPerson": "Mr. Gaurav Shukla",
+    "designation": "Regional Manager - West",
+    "city": "Pune",
+    "state": "Maharashtra",
+    "fullAddress": "PAP Plot No. S-3, Chakan MIDC Industrial Area, Phase II, Savardari, Taluka- Khed, Dist- Pune, Maharashtra – 410501",
+    "phone": "+91 9924743294",
+    "email": "gaurav@fscurtis.in",
+    "authorizedProducts": [
+      "Rotary Screw",
+      "Reciprocating",
+      "Centrifugal",
+      "Oil-Free"
+    ],
+    "status": "Active"
+  },
+  {
+    "id": "dist-2",
+    "name": "Southern Air Systems",
+    "region": "South",
+    "contactPerson": "Mr. Ashish Trehan",
+    "designation": "Regional Manager - South & East",
+    "city": "Bangalore",
+    "state": "Karnataka",
+    "fullAddress": "No.3237, 3rd Floor, Vishwabharathi HBCS Layout, 4th Phase, Girinagar, Bangalore 560085",
+    "phone": "+91 9686676793",
+    "email": "trehan@fscurtis.in",
+    "authorizedProducts": [
+      "Rotary Screw",
+      "Reciprocating",
+      "Centrifugal",
+      "Vacuum"
+    ],
+    "status": "Active"
+  },
+  {
+    "id": "dist-3",
+    "name": "Northern Pneumatic Co.",
+    "region": "North",
+    "contactPerson": "Mr. Ritesh Shukla",
+    "designation": "Regional Manager - North",
+    "city": "Noida",
+    "state": "Uttar Pradesh",
+    "fullAddress": "6th Floor, Tower B, Lotus Business Park, Sector-127, Noida, UP – 201304",
+    "phone": "+91 9644300030",
+    "email": "ritesh.shukla@fscurtis.in",
+    "authorizedProducts": [
+      "Rotary Screw",
+      "Reciprocating",
+      "Oil-Free",
+      "Accessories"
+    ],
+    "status": "Active"
+  },
+  {
+    "id": "dist-4",
+    "name": "Gujarat Industrial Air",
+    "region": "West",
+    "contactPerson": "Mr. Gaurav Shukla",
+    "designation": "Branch Manager",
+    "city": "Ahmedabad",
+    "state": "Gujarat",
+    "fullAddress": "218, Stadium House, Near Das Khaman, Stadium Five Road, Navrangpura, Ahmedabad-380009",
+    "phone": "+91 9924743294",
+    "email": "gaurav@fscurtis.in",
+    "authorizedProducts": [
+      "Rotary Screw",
+      "Reciprocating",
+      "Vacuum"
+    ],
+    "status": "Active"
+  },
+  {
+    "id": "dist-5",
+    "name": "Eastern Compressor Tech",
+    "region": "East",
+    "contactPerson": "Mr. Sandeep Kumar",
+    "designation": "Regional Manager - East",
+    "city": "Kolkata",
+    "state": "West Bengal",
+    "fullAddress": "Salt Lake City, Sector V, Kolkata - 700091",
+    "phone": "+91 9876543210",
+    "email": "east@fscurtis.in",
+    "authorizedProducts": [
+      "Rotary Screw",
+      "Reciprocating",
+      "Blowers",
+      "Accessories"
+    ],
+    "status": "Active"
+  },
+  {
+    "id": "dist-6",
+    "name": "Central Plains Compressed Air",
+    "region": "Central",
+    "contactPerson": "Mr. Rajesh Patel",
+    "designation": "Regional Manager - Central",
+    "city": "Indore",
+    "state": "Madhya Pradesh",
+    "fullAddress": "AB Road, Industrial Area, Indore - 452010",
+    "phone": "+91 9123456789",
+    "email": "central@fscurtis.in",
+    "authorizedProducts": [
+      "Rotary Screw",
+      "Reciprocating",
+      "Vacuum",
+      "Parts"
+    ],
+    "status": "Active"
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "name": "compressor-fullstack",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:backend": "mvn -f backend/pom.xml spring-boot:run",
+    "build": "npm --prefix frontend run build && mvn -f backend/pom.xml package -DskipTests",
+    "preview": "npm --prefix frontend run preview",
+    "start": "mvn -f backend/pom.xml spring-boot:run"
+  }
+}

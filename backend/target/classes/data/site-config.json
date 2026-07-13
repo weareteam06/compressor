@@ -1,0 +1,79 @@
+{
+  "company": {
+    "name": "firstAir Compressor",
+    "tagline": "Air cooled single stage rotary screw compressors",
+    "foundedYear": 2024,
+    "yearsOfExcellence": 1
+  },
+  "hero": {
+    "title": "Air cooled single stage rotary screw compressors",
+    "subtitle": "FAS and FSG air-cooled rotary screw compressor ranges from 4 kW up to 185 kW for workshops, plant air, site work, and heavy duty industrial use.",
+    "cta": "View Products",
+    "secondaryCta": "Technical Information"
+  },
+  "about": {
+    "storyShort": "firstAir offers FAS and FSG air-cooled rotary screw compressor ranges for industrial compressed air users.",
+    "storyLong": "firstAir compressors support workshops, manufacturing units, service teams, site work, and continuous plant air requirements with cataloged models from compact packages through high-capacity industrial compressors.",
+    "mission": "To provide practical, economical, and reliable air compressor packages for industrial users.",
+    "vision": "To make compressor selection simple through clear FAS and FSG model data, technical information, warranty support, and responsive service."
+  },
+  "contact": {
+    "factoryPhone": "1-877-287-0222",
+    "salesPhone": "1-877-287-0222",
+    "email": "sales@firstaircompressor.com",
+    "headquarters": {
+      "name": "firstAir Compressor",
+      "address": "Contact firstAir for sales, service, parts, and warranty information."
+    },
+    "regionalOffices": [
+      {
+        "region": "Sales",
+        "address": "firstAir Compressor",
+        "contactPerson": "Sales Team",
+        "designation": "Product inquiries",
+        "phone": "1-877-287-0222",
+        "email": "sales@firstaircompressor.com"
+      },
+      {
+        "region": "Support",
+        "address": "firstAir Compressor",
+        "contactPerson": "Support Team",
+        "designation": "Service and warranty support",
+        "phone": "1-877-287-0222",
+        "email": "support@firstaircompressor.com"
+      }
+    ]
+  },
+  "social": {
+    "linkedin": "",
+    "facebook": "",
+    "youtube": ""
+  },
+  "pages": {
+    "technical": {
+      "eyebrow": "Technical Information",
+      "title": "Technical documents for selecting and operating FAS compressors",
+      "intro": "Use the product data sheets and technical information to compare air discharge, pressure, power, dimensions, weight, and package options across the FAS compressor range.",
+      "points": [
+        "Operating pressure: 8 to 10 bar(g)",
+        "Air discharge range: 0.52 m3/min to 5.94 m3/min",
+        "Motor nominal power range: 4 kW to 37 kW",
+        "IE3 energy efficiency class motors",
+        "IP55 protection and Class F insulation",
+        "Receiver and dryer package options on selected lower-kW models"
+      ]
+    },
+    "warranty": {
+      "eyebrow": "Warranty Information",
+      "title": "5 year warranty support with genuine firstAir parts",
+      "intro": "firstAir warranty support is designed around correct maintenance, genuine parts, and regular service practices that protect compressor reliability.",
+      "points": [
+        "5 year warranty program for eligible compressors",
+        "Use genuine firstAir parts during recommended service intervals",
+        "Keep maintenance records for warranty support",
+        "Contact the support team for service, parts, and warranty guidance",
+        "Support email: support@firstaircompressor.com"
+      ]
+    }
+  }
+}

@@ -1,0 +1,20 @@
+# firstAir Compressor
+
+firstAir Compressor provides air cooled single stage rotary screw compressors for industrial compressed air requirements.
+
+## Core Pages
+
+- Home: https://www.firstaircompressor.com/
+- Products: https://www.firstaircompressor.com/products
+- Technical Information: https://www.firstaircompressor.com/technical-information
+- Warranty Information: https://www.firstaircompressor.com/warranty-information
+- Dealer Network: https://www.firstaircompressor.com/distributors
+- Contact: https://www.firstaircompressor.com/contact
+
+## Product Coverage
+
+The site includes FAS and FSG compressor model information, including power, pressure, CFM, applications, product details, and downloadable brochures.
+
+## Contact
+
+Use the contact form or WhatsApp button for compressor quotations, service enquiries, warranty support, dealer assistance, and technical selection help.

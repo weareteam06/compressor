@@ -1,0 +1,27 @@
+[
+  {
+    "id": "cat-air-compressors",
+    "slug": "air-compressors",
+    "name": "Air Compressors",
+    "shortName": "Air Compressors",
+    "description": "Air cooled single stage rotary screw compressors from 3 kW up to 37 kW.",
+    "longDescription": "The firstAir FAS range is a complete line of air cooled single stage rotary screw compressors for heavy duty industrial use. The range features IE3 high efficient main motors, air cooled packages, maintenance friendly design, and V-belt drive architecture.",
+    "icon": "Gauge",
+    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS37-400x400.png",
+    "features": [
+      "Air cooled rotary screw compressor range",
+      "Single-stage compressor packages",
+      "IE3 high efficient main motors",
+      "Maintenance friendly design",
+      "V-belt drive",
+      "Operating pressure 8 to 10 bar(g)"
+    ],
+    "applications": [
+      "Industrial air",
+      "Workshops",
+      "Manufacturing",
+      "General plant air"
+    ],
+    "order": 1
+  }
+]
