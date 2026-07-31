@@ -1,5 +1,5 @@
 ﻿import { useEffect, useState } from 'react';
-import { ArrowRight, CheckCircle2, ChevronLeft, ChevronRight, FileText, Gauge, Phone, ShieldCheck, Wrench } from 'lucide-react';
+import { ArrowRight, CheckCircle2, ChevronLeft, ChevronRight, FileText, Phone, ShieldCheck, Wrench } from 'lucide-react';
 import type { Product, SiteConfig } from '@/lib/data';
 import { getProducts, getSiteConfig } from '@/lib/data';
 import CompressorSeriesGuide from '@/components/CompressorSeriesGuide';
@@ -101,20 +101,20 @@ export default function HomePage({ onNavigate, onViewProduct }: HomePageProps) {
 
   return (
     <div className="bg-white text-slate-900">
-      <section className="relative min-h-[78vh] overflow-hidden bg-slate-950 text-white">
-        <img src={slide.image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-35" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(15,23,42,0.96),rgba(127,29,29,0.82),rgba(15,23,42,0.52))]" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-950/80 to-transparent" />
+      <section className="relative min-h-[78vh] overflow-hidden bg-[#f9b916] text-slate-950">
+        <img src={slide.image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-20 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,248,218,0.98)_0%,rgba(255,220,111,0.91)_48%,rgba(249,185,22,0.58)_100%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#f9b916]/80 to-transparent" />
 
         <div className="relative mx-auto flex min-h-[78vh] max-w-[1440px] flex-col px-5 py-10 lg:px-10">
           <div className="grid flex-1 items-center gap-8 lg:grid-cols-[0.95fr_1.05fr]">
             <div className="max-w-3xl py-10">
-              <div className="inline-flex items-center gap-2 border border-amber-300/40 bg-amber-400/15 px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-amber-200">
+              <div className="inline-flex items-center gap-2 border border-black/20 bg-white/55 px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-red-700">
                 <CompressorIcon className="h-4 w-4" />
                 {slide.eyebrow}
               </div>
-              <h1 className="brand-display mt-7 text-4xl font-black leading-[1.02] text-white sm:text-5xl lg:text-7xl">{slide.title}</h1>
-              <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/78 sm:text-lg">{slide.body}</p>
+              <h1 className="brand-display mt-7 text-4xl font-black leading-[1.02] text-black sm:text-5xl lg:text-7xl">{slide.title}</h1>
+              <p className="mt-6 max-w-2xl text-base font-medium leading-relaxed text-slate-800 sm:text-lg">{slide.body}</p>
 
               <div className="mt-8 grid max-w-2xl grid-cols-3 gap-3">
                 {[
@@ -122,9 +122,9 @@ export default function HomePage({ onNavigate, onViewProduct }: HomePageProps) {
                   { label: 'CFM', value: heroProduct ? heroProduct.flowRateCfm : '9-1130' },
                   { label: 'Pressure', value: heroProduct ? `${heroProduct.pressureMin}-${heroProduct.pressureMax} kg/cm2(g)` : '5-16 kg/cm2(g)' },
                 ].map(item => (
-                  <div key={item.label} className="border border-white/15 bg-white/10 px-4 py-4 backdrop-blur-sm">
-                    <div className="text-xl font-black text-white lg:text-2xl">{item.value}</div>
-                    <div className="mt-1 text-[10px] font-black uppercase tracking-widest text-amber-200">{item.label}</div>
+                  <div key={item.label} className="border border-black/15 bg-white/55 px-4 py-4 backdrop-blur-sm">
+                    <div className="text-xl font-black text-black lg:text-2xl">{item.value}</div>
+                    <div className="mt-1 text-[10px] font-black uppercase tracking-widest text-red-700">{item.label}</div>
                   </div>
                 ))}
               </div>
@@ -133,7 +133,7 @@ export default function HomePage({ onNavigate, onViewProduct }: HomePageProps) {
                 <button onClick={slide.action} className="inline-flex items-center gap-2 bg-red-600 px-7 py-4 text-sm font-black uppercase tracking-wide text-white shadow-xl shadow-red-950/25 transition-colors hover:bg-red-700">
                   {slide.actionLabel} <ArrowRight className="h-4 w-4" />
                 </button>
-                <button onClick={slide.secondary} className="inline-flex items-center gap-2 bg-white px-7 py-4 text-sm font-black uppercase tracking-wide text-slate-950 transition-colors hover:bg-amber-100">
+                <button onClick={slide.secondary} className="inline-flex items-center gap-2 border border-amber-600 bg-white px-7 py-4 text-sm font-black uppercase tracking-wide text-slate-950 transition-colors hover:bg-amber-50">
                   {slide.secondaryLabel}
                 </button>
               </div>
@@ -145,16 +145,16 @@ export default function HomePage({ onNavigate, onViewProduct }: HomePageProps) {
                 alt={heroProduct?.model || 'firstAir compressor'}
                 className="max-h-[520px] w-full max-w-[680px] object-contain drop-shadow-2xl"
               />
-              <div className="absolute bottom-4 right-0 bg-slate-950/85 px-5 py-4 text-right backdrop-blur-sm">
-                <div className="text-xs font-black uppercase tracking-[0.22em] text-red-200">Featured</div>
-                <div className="brand-display text-3xl font-black">{heroProduct?.model || 'FAS Range'}</div>
+              <div className="absolute bottom-4 right-0 border-l-4 border-red-600 bg-white/90 px-5 py-4 text-right text-slate-950 shadow-xl backdrop-blur-sm">
+                <div className="text-xs font-black uppercase tracking-[0.22em] text-red-700">Featured</div>
+                <div className="brand-display text-3xl font-black text-slate-950">{heroProduct?.model || 'FAS Range'}</div>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-4 border-t border-white/12 pt-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-4 border-t border-black/15 pt-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex gap-2">
-              <button onClick={() => goToSlide(activeSlide - 1)} className="flex h-11 w-11 items-center justify-center border border-white/20 bg-white/10 text-white transition-colors hover:bg-white/20" aria-label="Previous hero slide">
+              <button onClick={() => goToSlide(activeSlide - 1)} className="flex h-11 w-11 items-center justify-center border border-black/20 bg-white/60 text-black transition-colors hover:bg-white" aria-label="Previous hero slide">
                 <ChevronLeft className="h-5 w-5" />
               </button>
               <button onClick={() => goToSlide(activeSlide + 1)} className="flex h-11 w-11 items-center justify-center bg-red-600 text-white transition-colors hover:bg-red-700" aria-label="Next hero slide">
@@ -168,15 +168,15 @@ export default function HomePage({ onNavigate, onViewProduct }: HomePageProps) {
                   <button
                     key={item.key}
                     onClick={() => goToSlide(index)}
-                    className={`flex items-center gap-3 border px-3 py-2 text-left transition-colors ${activeSlide === index ? 'border-amber-300 bg-amber-300/15' : 'border-white/12 bg-white/8 hover:bg-white/14'}`}
+                    className={`flex items-center gap-3 border px-3 py-2 text-left transition-colors ${activeSlide === index ? 'border-red-600 bg-white/80' : 'border-black/15 bg-white/45 hover:bg-white/70'}`}
                     aria-label={`Go to hero slide ${index + 1}`}
                   >
                     <span className="flex h-12 w-14 shrink-0 items-center justify-center bg-white">
                       <img src={thumbProduct?.imageUrl || bannerUrl} alt={item.title} className="max-h-11 max-w-full object-contain" />
                     </span>
                     <span className="min-w-0">
-                      <span className="block truncate text-xs font-black text-white">{item.product?.model || 'Range'}</span>
-                      <span className="block truncate text-[10px] font-bold uppercase tracking-wider text-white/55">{item.product ? `${item.product.powerKw} kW` : 'Overview'}</span>
+                      <span className="block truncate text-xs font-black text-black">{item.product?.model || 'Range'}</span>
+                      <span className="block truncate text-[10px] font-bold uppercase tracking-wider text-red-700">{item.product ? `${item.product.powerKw} kW` : 'Overview'}</span>
                     </span>
                   </button>
                 );
@@ -186,7 +186,7 @@ export default function HomePage({ onNavigate, onViewProduct }: HomePageProps) {
         </div>
       </section>
 
-      <section className="py-18 lg:py-24 bg-white">
+      <section className="bg-white py-18 lg:py-24">
         <div className="max-w-[1180px] mx-auto px-5 lg:px-8 grid lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
           <div>
             <div className="text-red-600 font-black text-xs uppercase tracking-[0.25em] mb-3">What is firstAir?</div>
@@ -208,7 +208,7 @@ export default function HomePage({ onNavigate, onViewProduct }: HomePageProps) {
                 { value: '9-1130 CFM', label: 'Air delivery' },
                 { value: '5-16 kg/cm2(g)', label: 'Pressure coverage' },
               ].map(item => (
-                <div key={item.label} className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <div key={item.label} className="rounded-lg border border-amber-200 bg-[#fff8df] p-4">
                   <div className="text-2xl font-black text-slate-950">{item.value}</div>
                   <div className="mt-1 text-[10px] font-black uppercase tracking-widest text-red-600">{item.label}</div>
                 </div>
@@ -220,7 +220,7 @@ export default function HomePage({ onNavigate, onViewProduct }: HomePageProps) {
 
       <CompressorSeriesGuide onNavigate={onNavigate} />
 
-      <section className="py-18 lg:py-24 bg-white border-y border-slate-100">
+      <section className="border-y border-amber-100 bg-white py-18 lg:py-24">
         <div className="max-w-[1180px] mx-auto px-5 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-12">
             <div>
@@ -251,14 +251,14 @@ export default function HomePage({ onNavigate, onViewProduct }: HomePageProps) {
           </div>
 
           <div className="mt-10 flex justify-center">
-            <button onClick={() => onNavigate('products')} className="inline-flex items-center gap-2 rounded-xl bg-slate-950 px-7 py-4 text-sm font-black uppercase tracking-wide text-white hover:bg-red-700 transition-colors shadow-xl shadow-slate-950/15">
+            <button onClick={() => onNavigate('products')} className="inline-flex items-center gap-2 rounded-xl border border-amber-500 bg-[#f9b916] px-7 py-4 text-sm font-black uppercase tracking-wide text-slate-950 hover:bg-amber-400 transition-colors shadow-xl shadow-amber-900/15">
               Browse Complete FAS Range <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
       </section>
 
-      <section className="py-18 lg:py-24 bg-slate-50">
+      <section className="border-y border-amber-200 bg-[#fff8df] py-18 lg:py-24">
         <div className="max-w-[1180px] mx-auto px-5 lg:px-8 grid lg:grid-cols-3 gap-7">
           {[
             {
@@ -277,7 +277,7 @@ export default function HomePage({ onNavigate, onViewProduct }: HomePageProps) {
               text: 'Extended warranty support is available when maintenance is performed with genuine firstAir parts.',
             },
           ].map(({ icon: Icon, title, text }) => (
-            <div key={title} className="border border-slate-200 bg-white rounded-sm p-7 shadow-sm">
+            <div key={title} className="rounded-sm border border-amber-200 bg-white p-7 shadow-sm">
               <Icon className="w-9 h-9 text-red-600 mb-6" />
               <h3 className="text-2xl font-black tracking-tight">{title}</h3>
               <p className="text-slate-600 mt-3 leading-relaxed">{text}</p>
@@ -297,7 +297,7 @@ export default function HomePage({ onNavigate, onViewProduct }: HomePageProps) {
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             {commonApplications.map(item => (
-              <div key={item} className="flex items-center gap-3 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+              <div key={item} className="flex items-center gap-3 rounded-lg border border-amber-200 bg-[#fffdf7] p-4 shadow-sm">
                 <CheckCircle2 className="h-5 w-5 shrink-0 text-red-600" />
                 <span className="text-sm font-bold text-slate-700">{item}</span>
               </div>
@@ -306,12 +306,12 @@ export default function HomePage({ onNavigate, onViewProduct }: HomePageProps) {
         </div>
       </section>
 
-      <section className="py-18 lg:py-24 bg-slate-950 text-white">
+      <section className="py-18 lg:py-24 border-y border-amber-400 bg-gradient-to-br from-[#fff8df] to-[#f9b916] text-slate-950">
         <div className="max-w-[1180px] mx-auto px-5 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <div className="text-red-400 font-black text-xs uppercase tracking-[0.25em] mb-3">Technical Information</div>
+            <div className="text-red-700 font-black text-xs uppercase tracking-[0.25em] mb-3">Technical Information</div>
             <h2 className="text-4xl lg:text-5xl font-black tracking-tight leading-tight">Documents and compressor sizing details</h2>
-            <p className="text-white/70 text-lg mt-5 leading-relaxed">
+            <p className="text-slate-700 text-lg mt-5 leading-relaxed">
               Use the technical information area for flow, pressure, dimensions, installation, service, and operation documents across the FAS and FSG catalog ranges.
             </p>
           </div>

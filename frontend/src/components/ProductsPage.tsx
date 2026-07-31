@@ -13,17 +13,19 @@ const productOrder = [
   'FAS-4', 'FAS-6', 'FAS-8', 'FAS-11', 'FAS-11(HE)',
   'FAS-15', 'FAS-18', 'FAS-22', 'FAS-30', 'FAS-37', 'FAS-45', 'FAS-55', 'FAS-75',
   'FSG270A', 'FSG340A', 'FSG460A', 'FSG760A', 'FSG860A', 'FSG1060A',
+  'FASM08A', 'FASM11A', 'FASM15A', 'FASM18A', 'FASM22A', 'FASM30A', 'FASM37A',
 ];
 
 const productSeries = [
   { key: 'fas-small', title: 'FAS Series', range: '4-11 kW', family: 'FAS', min: 4, max: 11 },
   { key: 'fas-large', title: 'FAS Series', range: '15-250 kW', family: 'FAS', min: 15, max: 250 },
   { key: 'fsg', title: 'FSG Series', range: '45-185 kW', family: 'FSG', min: 45, max: 185 },
+  { key: 'fasm', title: 'FASM Series', range: '7.5-37 kW Permanent Magnet VFD', family: 'FASM', min: 7.5, max: 37 },
 ];
 
 function firstAirProducts(products: Product[]) {
   return products
-    .filter(product => /^(FAS[-\s]?\d+|FSG\d+)/i.test(product.model))
+    .filter(product => /^(FAS[-\s]?\d+|FASM\d+|FSG\d+)/i.test(product.model))
     .sort((a, b) => {
       const aIndex = productOrder.indexOf(a.model);
       const bIndex = productOrder.indexOf(b.model);
@@ -35,11 +37,13 @@ function firstAirProducts(products: Product[]) {
 }
 
 function productsForSeries(products: Product[], series: typeof productSeries[number]) {
-  return products.filter(product => (
-    product.model.toUpperCase().startsWith(series.family) &&
-    product.powerKw >= series.min &&
-    product.powerKw <= series.max
-  ));
+  return products.filter(product => {
+    const model = product.model.toUpperCase();
+    const familyMatches = series.family === 'FAS'
+      ? model.startsWith('FAS') && !model.startsWith('FASM')
+      : model.startsWith(series.family);
+    return familyMatches && product.powerKw >= series.min && product.powerKw <= series.max;
+  });
 }
 
 function ProductCard({ product, onNavigate }: { product: Product; onNavigate: (page: string, param?: string) => void }) {
@@ -165,20 +169,20 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
 
   return (
     <div className="min-h-screen bg-white pb-20">
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#fff8df] via-white to-red-50 border-b border-red-100 py-16 lg:py-20">
-        <div className="absolute left-8 top-8 h-20 w-20 rounded-full border-[16px] border-amber-300/30" />
-        <div className="absolute right-10 bottom-8 h-24 w-24 rounded-full border-[18px] border-red-300/25" />
-        <div className="max-w-[1280px] mx-auto px-5 lg:px-8 text-center">
-          <div className="relative text-red-600 font-black text-xs uppercase tracking-[0.25em] mb-3">Products</div>
-          <h1 className="brand-display relative text-4xl lg:text-5xl font-black text-slate-950">Our Product Range</h1>
-          <p className="mt-4 text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
-            Complete range of air-cooled single-stage rotary screw compressors from 3 kW to 37 kW, designed for heavy-duty industrial use.
+      <section className="page-hero relative overflow-hidden border-t-4 border-red-600 bg-gradient-to-br from-[#fff8df] via-[#ffd765] to-[#f9b916] py-16 lg:py-20">
+        <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full border-[38px] border-white/20" />
+        <div className="absolute bottom-8 right-[22%] h-16 w-16 rounded-full border-[12px] border-red-500/10" />
+        <div className="relative mx-auto max-w-[1400px] px-5 lg:px-8">
+          <div className="mb-3 text-xs font-black uppercase tracking-[0.25em] text-red-700">Products</div>
+          <h1 className="brand-display max-w-4xl text-4xl font-black text-slate-950 lg:text-6xl">Our Product Range</h1>
+          <p className="mt-4 max-w-3xl text-lg font-medium leading-relaxed text-slate-700">
+            Explore FAS and FSG industrial rotary screw compressors plus the FASM permanent-magnet variable-speed range from 7.5 kW to 37 kW.
           </p>
         </div>
       </section>
 
-      <section className="max-w-[1280px] mx-auto px-5 lg:px-8 py-10">
-        <div className="bg-white rounded-xl border border-red-100 shadow-xl shadow-red-950/5 p-4 mb-8">
+      <section className="relative z-10 mx-auto -mt-7 max-w-[1280px] px-5 pb-10 lg:px-8">
+        <div className="mb-7 rounded-xl border border-amber-300 bg-white p-4 shadow-xl shadow-amber-900/10">
           <div className="grid lg:grid-cols-[1fr_180px_180px_190px] gap-3">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />

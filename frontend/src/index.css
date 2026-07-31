@@ -74,3 +74,142 @@ html {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Yellow-forward product theme for public interior pages only. */
+.interior-theme {
+  --product-yellow: #f9b916;
+  --product-yellow-dark: #d99a00;
+  --product-yellow-pale: #fff8df;
+  --product-yellow-soft: #ffedaa;
+}
+
+.interior-theme main {
+  background: #fff8df;
+}
+
+.interior-theme main [class~="bg-red-50"],
+.interior-theme main [class~="bg-slate-50"] {
+  background-color: var(--product-yellow-pale) !important;
+}
+
+.interior-theme main [class~="bg-red-100"],
+.interior-theme main [class~="bg-red-200"],
+.interior-theme main [class~="bg-slate-100"] {
+  background-color: var(--product-yellow-soft) !important;
+}
+
+.interior-theme main [class~="border-red-50"],
+.interior-theme main [class~="border-red-100"],
+.interior-theme main [class~="border-red-200"],
+.interior-theme main [class~="border-red-300"],
+.interior-theme main [class~="border-slate-100"],
+.interior-theme main [class~="border-slate-200"] {
+  border-color: #efcf65 !important;
+}
+
+.interior-theme main [class~="border-red-400"],
+.interior-theme main [class~="border-red-500"],
+.interior-theme main [class~="border-red-600"] {
+  border-color: var(--product-yellow-dark) !important;
+}
+
+.interior-theme main [class~="from-red-50"],
+.interior-theme main [class~="from-slate-50"] {
+  --tw-gradient-from: var(--product-yellow-pale) var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgb(255 248 223 / 0) var(--tw-gradient-to-position) !important;
+}
+
+.interior-theme main [class~="to-red-50"],
+.interior-theme main [class~="to-slate-50"] {
+  --tw-gradient-to: #fff0b8 var(--tw-gradient-to-position) !important;
+}
+
+.interior-theme main section[class~="via-red-950"] {
+  color: #111827;
+  background-image: linear-gradient(120deg, #fff8df 0%, #f9b916 62%, #e5a400 100%) !important;
+  box-shadow: inset 0 4px 0 #dc2626;
+}
+
+.interior-theme main section[class~="via-red-950"] [class~="text-white"] {
+  color: #111827 !important;
+}
+
+.interior-theme main section[class~="via-red-950"] [class~="text-white/70"],
+.interior-theme main section[class~="via-red-950"] [class~="text-red-200/80"] {
+  color: #3f3f46 !important;
+}
+
+.interior-theme main section[class~="via-red-950"] [class~="text-amber-300"],
+.interior-theme main section[class~="via-red-950"] [class~="text-amber-400"] {
+  color: #991b1b !important;
+}
+
+.interior-theme main [class~="hover:bg-red-50"]:hover {
+  background-color: var(--product-yellow-pale) !important;
+}
+
+.interior-theme main [class~="hover:border-red-400"]:hover,
+.interior-theme main [class~="hover:border-red-500"]:hover {
+  border-color: var(--product-yellow-dark) !important;
+}
+
+/* Shared administration surfaces: warm canvas, white work areas, red danger states. */
+.admin-theme [class~="bg-slate-50"] {
+  background-color: #fff8df !important;
+}
+
+.admin-theme [class~="bg-slate-100"] {
+  background-color: #ffefbd !important;
+}
+
+.admin-theme [class~="border-slate-100"],
+.admin-theme [class~="border-slate-200"] {
+  border-color: #ead38a !important;
+}
+
+.admin-theme input:focus,
+.admin-theme select:focus,
+.admin-theme textarea:focus {
+  border-color: #d99a00 !important;
+  --tw-ring-color: rgb(249 185 22 / 0.25) !important;
+}
+
+/* One consistent hero system for every public interior page. */
+.interior-theme main .page-hero {
+  display: flex;
+  min-height: 360px;
+  align-items: center;
+  padding-top: 4rem !important;
+  padding-bottom: 4rem !important;
+  color: #0f172a;
+  border-top: 4px solid #dc2626 !important;
+  background-color: #f9b916 !important;
+  background-image: linear-gradient(120deg, #fff1bd 0%, #ffd45f 48%, #f9b000 100%) !important;
+}
+
+.interior-theme main .page-hero > div:not(.absolute) {
+  width: 100%;
+}
+
+.interior-theme main .page-hero [class~="text-white"] {
+  color: #0f172a !important;
+}
+
+.interior-theme main .page-hero [class~="text-white/70"],
+.interior-theme main .page-hero [class~="text-red-200/80"],
+.interior-theme main .page-hero [class~="text-red-100/85"] {
+  color: #475569 !important;
+}
+
+.interior-theme main .page-hero [class~="text-amber-300"],
+.interior-theme main .page-hero [class~="text-amber-400"] {
+  color: #b91c1c !important;
+}
+
+@media (max-width: 767px) {
+  .interior-theme main .page-hero {
+    min-height: 300px;
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
+}

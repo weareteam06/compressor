@@ -104,9 +104,9 @@ function WebsiteLayout({ config, children }: { config: SiteConfig; children: Rea
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className={`min-h-screen bg-white flex flex-col ${currentPage === 'home' ? 'home-theme' : 'interior-theme'}`}>
       <SeoHead config={config} />
-      <Navbar onNavigate={navigatePage} currentPage={currentPage} salesPhone={config.contact.salesPhone} />
+      <Navbar onNavigate={navigatePage} currentPage={currentPage} salesPhone={config.contact.salesPhone} social={config.social} />
       <main className="flex-1">{children}</main>
       <Footer config={config} onNavigate={navigatePage} />
       <FloatingWhatsAppButton config={config} />

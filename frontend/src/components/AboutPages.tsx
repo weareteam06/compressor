@@ -23,7 +23,7 @@ export default function AboutPages({ config, page, onNavigate }: Props) {
 
   return (
     <div className="min-h-screen pb-20 bg-slate-50">
-      <section className="bg-gradient-to-br from-slate-900 via-red-950 to-slate-900 py-20">
+      <section className="page-hero bg-gradient-to-br from-slate-900 via-red-950 to-slate-900 py-20">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <div className="text-amber-400 font-black text-xs uppercase tracking-widest mb-3">About Us</div>
           <h1 className="text-4xl lg:text-6xl font-black text-white tracking-tight">{pageTitle}</h1>

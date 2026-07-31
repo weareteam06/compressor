@@ -219,9 +219,8 @@ export default function ProductDetailPage({ productId, onNavigate, onContact }: 
                 />
               </div>
               <div>
-                <label className="mb-2 block text-xs font-black uppercase tracking-wider text-slate-700">Email *</label>
+                <label className="mb-2 block text-xs font-black uppercase tracking-wider text-slate-700">Email <span className="normal-case text-slate-400">(optional)</span></label>
                 <input
-                  required
                   type="email"
                   value={downloadForm.email}
                   onChange={event => setDownloadForm(form => ({ ...form, email: event.target.value }))}

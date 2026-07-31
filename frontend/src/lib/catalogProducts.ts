@@ -3,7 +3,7 @@ import type { Product } from '@/lib/data';
 type CatalogRow = {
   id: string;
   model: string;
-  series: 'FAS' | 'FSG';
+  series: 'FAS' | 'FSG' | 'FASM';
   powerKw: number;
   powerHp: number;
   pressureMin: number;
@@ -11,11 +11,15 @@ type CatalogRow = {
   flowRateCfm: string;
   imageUrl: string;
   brochureUrl: string;
+  dimensions?: string;
+  weightKg?: number;
+  outlet?: string;
 };
 
 const fasSmallCover = '/catalogs/FAS-4-11-cover.jpg';
 const fasLargeCover = '/catalogs/FAS-15-250KW-cover.jpg';
 const fsgCover = '/catalogs/FSG-45-185KW-cover.jpg';
+const fasmCover = '/catalogs/FASM-product.png';
 
 const rows: CatalogRow[] = [
   { id: 'fas4', model: 'FAS-4', series: 'FAS', powerKw: 4, powerHp: 5, pressureMin: 7, pressureMax: 16, flowRateCfm: '9-19', imageUrl: 'https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS-4-400x400.png', brochureUrl: '/catalogs/FAS-4-11.pdf' },
@@ -37,13 +41,22 @@ const rows: CatalogRow[] = [
   { id: 'fsg760a', model: 'FSG760A', series: 'FSG', powerKw: 110, powerHp: 150, pressureMin: 7, pressureMax: 10, flowRateCfm: '727-745', imageUrl: fsgCover, brochureUrl: '/catalogs/FSG-45-185KW.pdf' },
   { id: 'fsg860a', model: 'FSG860A', series: 'FSG', powerKw: 132, powerHp: 175, pressureMin: 7, pressureMax: 12, flowRateCfm: '646-890', imageUrl: fsgCover, brochureUrl: '/catalogs/FSG-45-185KW.pdf' },
   { id: 'fsg1060a', model: 'FSG1060A', series: 'FSG', powerKw: 185, powerHp: 250, pressureMin: 7, pressureMax: 12, flowRateCfm: '876-1130', imageUrl: fsgCover, brochureUrl: '/catalogs/FSG-45-185KW.pdf' },
+  { id: 'fasm08a', model: 'FASM08A', series: 'FASM', powerKw: 7.5, powerHp: 10, pressureMin: 5, pressureMax: 16, flowRateCfm: '11-44', imageUrl: fasmCover, brochureUrl: '/catalogs/FASM.pdf', dimensions: '680 × 680 × 1220 mm', weightKg: 245, outlet: 'G3/4' },
+  { id: 'fasm11a', model: 'FASM11A', series: 'FASM', powerKw: 11, powerHp: 15, pressureMin: 5, pressureMax: 16, flowRateCfm: '18-69', imageUrl: fasmCover, brochureUrl: '/catalogs/FASM.pdf', dimensions: '680 × 680 × 1240 mm', weightKg: 260, outlet: 'G3/4' },
+  { id: 'fasm15a', model: 'FASM15A', series: 'FASM', powerKw: 15, powerHp: 20, pressureMin: 5, pressureMax: 16, flowRateCfm: '24-101', imageUrl: fasmCover, brochureUrl: '/catalogs/FASM.pdf', dimensions: '680 × 680 × 1240 mm', weightKg: 270, outlet: 'G3/4' },
+  { id: 'fasm18a', model: 'FASM18A', series: 'FASM', powerKw: 18.5, powerHp: 25, pressureMin: 5, pressureMax: 16, flowRateCfm: '30-131', imageUrl: fasmCover, brochureUrl: '/catalogs/FASM.pdf', dimensions: '780 × 780 × 1300 mm', weightKg: 300, outlet: 'G1' },
+  { id: 'fasm22a', model: 'FASM22A', series: 'FASM', powerKw: 22, powerHp: 30, pressureMin: 5, pressureMax: 16, flowRateCfm: '39-155', imageUrl: fasmCover, brochureUrl: '/catalogs/FASM.pdf', dimensions: '780 × 780 × 1300 mm', weightKg: 320, outlet: 'G1' },
+  { id: 'fasm30a', model: 'FASM30A', series: 'FASM', powerKw: 30, powerHp: 40, pressureMin: 5, pressureMax: 16, flowRateCfm: '53-212', imageUrl: fasmCover, brochureUrl: '/catalogs/FASM.pdf', dimensions: '920 × 840 × 1422 mm', weightKg: 425, outlet: 'G1-1/4' },
+  { id: 'fasm37a', model: 'FASM37A', series: 'FASM', powerKw: 37, powerHp: 50, pressureMin: 5, pressureMax: 16, flowRateCfm: '66-263', imageUrl: fasmCover, brochureUrl: '/catalogs/FASM.pdf', dimensions: '920 × 840 × 1422 mm', weightKg: 450, outlet: 'G1-1/4' },
 ];
 
 export const catalogProducts: Product[] = rows.map(row => {
   const pressure = row.pressureMin === row.pressureMax
     ? `${row.pressureMax} kg/cm2(g)`
     : `${row.pressureMin}-${row.pressureMax} kg/cm2(g)`;
-  const applicationFit = row.series === 'FSG'
+  const applicationFit = row.series === 'FASM'
+    ? 'variable-demand manufacturing, automotive, electronics, packaging, pharmaceutical, food, CNC, and precision engineering'
+    : row.series === 'FSG'
     ? 'site work, maintenance, rental fleets, and high-capacity compressed air demand'
     : row.powerKw >= 30
       ? 'factory plant air, automotive, fabrication, packaging, and continuous production'
@@ -53,20 +66,34 @@ export const catalogProducts: Product[] = rows.map(row => {
   return {
     ...row,
     categoryId: 'cat-air-compressors',
-    name: 'Air cooled single stage rotary screw compressor',
+    name: row.series === 'FASM' ? 'Permanent magnet variable speed screw air compressor' : 'Air cooled single stage rotary screw compressor',
     description: `${row.model} is suited for ${applicationFit} with ${row.flowRateCfm} CFM free air delivery.`,
     longDescription: `The ${row.model} is an air cooled single stage rotary screw compressor for ${applicationFit}. It provides ${row.powerKw} kW power, ${row.flowRateCfm} CFM free air delivery, and ${pressure} working pressure.`,
     flowRateM3Min: '',
-    features: [
-      'Air cooled',
-      `Working pressure ${pressure}`,
-      `Free air delivery ${row.flowRateCfm} CFM`,
-      `Motor nominal power ${row.powerKw} kW`,
+    features: row.series === 'FASM' ? [
+      'Super IE4 permanent magnet motor',
+      'Integrated Variable Frequency Drive (VFD)',
+      '7-inch color touchscreen with smart monitoring',
+      'Coaxial direct transmission',
+      'Remote control and maintenance alerts',
+      'High-efficiency airend with bearing life up to 60,000 hours',
+    ] : [
+      'Air cooled', `Working pressure ${pressure}`, `Free air delivery ${row.flowRateCfm} CFM`, `Motor nominal power ${row.powerKw} kW`,
     ],
     specifications: [
       { label: 'Power', value: `${row.powerKw} kW` },
       { label: 'Free air delivery', value: `${row.flowRateCfm} CFM` },
       { label: 'Working pressure', value: pressure },
+      ...(row.series === 'FASM' ? [
+        { label: 'Motor technology', value: 'IE4 permanent magnet motor' },
+        { label: 'Starting method', value: 'Inverter (VFD)' },
+        { label: 'Voltage / frequency', value: '400 V / 50 Hz' },
+        { label: 'Transmission', value: 'Coaxial direct transmission' },
+        { label: 'Dimensions (L × W × H)', value: row.dimensions || '' },
+        { label: 'Weight', value: `${row.weightKg} kg` },
+        { label: 'Discharge outlet', value: row.outlet || '' },
+        { label: 'Cooler outlet temperature', value: 'Ambient temperature +15°C or less' },
+      ] : []),
     ],
     applications: ['Industrial air', 'Manufacturing', 'General plant air'],
   };

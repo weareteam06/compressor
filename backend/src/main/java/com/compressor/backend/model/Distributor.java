@@ -21,6 +21,8 @@ public class Distributor extends BaseEntity {
   public String state;
   @Column(columnDefinition = "TEXT")
   public String fullAddress;
+  public Double latitude;
+  public Double longitude;
   public String phone;
   public String email;
   @JdbcTypeCode(SqlTypes.JSON)

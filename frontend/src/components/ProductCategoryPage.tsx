@@ -33,7 +33,7 @@ export default function ProductCategoryPage({ slug, onNavigate, onViewProduct }:
 
   return (
     <div className="min-h-screen pb-20">
-      <section className="relative bg-gradient-to-br from-slate-900 via-red-950 to-slate-900 py-20 overflow-hidden">
+      <section className="page-hero relative bg-gradient-to-br from-slate-900 via-red-950 to-slate-900 py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <img src={category.imageUrl} alt="" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" />

@@ -68,11 +68,11 @@ export default function ContactPage({ config, preselectedProduct }: ContactPageP
 
   return (
     <div className="min-h-screen pb-20 bg-slate-50">
-      <section className="bg-slate-950 py-20">
+      <section className="page-hero border-t-4 border-red-600 bg-gradient-to-br from-[#fff8df] via-[#ffd765] to-[#f9b916] py-20">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
-          <div className="text-red-400 font-black text-xs uppercase tracking-widest mb-3">Contact Us</div>
-          <h1 className="text-4xl lg:text-6xl font-black text-white tracking-tight">Send Us A Message</h1>
-          <p className="mt-4 text-lg text-white/70 max-w-2xl">
+          <div className="text-red-700 font-black text-xs uppercase tracking-widest mb-3">Contact Us</div>
+          <h1 className="text-4xl lg:text-6xl font-black text-slate-950 tracking-tight">Send Us A Message</h1>
+          <p className="mt-4 text-lg font-medium text-slate-700 max-w-2xl">
             Use the form below for firstAir product inquiries, technical information, warranty questions, or service support.
           </p>
         </div>
@@ -166,15 +166,15 @@ export default function ContactPage({ config, preselectedProduct }: ContactPageP
           </div>
 
           <div className="lg:col-span-2 space-y-5">
-            <div className="bg-slate-950 rounded-sm p-8 text-white shadow-xl">
-              <Building2 className="w-8 h-8 text-red-400 mb-3" />
+            <div className="rounded-sm border border-amber-500 bg-[#f9b916] p-8 text-slate-950 shadow-xl shadow-amber-900/15">
+              <Building2 className="w-8 h-8 text-red-700 mb-3" />
               <h3 className="text-xl font-black mb-1">firstAir Compressor</h3>
-              <p className="text-red-300 text-sm mb-6 font-bold">{config.contact.headquarters.name}</p>
+              <p className="text-red-800 text-sm mb-6 font-bold">{config.contact.headquarters.name}</p>
 
               <div className="space-y-4">
-                <div className="flex items-start gap-3"><MapPin className="w-4 h-4 text-red-400 mt-1 flex-shrink-0" /><span className="text-sm text-white/80 leading-relaxed">{config.contact.headquarters.address}</span></div>
-                <div className="flex items-center gap-3"><Phone className="w-4 h-4 text-red-400 flex-shrink-0" /><div className="text-sm"><span className="text-white/50">Phone: </span><a href={`tel:${config.contact.factoryPhone}`} className="font-bold hover:text-red-300">{config.contact.factoryPhone}</a></div></div>
-                <div className="flex items-center gap-3"><Mail className="w-4 h-4 text-red-400 flex-shrink-0" /><a href={`mailto:${config.contact.email}`} className="text-sm font-bold hover:text-red-300">{config.contact.email}</a></div>
+                <div className="flex items-start gap-3"><MapPin className="w-4 h-4 text-red-700 mt-1 flex-shrink-0" /><span className="text-sm text-slate-700 leading-relaxed">{config.contact.headquarters.address}</span></div>
+                <div className="flex items-center gap-3"><Phone className="w-4 h-4 text-red-700 flex-shrink-0" /><div className="text-sm"><span className="text-slate-600">Phone: </span><a href={`tel:${config.contact.factoryPhone}`} className="font-bold hover:text-red-700">{config.contact.factoryPhone}</a></div></div>
+                <div className="flex items-center gap-3"><Mail className="w-4 h-4 text-red-700 flex-shrink-0" /><a href={`mailto:${config.contact.email}`} className="text-sm font-bold hover:text-red-700">{config.contact.email}</a></div>
               </div>
             </div>
 

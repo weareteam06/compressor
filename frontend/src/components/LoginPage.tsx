@@ -29,7 +29,7 @@ export default function LoginPage({ onLoginSuccess, onBack }: LoginPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-red-900 to-red-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-gradient-to-br from-[#fff8df] via-[#ffd765] to-[#f9b916] py-12 sm:px-6 lg:px-8">
       {/* Background patterns */}
       <div className="absolute inset-0 opacity-10 pointer-events-none">
         <div className="absolute inset-0" style={{
@@ -41,7 +41,7 @@ export default function LoginPage({ onLoginSuccess, onBack }: LoginPageProps) {
         {/* Back link */}
         <button 
           onClick={onBack}
-          className="absolute -top-12 left-0 flex items-center gap-2 text-sm font-semibold text-red-200 hover:text-white transition-colors group"
+          className="group absolute -top-12 left-0 flex items-center gap-2 text-sm font-bold text-slate-700 transition-colors hover:text-red-700"
         >
           <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
           Back to Public Website
@@ -49,17 +49,17 @@ export default function LoginPage({ onLoginSuccess, onBack }: LoginPageProps) {
 
         {/* Brand Header */}
         <div className="flex flex-col items-center">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center shadow-2xl shadow-red-500/30 border border-red-400/20 mb-4">
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-red-700 bg-red-600 shadow-2xl shadow-red-700/20">
             <ShieldCheck className="w-10 h-10 text-white" />
           </div>
-          <h2 className="text-3xl font-extrabold text-white tracking-tight">Backend Portal Login</h2>
-          <p className="mt-2 text-sm text-red-200/80">
+          <h2 className="text-3xl font-extrabold text-slate-950 tracking-tight">Backend Portal Login</h2>
+          <p className="mt-2 text-sm font-medium text-slate-700">
             Certified Administration & Content Management Layer
           </p>
         </div>
 
         {/* Form Container */}
-        <div className="mt-8 bg-white/10 backdrop-blur-xl py-8 px-4 shadow-2xl sm:rounded-3xl sm:px-10 border border-white/10">
+        <div className="mt-8 border border-amber-400 bg-white/95 py-8 px-4 shadow-2xl shadow-amber-900/15 backdrop-blur-xl sm:rounded-3xl sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
               <div className="p-4 rounded-2xl bg-red-500/20 border border-red-500/30 flex items-center gap-3 text-red-200 text-sm">
@@ -69,7 +69,7 @@ export default function LoginPage({ onLoginSuccess, onBack }: LoginPageProps) {
             )}
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-red-200 mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
                 Administrator Username
               </label>
               <div className="relative rounded-2xl overflow-hidden shadow-inner">
@@ -81,14 +81,14 @@ export default function LoginPage({ onLoginSuccess, onBack }: LoginPageProps) {
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="block w-full pl-11 pr-4 py-3.5 bg-white/90 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-400 font-medium text-sm rounded-2xl transition-all"
+                  className="block w-full rounded-2xl border border-amber-200 bg-white pl-11 pr-4 py-3.5 text-sm font-medium text-slate-900 placeholder-slate-400 transition-all focus:outline-none focus:ring-2 focus:ring-amber-400"
                   placeholder="Enter username..."
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-red-200 mb-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
                 Administrator Password
               </label>
               <div className="relative rounded-2xl overflow-hidden shadow-inner">
@@ -100,7 +100,7 @@ export default function LoginPage({ onLoginSuccess, onBack }: LoginPageProps) {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-11 pr-4 py-3.5 bg-white/90 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-400 font-medium text-sm rounded-2xl transition-all"
+                  className="block w-full rounded-2xl border border-amber-200 bg-white pl-11 pr-4 py-3.5 text-sm font-medium text-slate-900 placeholder-slate-400 transition-all focus:outline-none focus:ring-2 focus:ring-amber-400"
                   placeholder="••••••••"
                 />
               </div>
@@ -124,15 +124,15 @@ export default function LoginPage({ onLoginSuccess, onBack }: LoginPageProps) {
             </div>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-white/10 text-center">
-            <p className="text-xs font-semibold text-red-200 uppercase tracking-wider">
+          <div className="mt-8 border-t border-amber-200 pt-6 text-center">
+            <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
               Database-backed administrator access
             </p>
           </div>
         </div>
 
         <div className="mt-8 text-center">
-          <p className="text-xs font-medium text-red-300">
+          <p className="text-xs font-medium text-slate-700">
             Secure 256-bit AES Encryption Layer &copy; firstAir Compressed Air Systems
           </p>
         </div>

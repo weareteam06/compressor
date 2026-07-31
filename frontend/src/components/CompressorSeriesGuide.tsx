@@ -122,7 +122,7 @@ export default function CompressorSeriesGuide({ variant = 'cards', onNavigate }:
   }
 
   return (
-    <section className="bg-slate-50 py-16 lg:py-24">
+    <section className="border-y border-amber-200 bg-[#fff8df] py-16 lg:py-24">
       <div className="mx-auto max-w-[1180px] px-5 lg:px-8">
         <div className="mb-10 max-w-3xl">
           <div className="mb-3 text-xs font-black uppercase tracking-[0.25em] text-red-600">Selection Guide</div>
@@ -136,7 +136,7 @@ export default function CompressorSeriesGuide({ variant = 'cards', onNavigate }:
           {compressorSeriesGuide.map((item, index) => {
             const Icon = index === 0 ? Factory : index === 1 ? CompressorIcon : index === 2 ? Settings2 : index === 3 ? Gauge : Factory;
             return (
-              <article key={item.series} className="flex min-h-[260px] flex-col rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition-colors hover:border-red-200 hover:bg-red-50">
+              <article key={item.series} className="flex min-h-[260px] flex-col rounded-lg border border-amber-200 bg-white p-5 shadow-sm transition-colors hover:border-amber-400 hover:bg-amber-50">
                 <Icon className="mb-5 h-8 w-8 text-red-600" />
                 <h3 className="text-xl font-black text-slate-950">{item.series}</h3>
                 <p className="mt-2 text-sm font-semibold text-slate-600">{item.summary}</p>

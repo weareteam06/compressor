@@ -26,7 +26,7 @@ export default function ServicesPage({ onNavigate, slug }: Props) {
     const Icon = iconMap[current.iconName] || Wrench;
     return (
       <div className="min-h-screen bg-slate-50 pb-20">
-        <section className="relative bg-gradient-to-br from-slate-900 via-red-950 to-slate-900 py-20 overflow-hidden">
+        <section className="page-hero relative bg-gradient-to-br from-slate-900 via-red-950 to-slate-900 py-20 overflow-hidden">
           <div className="absolute inset-0 opacity-20"><img src={current.imageUrl} alt="" onError={(event) => { event.currentTarget.style.display = 'none'; }} className="w-full h-full object-cover" /><div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" /></div>
           <div className="relative max-w-[1400px] mx-auto px-4 lg:px-8">
             <button onClick={() => onNavigate('services')} className="flex items-center gap-2 text-amber-400 hover:text-amber-300 mb-6 text-sm font-bold">
@@ -88,7 +88,7 @@ export default function ServicesPage({ onNavigate, slug }: Props) {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
-      <section className="bg-gradient-to-br from-slate-900 via-red-950 to-slate-900 py-20">
+      <section className="page-hero bg-gradient-to-br from-slate-900 via-red-950 to-slate-900 py-20">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
           <div className="text-amber-400 font-black text-xs uppercase tracking-widest mb-3">Our Services</div>
           <h1 className="text-4xl lg:text-6xl font-black text-white tracking-tight">World-Class Service</h1>

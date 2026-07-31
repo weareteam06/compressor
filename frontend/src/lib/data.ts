@@ -1,4 +1,5 @@
 import { catalogProducts } from '@/lib/catalogProducts';
+import { targetIndustries } from '@/lib/targetIndustries';
 
 export interface ProductCategory {
   id: number;
@@ -108,6 +109,8 @@ export interface Distributor {
   city: string;
   state: string;
   fullAddress: string;
+  latitude?: number;
+  longitude?: number;
   phone: string;
   email: string;
   authorizedProducts: string[];
@@ -192,6 +195,7 @@ export interface SiteConfig {
     linkedin?: string;
     twitter?: string;
     youtube?: string;
+    instagram?: string;
   };
   pages?: {
     technical?: {
@@ -278,7 +282,7 @@ async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
 const jsonBody = (body: unknown) => JSON.stringify(body);
 
 function normalizedModel(model = '') {
-  return model.toUpperCase().replace(/^FAS[\s-]?/, 'FAS-').trim();
+  return model.toUpperCase().replace(/^FAS(?!M)[\s-]?/, 'FAS-').trim();
 }
 
 function catalogProductMatches(product: Product, id: number | string) {
@@ -292,7 +296,7 @@ function mergeCatalogProducts(apiProducts: Product[]) {
   const catalogKeys = new Set(catalogProducts.map(product => normalizedModel(product.model)));
   const nonCatalogProducts = apiProducts.filter(product => {
     const model = normalizedModel(product.model);
-    const isCatalogFamily = model.startsWith('FAS-') || model.startsWith('FSG');
+    const isCatalogFamily = model.startsWith('FAS-') || model.startsWith('FASM') || model.startsWith('FSG');
     return !isCatalogFamily || !catalogKeys.has(model);
   });
   return [...catalogProducts, ...nonCatalogProducts];
@@ -325,10 +329,15 @@ export function getProductById(id: number | string): Promise<Product | undefined
 }
 
 export function getIndustries(): Promise<Industry[]> {
-  return api('/industries');
+  return api<Industry[]>('/industries').then(apiIndustries => {
+    const targetSlugs = new Set(targetIndustries.map(industry => industry.slug));
+    return [...targetIndustries, ...apiIndustries.filter(industry => !targetSlugs.has(industry.slug))];
+  });
 }
 
 export function getIndustryBySlug(slug: string): Promise<Industry | undefined> {
+  const targetIndustry = targetIndustries.find(industry => industry.slug === slug);
+  if (targetIndustry) return Promise.resolve(targetIndustry);
   return api(`/industries/${encodeURIComponent(slug)}`);
 }
 

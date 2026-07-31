@@ -143,7 +143,7 @@ export default function FirstAirInfoPages({ page, config, onNavigate }: Props) {
 
   return (
     <div className="min-h-screen bg-white">
-      <section className="bg-gradient-to-br from-slate-950 via-red-950 to-red-700 py-20">
+      <section className="page-hero bg-gradient-to-br from-slate-950 via-red-950 to-red-700 py-20">
         <div className="max-w-[1180px] mx-auto px-5 lg:px-8">
           <div className="text-amber-300 font-black text-xs uppercase tracking-[0.25em] mb-3">{eyebrow}</div>
           <h1 className="brand-display text-4xl lg:text-6xl font-black text-white max-w-4xl">{title}</h1>
