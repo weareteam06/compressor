@@ -35,13 +35,30 @@ public class Product extends BaseEntity {
   public String imageUrl;
   public Double powerHp;
   public Double powerKw;
-  public Integer pressureMin;
-  public Integer pressureMax;
+  public Double pressureMin;
+  public Double pressureMax;
   public String flowRateCfm;
   public String flowRateM3Min;
+  public String motorPower;
+  public String motorType;
+  public String coolingMethod;
+  public String voltage;
+  public String frequency;
+  public String noiseLevel;
+  public String dimensions;
+  public String weight;
+  @JdbcTypeCode(SqlTypes.JSON)
+  @Column(columnDefinition = "json")
+  public List<String> categorySlugs = new ArrayList<>();
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(columnDefinition = "json")
   public List<String> features = new ArrayList<>();
+  @JdbcTypeCode(SqlTypes.JSON)
+  @Column(columnDefinition = "json")
+  public List<String> benefits = new ArrayList<>();
+  @JdbcTypeCode(SqlTypes.JSON)
+  @Column(columnDefinition = "json")
+  public List<String> imageUrls = new ArrayList<>();
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(columnDefinition = "json")
   public List<Map<String, String>> specifications = new ArrayList<>();
@@ -50,5 +67,7 @@ public class Product extends BaseEntity {
   public List<String> applications = new ArrayList<>();
   @Column(length = 1000)
   public String brochureUrl;
+  @Column(length = 1000)
+  public String datasheetUrl;
 
 }

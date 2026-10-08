@@ -9,64 +9,6 @@ interface SeoHeadProps {
 const SITE_URL = (import.meta.env.VITE_SITE_URL || 'https://www.firstaircompressor.com').replace(/\/$/, '');
 const DEFAULT_IMAGE = `${SITE_URL}/catalogs/FAS-15-250KW-cover.jpg`;
 
-const routeMeta: Record<string, { title: string; description: string; keywords: string }> = {
-  '/': {
-    title: 'firstAir Compressor | Rotary Screw Air Compressors',
-    description: 'firstAir Compressor offers air cooled single stage rotary screw compressors from 3 kW to 37 kW for industrial air applications.',
-    keywords: 'firstAir compressor, rotary screw compressor, air cooled compressor, industrial air compressor, FAS compressor',
-  },
-  '/products': {
-    title: 'Air Compressor Products | firstAir Compressor',
-    description: 'Compare firstAir FAS and FSG compressor models by power, pressure, CFM, brochure, and industrial application.',
-    keywords: 'compressor models, FAS compressor, FSG compressor, screw air compressor products, compressor catalogue',
-  },
-  '/technical-information': {
-    title: 'Technical Information | firstAir Compressor',
-    description: 'Review technical information for firstAir compressors including pressure range, CFM, kW, motor efficiency, and package options.',
-    keywords: 'compressor technical information, compressor CFM, compressor pressure, compressor kW, IE3 motor compressor',
-  },
-  '/warranty-information': {
-    title: 'Warranty Information | firstAir Compressor',
-    description: 'Learn about firstAir compressor warranty support, genuine parts, service practices, and maintenance records.',
-    keywords: 'compressor warranty, firstAir warranty, compressor service, genuine compressor parts',
-  },
-  '/industries': {
-    title: 'Industries Served | firstAir Compressor',
-    description: 'Explore industrial applications for firstAir rotary screw compressors across manufacturing, workshops, plant air, and service environments.',
-    keywords: 'industrial compressor applications, manufacturing compressor, workshop air compressor, plant air compressor',
-  },
-  '/services': {
-    title: 'Compressor Services | firstAir Compressor',
-    description: 'Contact firstAir for compressor consultation, installation, maintenance, parts, warranty, and service support.',
-    keywords: 'compressor service, compressor maintenance, compressor installation, compressor parts',
-  },
-  '/distributors': {
-    title: 'Dealer Network | firstAir Compressor',
-    description: 'Find firstAir dealer and distributor support for sales, service, parts, warranty, and compressor enquiries.',
-    keywords: 'compressor dealer, firstAir distributor, compressor sales, compressor service network',
-  },
-  '/contact': {
-    title: 'Contact firstAir Compressor | Sales and Service Enquiry',
-    description: 'Contact firstAir Compressor for product enquiries, quotations, technical information, service support, and dealer assistance.',
-    keywords: 'contact firstAir compressor, compressor quote, compressor sales enquiry, compressor service enquiry',
-  },
-  '/about/story': {
-    title: 'About firstAir Compressor',
-    description: 'Learn about firstAir Compressor and its practical range of air cooled single stage rotary screw compressors.',
-    keywords: 'about firstAir compressor, compressor company, rotary screw compressor manufacturer',
-  },
-  '/about/timeline': {
-    title: 'Company Timeline | firstAir Compressor',
-    description: 'View firstAir Compressor milestones and product information updates.',
-    keywords: 'firstAir timeline, compressor company history, firstAir milestones',
-  },
-  '/about/careers': {
-    title: 'Careers | firstAir Compressor',
-    description: 'Explore career opportunities with firstAir Compressor.',
-    keywords: 'firstAir careers, compressor jobs, engineering careers',
-  },
-};
-
 function humanize(value: string) {
   return value
     .replace(/[-_]+/g, ' ')
@@ -74,7 +16,7 @@ function humanize(value: string) {
     .trim();
 }
 
-function metaForPath(pathname: string) {
+function metaForPath(pathname: string, routeMeta: Record<string, { title: string; description: string; keywords: string }>) {
   if (routeMeta[pathname]) return routeMeta[pathname];
 
   if (pathname.startsWith('/products/category/')) {
@@ -156,27 +98,29 @@ function setJsonLd(id: string, data: unknown) {
 }
 
 export default function SeoHead({ config }: SeoHeadProps) {
+  const routeMeta = config.publicContent.routeMeta as Record<string, { title: string; description: string; keywords: string }>;
   const location = useLocation();
 
-  const meta = useMemo(() => metaForPath(location.pathname), [location.pathname]);
-  const canonical = `${SITE_URL}${location.pathname === '/' ? '/' : location.pathname}`;
+  const meta = useMemo(() => ({ ...metaForPath(location.pathname, routeMeta), ...(config.seo?.[location.pathname] || {}) }), [config.seo, routeMeta, location.pathname]);
+  const canonicalPath = meta.canonicalPath || (location.pathname === '/' ? '/' : location.pathname);
+  const canonical = `${SITE_URL}${canonicalPath}`;
 
   useEffect(() => {
     document.title = meta.title;
     setMeta('meta[name="description"]', { name: 'description', content: meta.description });
     setMeta('meta[name="keywords"]', { name: 'keywords', content: meta.keywords });
-    setMeta('meta[name="robots"]', { name: 'robots', content: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' });
+    setMeta('meta[name="robots"]', { name: 'robots', content: meta.noIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' });
     setMeta('meta[name="author"]', { name: 'author', content: config.company.name });
     setMeta('meta[property="og:type"]', { property: 'og:type', content: 'website' });
     setMeta('meta[property="og:site_name"]', { property: 'og:site_name', content: config.company.name });
     setMeta('meta[property="og:title"]', { property: 'og:title', content: meta.title });
     setMeta('meta[property="og:description"]', { property: 'og:description', content: meta.description });
     setMeta('meta[property="og:url"]', { property: 'og:url', content: canonical });
-    setMeta('meta[property="og:image"]', { property: 'og:image', content: DEFAULT_IMAGE });
+    setMeta('meta[property="og:image"]', { property: 'og:image', content: meta.imageUrl || DEFAULT_IMAGE });
     setMeta('meta[name="twitter:card"]', { name: 'twitter:card', content: 'summary_large_image' });
     setMeta('meta[name="twitter:title"]', { name: 'twitter:title', content: meta.title });
     setMeta('meta[name="twitter:description"]', { name: 'twitter:description', content: meta.description });
-    setMeta('meta[name="twitter:image"]', { name: 'twitter:image', content: DEFAULT_IMAGE });
+    setMeta('meta[name="twitter:image"]', { name: 'twitter:image', content: meta.imageUrl || DEFAULT_IMAGE });
     setLink('canonical', canonical);
 
     setJsonLd('organization-schema', {
@@ -184,7 +128,7 @@ export default function SeoHead({ config }: SeoHeadProps) {
       '@type': 'Organization',
       name: config.company.name,
       url: SITE_URL,
-      logo: 'https://www.firstaircompressor.com/wp-content/uploads/files/2024/logo.svg',
+      logo: config.navigation?.logoUrl,
       description: config.about.storyShort,
       email: config.contact.email,
       telephone: config.contact.salesPhone,

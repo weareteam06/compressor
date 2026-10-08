@@ -1,0 +1,412 @@
+{
+  "categoryDisplayNames": {
+    "oil-free-compressors": "string"
+  },
+  "heroSlides": [
+    {
+      "id": "string",
+      "series": "string",
+      "tab": "string",
+      "range": "string",
+      "title": "string",
+      "background": "string",
+      "preferredModels": [
+        "string"
+      ],
+      "intro": "string",
+      "highlights": [
+        "string"
+      ],
+      "imageUrl": "string"
+    }
+  ],
+  "faqs": [
+    [
+      "string"
+    ]
+  ],
+  "seriesGuide": [
+    {
+      "series": "string",
+      "capacity": "string",
+      "technology": "string",
+      "pressure": "string",
+      "positioning": "string",
+      "industries": "string",
+      "summary": "string"
+    }
+  ],
+  "infoPages": {
+    "about": {
+      "eyebrow": "string",
+      "title": "string",
+      "intro": "string",
+      "icon": "string",
+      "points": [
+        "string"
+      ]
+    },
+    "technical": {
+      "eyebrow": "string",
+      "title": "string",
+      "intro": "string",
+      "icon": "string",
+      "points": [
+        "string"
+      ]
+    },
+    "warranty": {
+      "eyebrow": "string",
+      "title": "string",
+      "intro": "string",
+      "icon": "string",
+      "points": [
+        "string"
+      ]
+    }
+  },
+  "technicalChecklist": [
+    {
+      "icon": "string",
+      "title": "string",
+      "text": "string"
+    }
+  ],
+  "brochures": [
+    {
+      "title": "string",
+      "detail": "string",
+      "href": "string"
+    }
+  ],
+  "technicalFaqs": [
+    {
+      "question": "string",
+      "answer": "string"
+    }
+  ],
+  "warrantyFaqs": [
+    {
+      "question": "string",
+      "answer": "string"
+    }
+  ],
+  "aboutHighlights": [
+    {
+      "icon": "string",
+      "title": "string",
+      "text": "string"
+    }
+  ],
+  "productOrder": [
+    "string"
+  ],
+  "productSeries": [
+    {
+      "key": "string",
+      "title": "string",
+      "range": "string",
+      "family": "string",
+      "min": "number",
+      "max": "number"
+    }
+  ],
+  "footer": {
+    "logoUrl": "string"
+  },
+  "productLinks": [
+    {
+      "label": "string",
+      "page": "string"
+    }
+  ],
+  "companyLinks": [
+    {
+      "label": "string",
+      "page": "string"
+    }
+  ],
+  "routeMeta": {
+    "/": {
+      "title": "string",
+      "description": "string",
+      "keywords": "string"
+    },
+    "/products": {
+      "title": "string",
+      "description": "string",
+      "keywords": "string"
+    },
+    "/technical-information": {
+      "title": "string",
+      "description": "string",
+      "keywords": "string"
+    },
+    "/warranty-information": {
+      "title": "string",
+      "description": "string",
+      "keywords": "string"
+    },
+    "/faq": {
+      "title": "string",
+      "description": "string",
+      "keywords": "string"
+    },
+    "/industries": {
+      "title": "string",
+      "description": "string",
+      "keywords": "string"
+    },
+    "/services": {
+      "title": "string",
+      "description": "string",
+      "keywords": "string"
+    },
+    "/distributors": {
+      "title": "string",
+      "description": "string",
+      "keywords": "string"
+    },
+    "/contact": {
+      "title": "string",
+      "description": "string",
+      "keywords": "string"
+    },
+    "/about/story": {
+      "title": "string",
+      "description": "string",
+      "keywords": "string"
+    },
+    "/about/timeline": {
+      "title": "string",
+      "description": "string",
+      "keywords": "string"
+    },
+    "/about/careers": {
+      "title": "string",
+      "description": "string",
+      "keywords": "string"
+    }
+  },
+  "productGuidance": [
+    {
+      "family": "string",
+      "minPowerKw": "number",
+      "duty": "string",
+      "bestFor": "string"
+    }
+  ],
+  "quickActions": [
+    {
+      "label": "string",
+      "prompt": "string",
+      "icon": "string"
+    }
+  ],
+  "chatbot": {
+    "greeting": "string",
+    "greetingLinks": [
+      {
+        "label": "string",
+        "page": "string"
+      }
+    ],
+    "thinking": "string",
+    "unavailable": "string",
+    "checking": "string",
+    "ready": "string",
+    "offline": "string"
+  },
+  "text": {
+    "FaqPage": {
+      "help_centre": "string",
+      "frequently_asked_questions": "string",
+      "quick_answers_about_selecting_operating_and_supporting_your_firstair_c": "string",
+      "still_need_help": "string",
+      "talk_to_our_team_about_your_compressor_requirement_service_or_technica": "string",
+      "contact_us": "string"
+    },
+    "FirstAirInfoPages": {
+      "firstair_compressor": "string",
+      "firstair_helps_buyers_compare_compressor_series_review_technical_data_": "string",
+      "view_products": "string",
+      "contact_us": "string",
+      "how_we_help": "string",
+      "clear_compressor_information_for_confident_buying": "string",
+      "the_about_us_page_should_do_more_than_introduce_the_brand_it_should_he": "string",
+      "before_selection": "string",
+      "what_buyers_should_check_first": "string",
+      "a_compressor_should_be_selected_from_the_real_site_requirement_not_onl": "string",
+      "catalog_downloads": "string",
+      "product_brochures": "string",
+      "request_technical_help": "string",
+      "open_pdf": "string",
+      "faq": "string"
+    },
+    "CompressorSeriesGuide": {
+      "selection_guide": "string",
+      "compare_compressor_series": "string",
+      "use_this_guide_to_understand_which_compressor_family_fits_your_capacit": "string",
+      "get_sizing_help": "string",
+      "capacity": "string",
+      "technology": "string",
+      "industries": "string",
+      "choose_the_right_compressor_series": "string",
+      "start_with_the_application_steady_demand_variable_demand_mobile_air_or": "string"
+    },
+    "HomePage": {
+      "0": "string",
+      "we_could_not_load_the_website_information": "string",
+      "please_check_that_the_application_server_is_running_then_refresh_this_": "string",
+      "try_again": "string"
+    },
+    "ProductHeroSlider": {
+      "series": "string",
+      "explore": "string",
+      "fsl_series": "string",
+      "contact_our_team_for_current_product_availability": "string"
+    },
+    "ProductsPage": {
+      "best_for": "string",
+      "power": "string",
+      "kw": "string",
+      "fad": "string",
+      "pressure": "string",
+      "view_details": "string",
+      "clear_filters": "string",
+      "showing_only_the": "string",
+      "product_series": "string",
+      "view_all_product_series": "string",
+      "showing": "string",
+      "of": "string",
+      "filter_by_series_power_pressure_and_airflow": "string",
+      "products": "string"
+    },
+    "ProductCategoryPage": {
+      "category_not_found": "string",
+      "back_to_all_products": "string",
+      "products": "string",
+      "series": "string",
+      "our_experts_can_help_you_select_the_perfect_compressor_for_your_specif": "string",
+      "talk_to_an_expert": "string",
+      "more_products_in_this_category_coming_soon_contact_us_for_current_avai": "string",
+      "series_2": "string",
+      "kw": "string",
+      "power": "string",
+      "cfm": "string",
+      "pressure": "string",
+      "view_details": "string"
+    },
+    "ProductDetailPage": {
+      "kw": "string",
+      "cfm": "string",
+      "bar": "string",
+      "kw_2": "string"
+    },
+    "IndustriesPage": {
+      "kw": "string",
+      "cfm": "string"
+    },
+    "NewsPage": {
+      "back_to_news": "string",
+      "by": "string",
+      "all_news": "string",
+      "contact_us": "string",
+      "news_insights": "string",
+      "product_launches_industry_events_technical_insights_and_company_news": "string",
+      "featured": "string",
+      "read_more": "string"
+    },
+    "DistributorsPage": {
+      "authorized_distribution_network": "string",
+      "find_certified_representatives_for_equipment_sales_package_guidance_in": "string",
+      "your_location": "string",
+      "search_radius": "string",
+      "results": "string",
+      "region": "string",
+      "category_filter": "string",
+      "use_my_location": "string",
+      "showing": "string",
+      "certified_representatives": "string",
+      "directions": "string",
+      "contact": "string",
+      "no_dealers_match_the_selected_filters": "string",
+      "interested_in_joining_the_firstair_network_connect_with_us_for_partner": "string",
+      "become_a_partner": "string"
+    },
+    "ContactPage": {
+      "your_inquiry_has_been_received_our_team_will_contact_you_within_24_hou": "string",
+      "submit_another_inquiry": "string",
+      "contact_enquiry": "string",
+      "product_enquiries_technical_information_warranty_questions_and_service": "string",
+      "fields_marked_with_are_required": "string",
+      "name": "string",
+      "company": "string",
+      "email": "string",
+      "phone": "string",
+      "how_can_we_help": "string",
+      "industry": "string",
+      "product_service_of_interest": "string",
+      "message": "string",
+      "sending": "string",
+      "submit_inquiry": "string",
+      "firstair_compressor": "string",
+      "phone_2": "string",
+      "regional_offices": "string"
+    },
+    "AboutPages": {
+      "we_have_been_a_trusted_name_in_the_compressed_air_industry_for_over_17": "string",
+      "explore_how_you_can_become_part_of_our_diverse_team_and_continue_the_l": "string",
+      "requirements": "string",
+      "apply_now": "string",
+      "no_current_openings_please_check_back_soon": "string",
+      "company_about": "string"
+    },
+    "Footer": {
+      "fixed_speed_fas_permanent_magnet_variable_speed_fasm_and_high_capacity": "string",
+      "4_250_kw": "string",
+      "5_16_bar": "string",
+      "up_to_1_130_cfm": "string",
+      "contact": "string",
+      "for_sales_amp_service_enquiry": "string",
+      "email": "string",
+      "info_fscurtis_in": "string",
+      "support_amp_enquiries": "string",
+      "view_contact_details": "string",
+      "all_rights_reserved": "string",
+      "faq": "string",
+      "warranty": "string",
+      "cookie_preferences": "string",
+      "admin_login": "string"
+    },
+    "NavbarOverlay": {
+      "dealer_login": "string",
+      "employee_login": "string"
+    },
+    "RequestModal": {
+      "request_received": "string",
+      "our_team_will_contact_you_about_your_requirement": "string",
+      "close": "string",
+      "urgency": "string",
+      "application_and_technical_details_optional": "string",
+      "requirement_details": "string",
+      "we_could_not_submit_your_request_your_details_are_saved_here_please_tr": "string"
+    },
+    "Chatbot": {
+      "intelligent_assistant": "string",
+      "call_sales": "string",
+      "email_team": "string"
+    },
+    "CookieConsentBanner": {
+      "your_privacy_choices": "string",
+      "we_use_essential_storage_to_make_this_site_work_with_your_permission_w": "string",
+      "manage_preferences": "string",
+      "reject_non_essential": "string",
+      "save_preferences": "string",
+      "accept_all": "string"
+    },
+    "DocumentDownload": {
+      "preview_pdf": "string"
+    }
+  }
+}

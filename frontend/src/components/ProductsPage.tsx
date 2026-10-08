@@ -1,31 +1,21 @@
+import { SiteText } from '@/lib/SiteText';
+import { usePublicContent, type PublicContent } from '@/lib/publicContent';
+import { productFamily, matchesCategory, categoryDisplay } from '@/lib/productSelection';
 ﻿import { useEffect, useMemo, useState } from 'react';
-import { Activity, ArrowRight, Gauge, Search, SlidersHorizontal } from 'lucide-react';
-import type { Product } from '@/lib/data';
-import { getProducts } from '@/lib/data';
-import { bestFor, cfmMax, dutyFor, pressureLabel } from '@/lib/productGuidance';
-import CompressorIcon from '@/components/CompressorIcon';
+import { Activity, ArrowRight, Gauge, RotateCcw, Search, SlidersHorizontal, Zap } from 'lucide-react';
+import type { Product, ProductCategory } from '@/lib/data';
+import { getProductCategories, getProducts } from '@/lib/data';
+import { cfmMax, pressureLabel } from '@/lib/productGuidance';
+import { defaultPageContent, usePageContent } from '@/lib/pageContent';
+import { useSearchParams } from 'react-router-dom';
 
 interface ProductsPageProps {
   onNavigate: (page: string, param?: string) => void;
 }
 
-const productOrder = [
-  'FAS-4', 'FAS-6', 'FAS-8', 'FAS-11', 'FAS-11(HE)',
-  'FAS-15', 'FAS-18', 'FAS-22', 'FAS-30', 'FAS-37', 'FAS-45', 'FAS-55', 'FAS-75',
-  'FSG270A', 'FSG340A', 'FSG460A', 'FSG760A', 'FSG860A', 'FSG1060A',
-  'FASM08A', 'FASM11A', 'FASM15A', 'FASM18A', 'FASM22A', 'FASM30A', 'FASM37A',
-];
-
-const productSeries = [
-  { key: 'fas-small', title: 'FAS Series', range: '4-11 kW', family: 'FAS', min: 4, max: 11 },
-  { key: 'fas-large', title: 'FAS Series', range: '15-250 kW', family: 'FAS', min: 15, max: 250 },
-  { key: 'fsg', title: 'FSG Series', range: '45-185 kW', family: 'FSG', min: 45, max: 185 },
-  { key: 'fasm', title: 'FASM Series', range: '7.5-37 kW Permanent Magnet VFD', family: 'FASM', min: 7.5, max: 37 },
-];
-
-function firstAirProducts(products: Product[]) {
+function firstAirProducts(products: Product[], productOrder: string[]) {
   return products
-    .filter(product => /^(FAS[-\s]?\d+|FASM\d+|FSG\d+)/i.test(product.model))
+    .filter(product => Boolean(product.model))
     .sort((a, b) => {
       const aIndex = productOrder.indexOf(a.model);
       const bIndex = productOrder.indexOf(b.model);
@@ -36,18 +26,17 @@ function firstAirProducts(products: Product[]) {
     });
 }
 
-function productsForSeries(products: Product[], series: typeof productSeries[number]) {
+function productsForSeries(products: Product[], series: PublicContent['productSeries'][number]) {
   return products.filter(product => {
-    const model = product.model.toUpperCase();
-    const familyMatches = series.family === 'FAS'
-      ? model.startsWith('FAS') && !model.startsWith('FASM')
-      : model.startsWith(series.family);
+    const familyMatches = productFamily(product) === series.family;
     return familyMatches && product.powerKw >= series.min && product.powerKw <= series.max;
   });
 }
 
 function ProductCard({ product, onNavigate }: { product: Product; onNavigate: (page: string, param?: string) => void }) {
-  const badge = dutyFor(product);
+  const { productGuidance } = usePublicContent();
+  const guidance = productGuidance.find(rule => (!rule.family || rule.family === productFamily(product)) && product.powerKw >= rule.minPowerKw);
+  const badge = guidance?.duty || '';
   return (
     <article className="group bg-white border border-red-100 rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-red-950/10 hover:border-amber-300 transition-all">
       <button onClick={() => onNavigate('product-detail', String(product.id))} className="w-full text-left">
@@ -59,31 +48,30 @@ function ProductCard({ product, onNavigate }: { product: Product; onNavigate: (p
           }`}>
             {badge}
           </span>
-          <img src={product.imageUrl} alt={product.model} onError={(event) => { event.currentTarget.style.display = 'none'; }} className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" />
+          <img src={product.imageUrl} alt={product.model} onError={(event) => { event.currentTarget.style.display = 'none'; }} className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
         </div>
 
         <div className="p-6">
           <h3 className="brand-display font-black text-slate-950 text-2xl group-hover:text-red-700 transition-colors leading-tight">{product.model}</h3>
           <p className="text-sm text-slate-600 mt-2 leading-relaxed line-clamp-2">{product.description}</p>
-          <div className="mt-3 rounded-md bg-amber-50 px-3 py-2 text-xs font-bold leading-relaxed text-amber-900">
-            Best for: {bestFor(product)}
+          <div className="mt-3 rounded-md bg-amber-50 px-3 py-2 text-xs font-bold leading-relaxed text-amber-900">{" "}<SiteText section="ProductsPage" name="best_for" />{" "}{guidance?.bestFor || ''}
           </div>
 
           <div className="grid grid-cols-3 gap-3 mt-5 text-sm">
             <div className="rounded-lg bg-slate-50 p-3">
-              <CompressorIcon className="w-4 h-4 text-red-600 mb-1" />
-              <div className="font-black text-slate-950">{product.powerKw} kW</div>
-              <div className="text-[9px] font-black uppercase tracking-widest text-slate-500">Power</div>
+              <Zap className="mb-1 h-4 w-4 text-red-600" />
+              <div className="text-[9px] font-black uppercase tracking-widest text-slate-500"><SiteText section="ProductsPage" name="power" /></div>
+              <div className="mt-1 font-black text-slate-950">{product.powerKw}{" "}<SiteText section="ProductsPage" name="kw" /></div>
             </div>
             <div className="rounded-lg bg-slate-50 p-3">
-              <Activity className="w-4 h-4 text-red-600 mb-1" />
-              <div className="font-black text-slate-950">{product.flowRateCfm}</div>
-              <div className="text-[9px] font-black uppercase tracking-widest text-slate-500">CFM</div>
+              <Activity className="mb-1 h-4 w-4 text-red-600" />
+              <div className="text-[9px] font-black uppercase tracking-widest text-slate-500"><SiteText section="ProductsPage" name="fad" /></div>
+              <div className="mt-1 font-black text-slate-950">{product.flowRateCfm}</div>
             </div>
             <div className="rounded-lg bg-slate-50 p-3">
-              <Gauge className="w-4 h-4 text-red-600 mb-1" />
-              <div className="font-black text-slate-950">{pressureLabel(product)}</div>
-              <div className="text-[9px] font-black uppercase tracking-widest text-slate-500">Pressure</div>
+              <Gauge className="mb-1 h-4 w-4 text-red-600" />
+              <div className="text-[9px] font-black uppercase tracking-widest text-slate-500"><SiteText section="ProductsPage" name="pressure" /></div>
+              <div className="mt-1 font-black text-slate-950">{pressureLabel(product)}</div>
             </div>
           </div>
 
@@ -96,8 +84,7 @@ function ProductCard({ product, onNavigate }: { product: Product; onNavigate: (p
             ))}
           </ul>
 
-          <div className="mt-5 flex items-center justify-center gap-2 bg-red-600 hover:bg-slate-950 text-white rounded-lg px-5 py-3 font-black text-sm transition-colors shadow-lg shadow-red-600/15">
-            View Details <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+          <div className="mt-5 flex items-center justify-center gap-2 bg-red-600 hover:bg-slate-950 text-white rounded-lg px-5 py-3 font-black text-sm transition-colors shadow-lg shadow-red-600/15">{" "}<SiteText section="ProductsPage" name="view_details" />{" "}<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </div>
         </div>
       </button>
@@ -106,26 +93,47 @@ function ProductCard({ product, onNavigate }: { product: Product; onNavigate: (p
 }
 
 export default function ProductsPage({ onNavigate }: ProductsPageProps) {
+  const { productOrder, productSeries, categoryDisplayNames } = usePublicContent();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const copy = usePageContent('products', defaultPageContent.products);
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<ProductCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
-  const [application, setApplication] = useState('All Industries');
-  const [duty, setDuty] = useState('All Products');
-  const [sort, setSort] = useState('power-desc');
+  const [seriesFilter, setSeriesFilter] = useState('all');
+  const [powerFilter, setPowerFilter] = useState('all');
+  const [pressureFilter, setPressureFilter] = useState('all');
+  const [sort, setSort] = useState('power-asc');
   const [quickFilter, setQuickFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
 
   useEffect(() => {
-    getProducts().then(p => {
-      setProducts(firstAirProducts(p));
+    Promise.all([getProducts(), getProductCategories()]).then(([p, categoryItems]) => {
+      setProducts(firstAirProducts(p, productOrder));
+      setCategories(categoryItems.map(category => categoryDisplay(category, categoryDisplayNames)));
       setLoading(false);
     });
   }, []);
 
-  const applications = useMemo(() => {
-    const values = new Set<string>();
-    products.forEach(product => product.applications.forEach(app => values.add(app)));
-    return ['All Industries', ...Array.from(values).sort()];
-  }, [products]);
+  useEffect(() => {
+    if (loading) return;
+    const requestedSeries = searchParams.get('series')?.toLowerCase();
+    setSeriesFilter(requestedSeries && ['fas', 'fas-small', 'fasm', 'fsl', 'fsg'].includes(requestedSeries) ? requestedSeries : 'all');
+    setQuery(searchParams.get('q') || '');
+    setCategoryFilter('all'); setPowerFilter('all'); setPressureFilter('all'); setQuickFilter('all');
+  }, [loading, searchParams]);
+
+  useEffect(() => {
+    if (loading) return;
+    const requestedSeries = searchParams.get('series')?.toLowerCase();
+    if (!requestedSeries || requestedSeries !== seriesFilter) return;
+    const firstFrame = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.getElementById(`series-${requestedSeries}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    return () => cancelAnimationFrame(firstFrame);
+  }, [loading, searchParams, seriesFilter]);
 
   const filtered = useMemo(() => {
     const text = query.trim().toLowerCase();
@@ -141,66 +149,107 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
           ...product.applications,
           ...product.features,
         ].join(' ').toLowerCase().includes(text);
-        const matchesApplication = application === 'All Industries' || product.applications.includes(application);
-        const matchesDuty = duty === 'All Products' || dutyFor(product) === duty;
+        const matchesSeries = seriesFilter === 'all'
+          || (seriesFilter === 'fas-small' && productFamily(product) === 'FAS' && product.powerKw <= 11)
+          || productFamily(product).toLowerCase() === seriesFilter;
+        const selectedCategory = categories.find(category => category.slug === categoryFilter);
+        const matchesProductCategory = matchesCategory(product, selectedCategory);
+        const matchesPower = powerFilter === 'all'
+          || (powerFilter === 'up-to-11' && product.powerKw <= 11)
+          || (powerFilter === '15-37' && product.powerKw >= 15 && product.powerKw <= 37)
+          || (powerFilter === '45-75' && product.powerKw >= 45 && product.powerKw <= 75)
+          || (powerFilter === '110-plus' && product.powerKw >= 110);
+        const requiredPressure = pressureFilter === 'all' ? 0 : Number(pressureFilter);
+        const matchesPressure = product.pressureMax >= requiredPressure;
         const matchesQuickFilter =
           quickFilter === 'all' ||
           (quickFilter === 'compact' && product.powerKw <= 11) ||
           (quickFilter === 'plant-air' && product.powerKw >= 15 && product.powerKw <= 55) ||
           (quickFilter === 'high-flow' && cfmMax(product) >= 250) ||
           (quickFilter === 'wide-pressure' && product.pressureMax >= 13);
-        return matchesText && matchesApplication && matchesDuty && matchesQuickFilter;
+        return matchesText && matchesProductCategory && matchesSeries && matchesPower && matchesPressure && matchesQuickFilter;
       })
       .sort((a, b) => {
-        if (sort === 'power-asc') return a.powerKw - b.powerKw;
+        if (sort === 'power-asc') return a.powerKw - b.powerKw || a.model.localeCompare(b.model, undefined, { numeric: true });
         if (sort === 'flow-desc') return cfmMax(b) - cfmMax(a);
         if (sort === 'flow-asc') return cfmMax(a) - cfmMax(b);
         if (sort === 'model') return a.model.localeCompare(b.model, undefined, { numeric: true });
         return b.powerKw - a.powerKw;
       });
-  }, [application, duty, products, query, quickFilter, sort]);
+  }, [categories, categoryFilter, powerFilter, pressureFilter, products, query, quickFilter, seriesFilter, sort]);
+
+  const hasActiveFilters = Boolean(query) || categoryFilter !== 'all' || seriesFilter !== 'all' || powerFilter !== 'all' || pressureFilter !== 'all' || quickFilter !== 'all';
+  const clearFilters = () => {
+    setQuery('');
+    setSeriesFilter('all');
+    setPowerFilter('all');
+    setPressureFilter('all');
+    setQuickFilter('all');
+    setCategoryFilter('all');
+  };
+  const showAllProducts = () => {
+    clearFilters();
+    setSearchParams({}, { replace: true });
+  };
 
   const grouped = useMemo(() => productSeries.map(series => ({
     ...series,
     products: productsForSeries(filtered, series),
-  })), [filtered]);
+  })), [filtered, productSeries]);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="w-12 h-12 border-4 border-red-100 border-t-red-600 rounded-full animate-spin" /></div>;
 
   return (
     <div className="min-h-screen bg-white pb-20">
-      <section className="page-hero relative overflow-hidden border-t-4 border-red-600 bg-gradient-to-br from-[#fff8df] via-[#ffd765] to-[#f9b916] py-16 lg:py-20">
-        <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full border-[38px] border-white/20" />
-        <div className="absolute bottom-8 right-[22%] h-16 w-16 rounded-full border-[12px] border-red-500/10" />
-        <div className="relative mx-auto max-w-[1400px] px-5 lg:px-8">
-          <div className="mb-3 text-xs font-black uppercase tracking-[0.25em] text-red-700">Products</div>
-          <h1 className="brand-display max-w-4xl text-4xl font-black text-slate-950 lg:text-6xl">Our Product Range</h1>
-          <p className="mt-4 max-w-3xl text-lg font-medium leading-relaxed text-slate-700">
-            Explore FAS and FSG industrial rotary screw compressors plus the FASM permanent-magnet variable-speed range from 7.5 kW to 37 kW.
-          </p>
+      <section className="relative z-10 mx-auto max-w-[1280px] px-5 pb-10 pt-10 lg:px-8">
+        <div className="mb-6 border-b border-slate-200 pb-6">
+          <div><div className="text-xs font-black uppercase tracking-[0.22em] text-red-700">{String(copy.heroEyebrow)}</div><h1 className="brand-display mt-2 text-3xl font-black text-slate-950 sm:text-4xl">{String(copy.heroTitle)}</h1><p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">{String(copy.heroIntro)}</p></div>
         </div>
-      </section>
 
-      <section className="relative z-10 mx-auto -mt-7 max-w-[1280px] px-5 pb-10 lg:px-8">
-        <div className="mb-7 rounded-xl border border-amber-300 bg-white p-4 shadow-xl shadow-amber-900/10">
-          <div className="grid lg:grid-cols-[1fr_180px_180px_190px] gap-3">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+        <div className="mb-3 rounded-xl border border-slate-200 bg-slate-50/70 p-3 sm:p-4">
+          <div className="mb-3 flex items-center gap-2 text-slate-700"><SlidersHorizontal className="h-4 w-4 text-red-600" /><h2 className="text-xs font-bold">{String(copy.selectionTitle)}</h2></div>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[1.5fr_1.2fr_1.1fr_1fr_1fr_1fr]">
+            <div className="relative min-w-0 sm:col-span-2 lg:col-span-1">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input
                 value={query}
                 onChange={event => setQuery(event.target.value)}
-                placeholder="Search products, features, power, flow..."
-                className="w-full h-13 pl-12 pr-4 rounded-lg border border-red-100 focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none text-sm font-medium"
+                placeholder={String(copy.searchPlaceholder)}
+                aria-label={String(copy.searchPlaceholder)}
+                className="h-10 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 text-xs font-medium text-slate-800 outline-none transition focus:border-red-400 focus:ring-2 focus:ring-red-100"
               />
             </div>
-            <select value={application} onChange={event => setApplication(event.target.value)} className="h-13 px-4 rounded-lg border border-red-100 focus:border-red-500 outline-none text-sm font-bold bg-white">
-              {applications.map(item => <option key={item} value={item}>{item}</option>)}
+            <select aria-label="Compressor type" value={categoryFilter} onChange={event => { clearFilters(); setCategoryFilter(event.target.value); }} className="h-10 w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 outline-none transition focus:border-red-400 focus:ring-2 focus:ring-red-100">
+              <option value="all">{String(copy.allCategoriesLabel)}</option>
+              {categories.filter(category => !category.external).map(category => <option key={category.id} value={category.slug}>{category.name}</option>)}
             </select>
-            <select value={duty} onChange={event => setDuty(event.target.value)} className="h-13 px-4 rounded-lg border border-red-100 focus:border-red-500 outline-none text-sm font-bold bg-white">
-              {['All Products', 'Small workshop', 'Small manufacturing', 'Factory plant air', 'Heavy duty industrial'].map(item => <option key={item} value={item}>{item}</option>)}
+            <select aria-label="Compressor series" value={seriesFilter} onChange={event => {
+              const value = event.target.value;
+              if (value === 'all') showAllProducts();
+              else setSearchParams({ series: value }, { replace: true });
+            }} className="h-10 w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 outline-none transition focus:border-red-400 focus:ring-2 focus:ring-red-100">
+              <option value="all">All series</option>
+              <option value="fas">FAS · Fixed speed</option>
+              <option value="fasm">FASM · Variable speed</option>
+              <option value="fsl">FSL · Low pressure</option>
+              <option value="fsg">FSG · High capacity</option>
             </select>
-            <select value={sort} onChange={event => setSort(event.target.value)} className="h-13 px-4 rounded-lg border border-red-100 focus:border-red-500 outline-none text-sm font-bold bg-white">
-              <option value="power-desc">Sort by Power</option>
+            <select aria-label="Motor power range" value={powerFilter} onChange={event => setPowerFilter(event.target.value)} className="h-10 w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 outline-none transition focus:border-red-400 focus:ring-2 focus:ring-red-100">
+              <option value="all">All power ranges</option>
+              <option value="up-to-11">4–11 kW</option>
+              <option value="15-37">15–37 kW</option>
+              <option value="45-75">45–75 kW</option>
+              <option value="110-plus">110–250 kW</option>
+            </select>
+            <select aria-label="Required working pressure" value={pressureFilter} onChange={event => setPressureFilter(event.target.value)} className="h-10 w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 outline-none transition focus:border-red-400 focus:ring-2 focus:ring-red-100">
+              <option value="all">All pressures</option>
+              <option value="8">8 bar capable</option>
+              <option value="10">10 bar capable</option>
+              <option value="12">12 bar capable</option>
+              <option value="16">16 bar capable</option>
+            </select>
+            <select aria-label="Sort products" value={sort} onChange={event => setSort(event.target.value)} className="h-10 w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 outline-none transition focus:border-red-400 focus:ring-2 focus:ring-red-100">
+              <option value="power-desc">Highest power</option>
               <option value="power-asc">Lowest Power</option>
               <option value="flow-desc">Highest Flow</option>
               <option value="flow-asc">Lowest Flow</option>
@@ -209,13 +258,13 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
           </div>
         </div>
 
-        <div className="mb-8 flex flex-wrap gap-2">
+        <div className="mb-8 flex flex-wrap items-center gap-2">
           {[
             { id: 'all', label: 'All models' },
-            { id: 'compact', label: 'Small workshop' },
-            { id: 'plant-air', label: 'Factory plant air' },
-            { id: 'high-flow', label: 'High CFM' },
-            { id: 'wide-pressure', label: 'Higher pressure' },
+            { id: 'compact', label: 'Up to 11 kW' },
+            { id: 'plant-air', label: '15–55 kW' },
+            { id: 'high-flow', label: '250+ CFM' },
+            { id: 'wide-pressure', label: '13–16 bar capable' },
           ].map(item => (
             <button
               key={item.id}
@@ -229,25 +278,32 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
               {item.label}
             </button>
           ))}
+          {hasActiveFilters && <button type="button" onClick={showAllProducts} className="ml-auto inline-flex items-center gap-2 rounded-md px-4 py-2 text-xs font-black uppercase tracking-wide text-slate-600 hover:bg-slate-100 hover:text-red-700"><RotateCcw className="h-3.5 w-3.5" /><SiteText section="ProductsPage" name="clear_filters" /></button>}
         </div>
 
-        <div className="flex items-center justify-between mb-6">
-          <div className="text-sm text-slate-500 font-bold">Showing {filtered.length} of {products.length} products</div>
-          <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500 font-bold">
-            <SlidersHorizontal className="w-4 h-4 text-red-600" />
-            Filter by model, application, duty, CFM, and pressure
+        {seriesFilter !== 'all' && (
+          <div className="mb-6 flex flex-col gap-3 border-l-4 border-red-600 bg-red-50 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm font-bold text-slate-800"><SiteText section="ProductsPage" name="showing_only_the" />{" "}{seriesFilter === 'fas-small' ? 'FAS 4–11 kW' : seriesFilter.toUpperCase()}{" "}<SiteText section="ProductsPage" name="product_series" /></p>
+            <button type="button" onClick={showAllProducts} className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-wide text-red-700 hover:text-red-800">
+              <RotateCcw className="h-4 w-4" /><SiteText section="ProductsPage" name="view_all_product_series" />{" "}</button>
           </div>
+        )}
+
+        <div className="flex items-center justify-between mb-6">
+          <div className="text-sm text-slate-500 font-bold"><SiteText section="ProductsPage" name="showing" />{" "}{filtered.length}{" "}<SiteText section="ProductsPage" name="of" />{" "}{products.length} {String(copy.resultsLabel)}</div>
+          <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500 font-bold">
+            <SlidersHorizontal className="w-4 h-4 text-red-600" />{" "}<SiteText section="ProductsPage" name="filter_by_series_power_pressure_and_airflow" />{" "}</div>
         </div>
 
         <div className="space-y-12">
           {grouped.filter(series => series.products.length > 0).map(series => (
-            <section key={series.key} className="scroll-mt-28">
+            <section id={`series-${series.family.toLowerCase()}`} key={series.key} className="scroll-mt-32">
               <div className="mb-5 flex flex-col gap-2 border-l-4 border-red-600 bg-slate-50 px-5 py-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <div className="text-xs font-black uppercase tracking-[0.22em] text-red-700">{series.title}</div>
                   <h2 className="brand-display text-3xl font-black text-slate-950">{series.range}</h2>
                 </div>
-                <div className="text-sm font-bold text-slate-500">{series.products.length} products</div>
+                <div className="text-sm font-bold text-slate-500">{series.products.length}{" "}<SiteText section="ProductsPage" name="products" /></div>
               </div>
               <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-7">
                 {series.products.map(product => (
@@ -261,7 +317,8 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
         {filtered.length === 0 && (
           <div className="text-center py-16 border border-slate-200 rounded-xl">
             <Search className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-            <p className="text-slate-500 font-medium">No products match the selected filters.</p>
+            <p className="text-slate-500 font-medium">{String(copy.emptyText)}</p>
+            <button type="button" onClick={showAllProducts} className="mt-5 inline-flex items-center gap-2 rounded-md bg-red-600 px-5 py-3 text-sm font-bold text-white hover:bg-red-700"><RotateCcw className="h-4 w-4" />{String(copy.clearFiltersLabel)}</button>
           </div>
         )}
       </section>

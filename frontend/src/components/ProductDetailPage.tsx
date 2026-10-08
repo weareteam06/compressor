@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Activity, ArrowLeft, ArrowRight, CheckCircle2, Download, Gauge, Phone, Settings2, ShieldCheck, X } from 'lucide-react';
+import { SiteText } from '@/lib/SiteText';
+import { useRequest } from './RequestModal';
+import { useEffect, useMemo, useState } from 'react';
+import { Activity, ArrowLeft, ArrowRight, CheckCircle2, Download, Gauge, Images, Phone, Settings2, Zap } from 'lucide-react';
 import type { Product } from '@/lib/data';
-import { getProductById, getProducts, submitLead } from '@/lib/data';
-import { bestFor, buyerDescription, maintenanceNotes, optionalAccessories, pressureLabel, similarProducts } from '@/lib/productGuidance';
+import { getProductById, getProducts } from '@/lib/data';
 import CompressorIcon from '@/components/CompressorIcon';
+import { defaultPageContent, usePageContent } from '@/lib/pageContent';
 
 interface Props {
   productId: string;
@@ -11,239 +13,95 @@ interface Props {
   onContact: (product: string) => void;
 }
 
+type DocumentRequest = { url: string; label: string };
+
 export default function ProductDetailPage({ productId, onNavigate, onContact }: Props) {
+  const openRequest = useRequest();
+  const copy = usePageContent('productDetail', defaultPageContent.productDetail);
   const [product, setProduct] = useState<Product | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [downloadOpen, setDownloadOpen] = useState(false);
-  const [downloadSubmitting, setDownloadSubmitting] = useState(false);
-  const [downloadForm, setDownloadForm] = useState({ name: '', email: '', phone: '' });
+  const [selectedImage, setSelectedImage] = useState('');
+
 
   useEffect(() => {
-    Promise.all([getProductById(productId), getProducts()]).then(([p, allProducts]) => {
-      setProduct(p || null);
+    setLoading(true);
+    Promise.all([getProductById(productId), getProducts()]).then(([item, allProducts]) => {
+      setProduct(item || null);
       setProducts(allProducts);
+      setSelectedImage(item?.imageUrls?.[0] || item?.imageUrl || '');
       setLoading(false);
     });
   }, [productId]);
 
+  const related = useMemo(() => product
+    ? products.filter(item => item.id !== product.id && item.series === product.series).sort((a, b) => Math.abs(a.powerKw - product.powerKw) - Math.abs(b.powerKw - product.powerKw)).slice(0, 3)
+    : [], [product, products]);
+  const availableModels = useMemo(() => product ? products.filter(item => item.series === product.series).sort((a, b) => a.powerKw - b.powerKw) : [], [product, products]);
+
   if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="w-12 h-12 border-4 border-red-100 border-t-red-600 rounded-full animate-spin" /></div>;
-  if (!product) return <div className="min-h-screen flex items-center justify-center"><p className="text-slate-500">Product not found.</p></div>;
+  if (!product) return <div className="min-h-screen flex items-center justify-center"><p className="text-slate-500">{String(copy.notFoundText)}</p></div>;
 
-  const pressure = pressureLabel(product);
-  const visibleFeatures = product.features.filter(feature => !/dimension|height|width|length|weight/i.test(feature));
-  const brochureUrl = product.brochureUrl || '/catalogs/FAS-15-250KW.pdf';
-  const similar = similarProducts(product, products);
+  const gallery = Array.from(new Set([product.imageUrl, ...(product.imageUrls || [])].filter(Boolean)));
+  const coreSpecifications = [
+    { label: String(copy.powerLabel), value: `${product.powerKw} kW / ${product.powerHp} HP`, icon: CompressorIcon },
+    { label: String(copy.fadLabel), value: [product.flowRateCfm && `${product.flowRateCfm} CFM`, product.flowRateM3Min && `${product.flowRateM3Min} m³/min`].filter(Boolean).join(' / '), icon: Activity },
+    { label: String(copy.pressureLabel), value: `${product.pressureMin}–${product.pressureMax} bar`, icon: Gauge },
+    { label: String(copy.motorLabel), value: product.motorType || product.motorPower, icon: Zap },
+  ].filter(item => item.value);
+  const technicalRows = [
+    ...product.specifications,
+    { label: 'Voltage', value: product.voltage || '' }, { label: 'Frequency', value: product.frequency || '' },
+    { label: 'Noise Level', value: product.noiseLevel || '' }, { label: 'Dimensions', value: product.dimensions || '' },
+    { label: 'Weight', value: product.weight || '' },
+  ].filter((item, index, rows) => item.value && rows.findIndex(other => other.label.toLowerCase() === item.label.toLowerCase()) === index);
 
-  const handleDownloadSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setDownloadSubmitting(true);
-    const downloadWindow = window.open('', '_blank');
-    try {
-      await submitLead({
-        name: downloadForm.name,
-        email: downloadForm.email,
-        phone: downloadForm.phone,
-        company: '',
-        type: 'General Inquiry',
-        source: 'Brochure Download',
-        productOfInterest: product.model,
-        message: `Catalog download request for ${product.model}. Brochure: ${brochureUrl}`,
-      });
-      if (downloadWindow) downloadWindow.location.href = brochureUrl;
-      else window.location.href = brochureUrl;
-      setDownloadOpen(false);
-      setDownloadForm({ name: '', email: '', phone: '' });
-    } finally {
-      setDownloadSubmitting(false);
-    }
-  };
+  const setDocumentRequest = (document: DocumentRequest) => openRequest({ title: document.label, product: product.model, type: 'General Inquiry', source: `${document.label} Download`, downloadUrl: document.url });
 
-  return (
-    <div className="min-h-screen bg-white pb-20">
-      <div className="border-b border-red-100 bg-white">
-        <div className="max-w-[1180px] mx-auto px-5 lg:px-8 py-5">
-          <button onClick={() => onNavigate('products')} className="flex items-center gap-2 text-red-700 hover:text-red-800 text-sm font-black uppercase tracking-wide">
-            <ArrowLeft className="w-4 h-4" /> Back to Products
-          </button>
+  return <div className="min-h-screen bg-white pb-24">
+    <div className="border-b border-slate-200"><div className="mx-auto max-w-[1180px] px-5 py-5 lg:px-8"><button onClick={() => onNavigate('products')} className="flex items-center gap-2 text-sm font-black uppercase tracking-wide text-red-700"><ArrowLeft className="h-4 w-4" />{String(copy.backLabel)}</button></div></div>
+
+    <main className="mx-auto max-w-[1180px] px-5 py-12 lg:px-8">
+      <section className="grid items-start gap-12 lg:grid-cols-[0.95fr_1.05fr]">
+        <div>
+          <div className="relative overflow-hidden border border-red-100 bg-gradient-to-br from-amber-50 via-white to-red-50 p-8 shadow-lg"><img src={selectedImage || product.imageUrl} alt={`${product.model} industrial air compressor`} className="aspect-square w-full object-contain" /></div>
+          {gallery.length > 1 && <div className="mt-3 grid grid-cols-5 gap-2">{gallery.map(url => <button key={url} onClick={() => setSelectedImage(url)} className={`border p-2 ${selectedImage === url ? 'border-red-600' : 'border-slate-200'}`}><img src={url} alt={`${product.model} product view`} loading="lazy" className="aspect-square w-full object-contain" /></button>)}</div>}
         </div>
-      </div>
-
-      <section className="max-w-[1180px] mx-auto px-5 lg:px-8 py-14">
-        <div className="grid lg:grid-cols-[0.95fr_1.05fr] gap-12 items-start">
-          <div className="relative bg-gradient-to-br from-[#fff7df] via-white to-red-50 border border-red-100 rounded-xl p-8 overflow-hidden shadow-xl shadow-red-950/5">
-            <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-amber-400 via-red-500 to-slate-950" />
-            <img src={product.imageUrl} alt={product.model} className="w-full aspect-square object-contain" />
-          </div>
-
-          <div>
-            <div className="text-red-600 font-black text-xs uppercase tracking-[0.25em] mb-3">Air Compressors</div>
-            <h1 className="brand-display text-5xl lg:text-6xl font-black">{product.model}</h1>
-            <p className="text-lg text-slate-600 mt-5 leading-relaxed">{buyerDescription(product)}</p>
-            <div className="mt-5 rounded-lg border border-amber-200 bg-amber-50 p-4">
-              <div className="text-xs font-black uppercase tracking-widest text-amber-700">Best For</div>
-              <div className="mt-1 text-sm font-bold leading-relaxed text-amber-950">{bestFor(product)}</div>
-            </div>
-
-            <h2 className="text-2xl font-black mt-10 mb-5">Data sheet</h2>
-            <div className="grid sm:grid-cols-3 gap-3">
-              {[
-                { icon: CompressorIcon, label: 'Power', value: `${product.powerKw} kW` },
-                { icon: Activity, label: 'CFM', value: product.flowRateCfm },
-                { icon: Gauge, label: 'Working pressure', value: pressure },
-              ].filter(item => item.value).map(({ icon: Icon, label, value }) => (
-                <div key={label} className="border border-red-100 p-4 rounded-xl bg-white shadow-sm">
-                  <Icon className="w-5 h-5 text-red-600 mb-3" />
-                  <div className="text-xs font-black uppercase tracking-widest text-slate-500">{label}</div>
-                  <div className="font-black text-lg mt-1">{value}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <button onClick={() => setDownloadOpen(true)} className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-black rounded-xl uppercase tracking-wide text-sm shadow-lg shadow-red-600/20">
-                <Download className="w-4 h-4" /> Download Brochure
-              </button>
-              <button onClick={() => onContact(product.model)} className="inline-flex items-center gap-2 px-6 py-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black rounded-xl uppercase tracking-wide text-sm shadow-lg shadow-amber-300/25">
-                <Phone className="w-4 h-4" /> Reach Us
-              </button>
-            </div>
+        <div>
+          <div className="text-xs font-black uppercase tracking-[0.25em] text-red-700">{product.series} · {String(copy.eyebrow)}</div>
+          <h1 className="brand-display mt-3 text-5xl font-black text-slate-950 lg:text-6xl">{product.model}</h1>
+          <h2 className="mt-3 text-xl font-bold text-slate-800">{product.name}</h2>
+          <p className="mt-5 text-base leading-7 text-slate-600">{product.longDescription || product.description}</p>
+          <div className="mt-8 grid gap-3 sm:grid-cols-2">{coreSpecifications.map(({ label, value, icon: Icon }) => <div key={label} className="border border-slate-200 p-4"><Icon className="mb-2 h-5 w-5 text-red-600"/><div className="text-[10px] font-black uppercase tracking-widest text-slate-500">{label}</div><div className="mt-1 font-black text-slate-950">{value}</div></div>)}</div>
+          <div className="mt-7 flex flex-wrap gap-3">
+            {product.datasheetUrl && <button onClick={() => setDocumentRequest({ url: product.datasheetUrl!, label: String(copy.datasheetLabel) })} className="inline-flex items-center gap-2 bg-slate-950 px-5 py-3 text-sm font-black uppercase tracking-wide text-white"><Download className="h-4 w-4" />{String(copy.datasheetLabel)}</button>}
+            {product.brochureUrl && <button onClick={() => setDocumentRequest({ url: product.brochureUrl!, label: String(copy.brochureLabel) })} className="inline-flex items-center gap-2 bg-red-600 px-5 py-3 text-sm font-black uppercase tracking-wide text-white"><Download className="h-4 w-4" />{String(copy.brochureLabel)}</button>}
+            <button onClick={() => onContact(product.model)} className="inline-flex items-center gap-2 bg-amber-400 px-5 py-3 text-sm font-black uppercase tracking-wide text-slate-950"><Phone className="h-4 w-4" />{String(copy.expertButton)}</button>
           </div>
         </div>
-
-        <div className="mt-14">
-          <div className="grid gap-7 lg:grid-cols-3">
-            <div className="rounded-xl border border-red-100 p-8 shadow-sm lg:col-span-2">
-              <h2 className="text-2xl font-black mb-6">More Info</h2>
-              <div className="space-y-3">
-              {visibleFeatures.map((feature, index) => (
-                <div key={index} className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-sm text-slate-700 font-medium leading-relaxed">{feature}</span>
-                </div>
-              ))}
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-8">
-              <Settings2 className="mb-5 h-8 w-8 text-red-600" />
-              <h2 className="text-2xl font-black">Optional Accessories</h2>
-              <div className="mt-5 space-y-3">
-                {optionalAccessories(product).map(item => (
-                  <div key={item} className="flex items-start gap-3">
-                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />
-                    <span className="text-sm font-medium leading-relaxed text-slate-700">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-7 grid gap-7 lg:grid-cols-2">
-          <div className="rounded-xl border border-slate-200 p-8 shadow-sm">
-            <ShieldCheck className="mb-5 h-8 w-8 text-red-600" />
-            <h2 className="text-2xl font-black">Maintenance Notes</h2>
-            <div className="mt-5 space-y-3">
-              {maintenanceNotes(product).map(item => (
-                <div key={item} className="flex items-start gap-3">
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />
-                  <span className="text-sm font-medium leading-relaxed text-slate-700">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-red-100 bg-red-50 p-8">
-            <Phone className="mb-5 h-8 w-8 text-red-600" />
-            <h2 className="text-2xl font-black text-slate-950">Ask for sizing help</h2>
-            <p className="mt-3 text-sm leading-relaxed text-slate-700">
-              Share your required pressure, estimated CFM, working hours, and application. The team can confirm the right model, receiver, dryer, and filter package.
-            </p>
-            <button onClick={() => onContact(product.model)} className="mt-6 inline-flex items-center gap-2 rounded-md bg-red-600 px-5 py-3 text-sm font-black uppercase tracking-wide text-white hover:bg-red-700">
-              Get Quote <ArrowRight className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-
-        {similar.length > 0 && (
-          <div className="mt-14">
-            <h2 className="brand-display mb-6 text-3xl font-black text-slate-950">Similar Models</h2>
-            <div className="grid gap-5 md:grid-cols-3">
-              {similar.map(item => (
-                <button key={item.id} onClick={() => onNavigate('product-detail', String(item.id))} className="group rounded-xl border border-slate-200 bg-white p-5 text-left shadow-sm transition-colors hover:border-red-300 hover:bg-red-50">
-                  <div className="flex h-36 items-center justify-center rounded-lg bg-white">
-                    <img src={item.imageUrl} alt={item.model} className="max-h-32 max-w-full object-contain" />
-                  </div>
-                  <h3 className="mt-4 text-xl font-black text-slate-950 group-hover:text-red-700">{item.model}</h3>
-                  <p className="mt-1 text-sm font-semibold text-slate-600">{item.powerKw} kW | {item.flowRateCfm} CFM</p>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
       </section>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 shadow-2xl backdrop-blur lg:hidden">
-        <div className="grid grid-cols-2 gap-2">
-          <button onClick={() => setDownloadOpen(true)} className="flex items-center justify-center gap-2 rounded-md bg-slate-950 px-4 py-3 text-xs font-black uppercase tracking-wide text-white">
-            <Download className="h-4 w-4" /> Brochure
-          </button>
-          <button onClick={() => onContact(product.model)} className="flex items-center justify-center gap-2 rounded-md bg-red-600 px-4 py-3 text-xs font-black uppercase tracking-wide text-white">
-            <Phone className="h-4 w-4" /> Get Quote
-          </button>
-        </div>
-      </div>
+      <section className="mt-16 grid gap-7 lg:grid-cols-2">
+        <ContentList title={String(copy.featuresTitle)} items={product.features} emptyText={String(copy.emptySectionText)} />
+        <ContentList title={String(copy.benefitsTitle)} items={product.benefits || []} emptyText={String(copy.emptySectionText)} />
+      </section>
 
-      {downloadOpen && (
-        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-950/70 px-4 py-6 backdrop-blur-sm">
-          <div className="w-full max-w-lg bg-white shadow-2xl">
-            <div className="flex items-start justify-between border-b border-slate-200 p-6">
-              <div>
-                <div className="text-xs font-black uppercase tracking-[0.22em] text-red-700">Download Brochure</div>
-                <h2 className="mt-1 text-2xl font-black text-slate-950">{product.model} Catalog</h2>
-              </div>
-              <button onClick={() => setDownloadOpen(false)} className="flex h-10 w-10 items-center justify-center rounded-sm bg-slate-100 text-slate-700 hover:bg-slate-200" aria-label="Close download form">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
+      <section className="mt-14"><div className="mb-6 flex items-center gap-3"><Settings2 className="h-7 w-7 text-red-600"/><h2 className="brand-display text-3xl font-black">{String(copy.specificationsTitle)}</h2></div><div className="overflow-hidden border border-slate-200"><div className="grid sm:grid-cols-2">{technicalRows.map((row, index) => <div key={`${row.label}-${index}`} className="grid grid-cols-[minmax(120px,0.8fr)_1.2fr] border-b border-slate-200 px-5 py-4 odd:bg-slate-50 sm:[&:nth-last-child(-n+2)]:border-b-0"><div className="text-xs font-black uppercase tracking-wide text-slate-500">{row.label}</div><div className="font-bold text-slate-950">{row.value}</div></div>)}</div></div></section>
 
-            <form onSubmit={handleDownloadSubmit} className="space-y-5 p-6">
-              <div>
-                <label className="mb-2 block text-xs font-black uppercase tracking-wider text-slate-700">Name *</label>
-                <input
-                  required
-                  value={downloadForm.name}
-                  onChange={event => setDownloadForm(form => ({ ...form, name: event.target.value }))}
-                  className="w-full rounded-sm border border-slate-200 px-4 py-3 text-sm font-semibold outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100"
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-xs font-black uppercase tracking-wider text-slate-700">Email <span className="normal-case text-slate-400">(optional)</span></label>
-                <input
-                  type="email"
-                  value={downloadForm.email}
-                  onChange={event => setDownloadForm(form => ({ ...form, email: event.target.value }))}
-                  className="w-full rounded-sm border border-slate-200 px-4 py-3 text-sm font-semibold outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100"
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-xs font-black uppercase tracking-wider text-slate-700">Mobile Number *</label>
-                <input
-                  required
-                  type="tel"
-                  value={downloadForm.phone}
-                  onChange={event => setDownloadForm(form => ({ ...form, phone: event.target.value }))}
-                  className="w-full rounded-sm border border-slate-200 px-4 py-3 text-sm font-semibold outline-none focus:border-red-500 focus:ring-2 focus:ring-red-100"
-                />
-              </div>
-              <button type="submit" disabled={downloadSubmitting} className="flex w-full items-center justify-center gap-2 bg-red-600 px-6 py-4 text-sm font-black uppercase tracking-wide text-white hover:bg-red-700 disabled:opacity-60">
-                {downloadSubmitting ? 'Preparing Download...' : <><Download className="h-4 w-4" /> Download Catalog</>}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+      <section className="mt-14 grid gap-7 lg:grid-cols-[1.2fr_0.8fr]">
+        <div><h2 className="brand-display mb-6 text-3xl font-black">{String(copy.modelsTitle)}</h2><div className="overflow-x-auto border border-slate-200"><table className="w-full min-w-[560px] text-left text-sm"><thead className="bg-slate-950 text-white"><tr><th className="p-4">{String(copy.modelLabel)}</th><th className="p-4">{String(copy.powerLabel)}</th><th className="p-4">{String(copy.fadLabel)}</th><th className="p-4">{String(copy.pressureLabel)}</th></tr></thead><tbody>{availableModels.map(item => <tr key={item.id} className="cursor-pointer border-b border-slate-200 hover:bg-red-50" onClick={() => onNavigate('product-detail', String(item.id))}><td className="p-4 font-black text-red-700">{item.model}</td><td className="p-4">{item.powerKw}{" "}<SiteText section="ProductDetailPage" name="kw" /></td><td className="p-4">{item.flowRateCfm}{" "}<SiteText section="ProductDetailPage" name="cfm" /></td><td className="p-4">{item.pressureMin}–{item.pressureMax}{" "}<SiteText section="ProductDetailPage" name="bar" /></td></tr>)}</tbody></table></div></div>
+        <ContentList title={String(copy.applicationsTitle)} items={product.applications} emptyText={String(copy.emptySectionText)} />
+      </section>
+
+      <section id="product-enquiry" className="mt-16 scroll-mt-28 bg-slate-950 p-7 text-white lg:p-10"><div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]"><div><div className="text-xs font-black uppercase tracking-[0.22em] text-amber-400">{String(copy.enquiryEyebrow)}</div><h2 className="brand-display mt-3 text-3xl font-black">{String(copy.enquiryTitle)}</h2><p className="mt-4 text-sm leading-6 text-slate-300">{String(copy.enquiryText)}</p><button onClick={() => onContact(product.model)} className="mt-5 inline-flex items-center gap-2 text-sm font-black text-amber-400">{String(copy.fullEnquiryLabel)} <ArrowRight className="h-4 w-4"/></button></div></div></section>
+
+      {related.length > 0 && <section className="mt-16"><h2 className="brand-display mb-6 text-3xl font-black">{String(copy.relatedTitle)}</h2><div className="grid gap-5 md:grid-cols-3">{related.map(item => <button key={item.id} onClick={() => onNavigate('product-detail', String(item.id))} className="border border-slate-200 p-5 text-left hover:border-red-400"><img src={item.imageUrl} alt={item.model} loading="lazy" className="h-36 w-full object-contain"/><h3 className="mt-4 text-xl font-black">{item.model}</h3><p className="text-sm text-slate-600">{item.powerKw}{" "}<SiteText section="ProductDetailPage" name="kw_2" />{" "}{item.flowRateCfm}{" "}<SiteText section="ProductDetailPage" name="cfm" /></p></button>)}</div></section>}
+    </main>
+
+
+  </div>;
+}
+
+function ContentList({ title, items, emptyText }: { title: string; items: string[]; emptyText: string }) {
+  return <div className="border border-slate-200 p-7"><h2 className="brand-display mb-5 text-2xl font-black">{title}</h2>{items.length > 0 ? <div className="space-y-3">{items.map(item => <div key={item} className="flex gap-3"><CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-red-600"/><span className="text-sm leading-6 text-slate-700">{item}</span></div>)}</div> : <div className="flex items-center gap-2 text-sm text-slate-400"><Images className="h-4 w-4"/>{emptyText}</div>}</div>;
 }

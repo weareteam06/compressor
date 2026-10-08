@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
+import { useSiteConfig } from '@/lib/siteConfig';
+import { validateSiteConfig } from '@/lib/configValidation';
 import {
   Plus, Trash2, X, LayoutDashboard, Package, FileText, LogOut, Building2, Users,
   CheckCircle2, AlertCircle, ChevronRight, Globe, Briefcase, Newspaper, Calendar,
-  Cog, MapPin, Wrench, Edit2, Search, Bell, ShieldCheck,
+  MapPin, Wrench, Edit2, Search, Bell, ShieldCheck, Images, Upload, Video, Layers,
 } from 'lucide-react';
 import type {
   Product, ProductCategory, Industry, Service, NewsArticle, TimelineEvent,
-  JobOpening, Distributor, Lead, SiteConfig, UserAccount, UserPayload
+  JobOpening, Distributor, Lead, SiteConfig, UserAccount, UserPayload, MediaAsset, CmsAudit, NavigationItem
 } from '@/lib/data';
+import { defaultPageContent } from '@/lib/pageContent';
 import {
   adminGetProducts, adminCreateProduct, adminUpdateProduct, adminDeleteProduct,
   adminGetCategories, adminCreateCategory, adminUpdateCategory, adminDeleteCategory,
@@ -19,7 +22,8 @@ import {
   adminGetDistributors, adminCreateDistributor, adminUpdateDistributor, adminDeleteDistributor,
   adminGetLeads, adminUpdateLead, adminDeleteLead,
   adminGetUsers, adminCreateUser, adminUpdateUser, adminDeleteUser, getCurrentUser,
-  getSiteConfig, adminUpdateSiteConfig,
+  adminGetMedia, adminUploadMedia, adminDeleteMedia,
+  getSiteConfig, adminUpdateSiteConfig, adminGetCmsAudit,
 } from '@/lib/data';
 
 interface Props {
@@ -29,8 +33,26 @@ interface Props {
   onNavigateFrontend: (page: string) => void;
 }
 
-export type Tab = 'dashboard' | 'users' | 'categories' | 'products' | 'industries' | 'services' | 'news' | 'timeline' | 'careers' | 'distributors' | 'leads' | 'settings';
+export type Tab = 'dashboard' | 'users' | 'categories' | 'products' | 'brochures' | 'industries' | 'services' | 'news' | 'timeline' | 'careers' | 'distributors' | 'leads' | 'media' | 'settings';
 export type AdminTab = Tab;
+
+const adminProductSeries = [
+  { key: 'fas-small', title: 'FAS Series', range: '4–11 kW', family: 'FAS', min: 4, max: 11 },
+  { key: 'fas-large', title: 'FAS Series', range: '15–250 kW', family: 'FAS', min: 15, max: 250 },
+  { key: 'fsl', title: 'FSL / FSLV Series', range: '30–220 kW · Low Pressure', family: 'FSL', min: 30, max: 220 },
+  { key: 'fsg', title: 'FSG Series', range: '45–185 kW', family: 'FSG', min: 45, max: 185 },
+  { key: 'fasm', title: 'FASM Series', range: '7.5–37 kW · Permanent Magnet VFD', family: 'FASM', min: 7.5, max: 37 },
+];
+
+function productsInAdminSeries(products: Product[], series: typeof adminProductSeries[number]) {
+  return products.filter(product => {
+    const model = product.model.toUpperCase();
+    const familyMatches = series.family === 'FAS'
+      ? model.startsWith('FAS') && !model.startsWith('FASM')
+      : model.startsWith(series.family);
+    return familyMatches && product.powerKw >= series.min && product.powerKw <= series.max;
+  }).sort((left, right) => left.powerKw - right.powerKw || left.model.localeCompare(right.model));
+}
 
 // Form modal helpers
 const FormField = ({ label, value, onChange, type = 'text', textarea, required, options }: any) => (
@@ -85,6 +107,175 @@ const JsonArrayField = ({ label, value, onChange }: { label: string; value: unkn
   );
 };
 
+const JsonObjectField = ({ label, value, onChange }: { label: string; value: Record<string, unknown>; onChange: (value: Record<string, unknown>) => void }) => {
+  const [text, setText] = useState(() => JSON.stringify(value, null, 2));
+  const [error, setError] = useState('');
+  const apply = () => {
+    try {
+      const parsed = JSON.parse(text);
+      if (!parsed || Array.isArray(parsed) || typeof parsed !== 'object') throw new Error();
+      setError(''); onChange(parsed);
+    } catch { setError('Enter a valid JSON object.'); }
+  };
+  return <div><label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-700">{label}</label><textarea rows={12} value={text} onChange={e => setText(e.target.value)} onBlur={apply} className={`w-full rounded-lg border px-3 py-2.5 font-mono text-xs outline-none ${error ? 'border-red-400' : 'border-slate-200 focus:border-red-500'}`} /><p className={`mt-1 text-[10px] ${error ? 'font-bold text-red-600' : 'text-slate-400'}`}>{error || 'Edit values only; keep field names unchanged. Changes apply after Save All Settings.'}</p></div>;
+};
+
+const MediaField = ({ label, value, kind = 'image', media, onChange, onUpload }: {
+  label: string;
+  value: string;
+  kind?: 'image' | 'video' | 'document';
+  media: MediaAsset[];
+  onChange: (value: string) => void;
+  onUpload: (file: File) => Promise<MediaAsset | undefined>;
+}) => {
+  const [showLibrary, setShowLibrary] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const choices = media.filter(asset => asset.mediaType === kind);
+
+  const upload = async (file?: File) => {
+    if (!file) return;
+    setUploading(true);
+    const asset = await onUpload(file);
+    if (asset) onChange(asset.url);
+    setUploading(false);
+  };
+
+  return (
+    <div className="sm:col-span-2">
+      <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-700">{label}</label>
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <div className="flex min-h-48 items-center justify-center bg-slate-100">
+          {!value ? (
+            <div className="text-center text-slate-400">{kind === 'video' ? <Video className="mx-auto h-10 w-10" /> : kind === 'document' ? <FileText className="mx-auto h-10 w-10" /> : <Images className="mx-auto h-10 w-10" />}<p className="mt-2 text-xs font-bold">No {kind} selected</p></div>
+          ) : kind === 'video' ? (
+            <video key={value} src={value} controls muted preload="metadata" className="max-h-64 w-full object-contain" />
+          ) : kind === 'document' ? (
+            <a href={value} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-3 p-8 text-red-700 hover:text-red-800"><FileText className="h-14 w-14" /><span className="text-sm font-black">Open selected PDF brochure</span></a>
+          ) : (
+            <img src={value} alt="Selected media preview" className="max-h-64 max-w-full object-contain p-3" />
+          )}
+        </div>
+        <div className="flex flex-wrap gap-2 border-t border-slate-200 p-3">
+          <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-amber-500 px-3 py-2 text-xs font-black text-white hover:bg-amber-600">
+            <Upload className="h-3.5 w-3.5" />{uploading ? 'Uploading…' : `Upload ${kind}`}
+            <input type="file" className="hidden" disabled={uploading} accept={kind === 'video' ? 'video/mp4,video/webm' : kind === 'document' ? 'application/pdf,.pdf' : 'image/jpeg,image/png,image/webp,image/svg+xml'} onChange={event => { void upload(event.target.files?.[0]); event.target.value = ''; }} />
+          </label>
+          <button type="button" onClick={() => setShowLibrary(current => !current)} className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-2 text-xs font-black text-white hover:bg-slate-700"><Images className="h-3.5 w-3.5" />Choose from library</button>
+          {value && <button type="button" onClick={() => onChange('')} className="rounded-lg bg-red-100 px-3 py-2 text-xs font-black text-red-700 hover:bg-red-200">Remove</button>}
+        </div>
+        {showLibrary && (
+          <div className="border-t border-slate-200 bg-slate-50 p-3">
+            <p className="mb-3 text-xs font-bold text-slate-600">Select an existing {kind}</p>
+            {choices.length ? <div className="grid max-h-72 grid-cols-2 gap-3 overflow-y-auto sm:grid-cols-3">
+              {choices.map(asset => (
+                <button type="button" key={asset.id} onClick={() => { onChange(asset.url); setShowLibrary(false); }} className={`overflow-hidden rounded-lg border-2 bg-white text-left transition hover:border-amber-400 ${value === asset.url ? 'border-amber-500' : 'border-transparent'}`}>
+                  <div className="flex h-24 items-center justify-center bg-slate-100">{kind === 'video' ? <video src={asset.url} muted preload="metadata" className="h-full w-full object-cover" /> : kind === 'document' ? <FileText className="h-10 w-10 text-red-600" /> : <img src={asset.url} alt={asset.altText || asset.fileName} className="h-full w-full object-contain p-1" />}</div>
+                  <p className="truncate px-2 py-2 text-[10px] font-bold text-slate-700">{asset.fileName}</p>
+                </button>
+              ))}
+            </div> : <p className="rounded-lg border border-dashed border-slate-300 p-5 text-center text-xs text-slate-500">No {kind}s in the library yet. Upload one above.</p>}
+          </div>
+        )}
+      </div>
+      <p className="mt-1 text-[10px] text-slate-400">Accepted: {kind === 'video' ? 'MP4 or WebM' : kind === 'document' ? 'PDF' : 'JPG, PNG, WebP or SVG'}. The database address is assigned automatically.</p>
+    </div>
+  );
+};
+
+const ManagedPageField = ({ page, value, media, onChange, onUpload }: {
+  page: string;
+  value: Record<string, unknown>;
+  media: MediaAsset[];
+  onChange: (value: Record<string, unknown>) => void;
+  onUpload: (file: File) => Promise<MediaAsset | undefined>;
+}) => {
+  const mediaEntries = Object.entries(value).filter(([key]) => /(image|video)Url$/i.test(key));
+  const textEntries = Object.fromEntries(Object.entries(value).filter(([key]) => !/(image|video)Url$/i.test(key)));
+  return (
+    <div className="space-y-4">
+      {mediaEntries.map(([key, current]) => (
+        <MediaField key={key} label={key.replace(/([A-Z])/g, ' $1')} value={String(current || '')} kind={/videoUrl$/i.test(key) ? 'video' : 'image'} media={media} onChange={next => onChange({ ...value, [key]: next })} onUpload={onUpload} />
+      ))}
+      <JsonObjectField label={`${page} text content`} value={textEntries} onChange={next => {
+        const retainedMedia = Object.fromEntries(mediaEntries);
+        onChange({ ...next, ...retainedMedia });
+      }} />
+    </div>
+  );
+};
+
+const MediaUploadDialog = ({ onClose, onUpload }: {
+  onClose: () => void;
+  onUpload: (file: File, altText: string, usageType: string) => Promise<MediaAsset | undefined>;
+}) => {
+  const [file, setFile] = useState<File | null>(null);
+  const [altText, setAltText] = useState('');
+  const [usageType, setUsageType] = useState('general');
+  const [previewUrl, setPreviewUrl] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!file) { setPreviewUrl(''); return; }
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+
+  const selectFile = (selected?: File) => {
+    if (!selected) return;
+    const accepted = selected.type.startsWith('image/') || selected.type === 'video/mp4' || selected.type === 'video/webm';
+    if (!accepted) { setError('Select a JPG, PNG, WebP, SVG, MP4, or WebM file.'); return; }
+    if (selected.size > 50 * 1024 * 1024) { setError('The maximum upload size is 50 MB.'); return; }
+    setError('');
+    setFile(selected);
+    if (!altText) setAltText(selected.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' '));
+  };
+
+  const submit = async () => {
+    if (!file) { setError('Select an image or video before uploading.'); return; }
+    setSubmitting(true);
+    const saved = await onUpload(file, altText.trim(), usageType);
+    setSubmitting(false);
+    if (saved) onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-[120] flex items-center justify-center overflow-y-auto bg-slate-950/75 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-2xl">
+        <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+          <div><h2 className="text-xl font-black text-slate-950">Upload Media</h2><p className="text-xs text-slate-500">Preview and confirm the file before saving it to the database.</p></div>
+          <button type="button" disabled={submitting} onClick={onClose} className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 disabled:opacity-50"><X className="h-5 w-5" /></button>
+        </div>
+        <div className="space-y-5 p-6">
+          <label className="flex min-h-64 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 transition hover:border-amber-500 hover:bg-amber-50/40">
+            {!previewUrl ? (
+              <div className="p-8 text-center"><Upload className="mx-auto h-10 w-10 text-amber-500" /><p className="mt-3 text-sm font-black text-slate-800">Choose an image or video</p><p className="mt-1 text-xs text-slate-500">JPG, PNG, WebP, SVG, MP4 or WebM · maximum 50 MB</p></div>
+            ) : file?.type.startsWith('video/') ? (
+              <video src={previewUrl} controls muted className="max-h-80 w-full object-contain" />
+            ) : (
+              <img src={previewUrl} alt="Selected upload preview" className="max-h-80 max-w-full object-contain p-3" />
+            )}
+            <input type="file" accept="image/jpeg,image/png,image/webp,image/svg+xml,video/mp4,video/webm" className="hidden" disabled={submitting} onChange={event => { selectFile(event.target.files?.[0]); event.target.value = ''; }} />
+          </label>
+
+          {file && <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-slate-100 px-3 py-2 text-xs"><span className="max-w-[70%] truncate font-bold text-slate-700">{file.name}</span><span className="font-semibold text-slate-500">{(file.size / 1024 / 1024).toFixed(2)} MB</span></div>}
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <FormField label="Alt text / description" value={altText} onChange={setAltText} />
+            <FormField label="Used for" value={usageType} onChange={setUsageType} options={['general', 'products', 'industries', 'services', 'news', 'home-hero', 'page-banner']} />
+          </div>
+          {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-xs font-bold text-red-700">{error}</p>}
+        </div>
+        <div className="flex justify-end gap-3 border-t border-slate-200 bg-slate-50 px-6 py-4">
+          <button type="button" disabled={submitting} onClick={onClose} className="rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-100 disabled:opacity-50">Cancel</button>
+          <button type="button" disabled={!file || submitting} onClick={() => void submit()} className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-black text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-50"><Upload className="h-4 w-4" />{submitting ? 'Uploading…' : 'Upload & Save'}</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Modal = ({ title, onClose, children, onSave, saveLabel = 'Save' }: any) => (
   <div className="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4 overflow-y-auto">
     <div className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -109,17 +300,17 @@ const defaultPageSettings = {
     points: [
       'Operating pressure: 8 to 10 bar(g)',
       'Air discharge range: 0.52 m3/min to 5.94 m3/min',
-      'Motor nominal power range: 4 kW to 37 kW',
+      'Catalog motor power range: 4 kW to 185 kW',
       'IE3 energy efficiency class motors',
       'IP55 protection and Class F insulation',
     ],
   },
   warranty: {
     eyebrow: 'Warranty Information',
-    title: '5 year warranty support with genuine firstAir parts',
+    title: '5 year extended warranty support with genuine firstAir parts',
     intro: 'firstAir warranty support is designed around correct maintenance, genuine parts, and regular service practices that protect compressor reliability.',
     points: [
-      '5 year warranty program for eligible compressors',
+      '5 year extended warranty program for eligible compressors',
       'Use genuine firstAir parts during recommended service intervals',
       'Keep maintenance records for warranty support',
       'Contact the support team for service, parts, and warranty guidance',
@@ -127,7 +318,86 @@ const defaultPageSettings = {
   },
 };
 
+const defaultHomeSettings: NonNullable<SiteConfig['home']> = {
+  heroVideoUrl: '/api/media/hero-industrial.mp4',
+  heroShowcaseImageUrl: '/api/media/hero-products-showcase.png',
+  heroShowcaseAlt: 'firstAir FASM22, FSG340, and FAS37 compressor range',
+  heroEyebrow: 'Industrial compressed-air solutions',
+  heroFeatures: ['Fixed & variable speed', 'IE3 / IE4 motors', 'Local service support'],
+  powerRange: '4–250 kW', pressureRange: '5–16 bar',
+  rangeTitle: 'Choose the right air system',
+  rangeIntro: 'A focused range for constant demand, variable demand, and high-capacity industrial applications.',
+  whyTitle: 'Built for productive, efficient operation',
+  whyIntro: 'Straightforward equipment, practical service access, and support that keeps production moving.',
+  industriesTitle: 'Compressed air that fits your application',
+  industriesIntro: 'Start with your industry and find equipment suited to your operating needs.',
+  serviceTitle: 'Support beyond the compressor',
+  serviceIntro: 'From choosing capacity to planned maintenance and genuine parts, our team supports performance throughout the equipment lifecycle.',
+  serviceCardTitle: 'Need service or technical help?',
+  serviceCardText: 'Connect with our team for application advice, service support, and compressor enquiries.',
+  aboutTitle: 'Industrial experience. Straightforward solutions.',
+  ctaTitle: 'Let’s find the right compressor for your business.',
+  ctaText: 'Share your required pressure, flow, and application with our team.',
+  ctaButton: 'Request a consultation',
+  heroMetricLabels: ['Compressor families', 'Power range', 'Pressure range'],
+  showcaseEyebrow: 'FAS · FASM · FSG', showcaseTitle: 'Engineered for every demand',
+  familyCards: [
+    { series: 'FAS', label: 'Fixed speed', title: 'Fixed Speed Screw Compressors', description: 'Dependable, easy-to-maintain compressors for steady industrial air demand.' },
+    { series: 'FASM', label: 'Variable speed', title: 'Variable Speed Compressors', description: 'Permanent-magnet variable-speed systems for changing demand and lower energy use.' },
+    { series: 'FSG', label: 'High capacity', title: 'High-Capacity Compressors', description: 'Robust compressor packages for large plants and demanding applications.' },
+  ],
+  rangeEyebrow: 'Our compressor range', modelsLabel: 'models', viewSeriesLabel: 'View series', viewAllProductsLabel: 'See all compressors',
+  whyEyebrow: 'Why firstAir',
+  benefits: [
+    { title: 'Energy efficient', description: 'Efficient motors and variable-speed options help reduce wasted power.' },
+    { title: 'Reliable by design', description: 'Industrial components for demanding daily operating conditions.' },
+    { title: 'Easy to maintain', description: 'Service-friendly layouts make maintenance more practical.' },
+    { title: 'Local support', description: 'Guidance for selection, commissioning, service, and genuine parts.' },
+  ],
+  industriesEyebrow: 'Solutions by industry', industryLinkLabel: 'Explore solution', serviceEyebrow: 'Service throughout the lifecycle',
+  serviceItems: ['Installation & Commissioning', 'Preventive Maintenance', 'Breakdown Support', 'Genuine Spare Parts', 'AMC', 'Energy Audit'],
+  servicesButton: 'Our services', callSalesButton: 'Call sales', aboutEyebrow: 'About firstAir', yearsLabel: 'years of expertise',
+  motorValue: 'IE3/IE4', motorLabel: 'motor technology', industryValue: 'Made for industry', industryText: 'Practical systems for workshops and production plants.',
+  aboutButton: 'Learn about our company',
+  solutionCards: [], energyEyebrow: 'Energy efficiency', energyTitle: 'Reduce Your Compressed Air Energy Costs',
+  energyIntro: 'Compressed air can be one of the largest energy consumers in an industrial facility.', energyText: 'FirstAir provides energy-efficient compressor solutions designed to deliver reliable compressed air while helping industries reduce operating costs.',
+  energyHighlights: ['Energy Efficiency', 'Variable Speed Technology', 'Permanent Magnet Technology', 'System Optimization'], energyCta: 'Request an Energy Assessment',
+  recommendationEyebrow: 'Compressor selection support', recommendationTitle: 'Not Sure Which Compressor You Need?', recommendationText: 'Tell us about your compressed-air requirement and our technical team will help you identify the right solution.', recommendationButton: 'Get My Compressor Recommendation', recommendationSuccessTitle: 'Requirement received', recommendationSuccessText: 'Our technical team will contact you.',
+  recommendationLabels: { name: 'Name', company: 'Company Name', phone: 'Mobile Number', email: 'Email', industry: 'Industry', industryPlaceholder: 'Select industry', requiredPressure: 'Required Pressure', requiredFad: 'Required FAD', operatingHours: 'Operating Hours/Day', currentCompressor: 'Current Compressor', application: 'Application', location: 'Location', requirementDetails: 'Requirement Details', submitting: 'Submitting…', submitAnother: 'Submit another requirement', error: 'We could not submit your requirement. Please try again.' },
+  serviceSectionCta: 'Request Service Support', serviceCards: [], statistics: [], customerLogosEyebrow: 'Customer trust', customerLogosTitle: 'Trusted by Industries Across India', customerLogos: [], industriesLimit: 8,
+};
+
+const NavigationEditor = ({ items, onChange }: { items: NavigationItem[]; onChange: (items: NavigationItem[]) => void }) => {
+  const update = (index: number, value: NavigationItem) => onChange(items.map((item, itemIndex) => itemIndex === index ? value : item));
+  const move = (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= items.length) return;
+    const next = [...items]; [next[index], next[target]] = [next[target], next[index]]; onChange(next);
+  };
+  const add = () => onChange([...items, { id: `menu-${Date.now()}`, label: 'New menu item', page: 'home', active: false }]);
+  return <div className="sm:col-span-2">
+    <div className="mb-3 flex items-center justify-between"><label className="text-xs font-bold uppercase tracking-wider text-slate-700">Ordered Navigation Items</label><button type="button" onClick={add} className="rounded-lg bg-slate-900 px-3 py-2 text-xs font-black text-white"><Plus className="inline h-3.5 w-3.5" /> Add item</button></div>
+    <div className="space-y-3">{items.map((item, index) => <div key={item.id} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <FormField label="Label" value={item.label} onChange={(label: string) => update(index, { ...item, label })} />
+        <FormField label="Page key" value={item.page || ''} onChange={(page: string) => update(index, { ...item, page, url: page ? undefined : item.url })} />
+        <FormField label="Parameter" value={item.param || ''} onChange={(param: string) => update(index, { ...item, param })} />
+        <FormField label="URL" value={item.url || ''} onChange={(url: string) => update(index, { ...item, url, page: url ? undefined : item.page })} />
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-3 text-xs font-bold">
+        <label><input type="checkbox" checked={item.active !== false} onChange={event => update(index, { ...item, active: event.target.checked })} className="mr-1.5" />Visible</label>
+        <label><input type="checkbox" checked={Boolean(item.external)} onChange={event => update(index, { ...item, external: event.target.checked })} className="mr-1.5" />External link</label>
+        <button type="button" onClick={() => move(index, -1)} disabled={index === 0} className="rounded bg-white px-2 py-1 disabled:opacity-30">↑ Move</button>
+        <button type="button" onClick={() => move(index, 1)} disabled={index === items.length - 1} className="rounded bg-white px-2 py-1 disabled:opacity-30">↓ Move</button>
+        <button type="button" onClick={() => onChange(items.filter((_, itemIndex) => itemIndex !== index))} className="ml-auto rounded bg-red-100 px-2 py-1 text-red-700">Remove</button>
+      </div>
+      <div className="mt-3"><JsonArrayField label="Dropdown children" value={item.children || []} onChange={children => update(index, { ...item, children: children as NavigationItem[] })} /></div>
+    </div>)}</div>
+  </div>;
+};
+
 export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigateFrontend }: Props) {
+  const { refreshConfig } = useSiteConfig();
   const tab = activeTab;
   const [notif, setNotif] = useState<{ type: 'success' | 'error', text: string } | null>(null);
   const [loading, setLoading] = useState(true);
@@ -145,6 +415,10 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
   const [config, setConfig] = useState<SiteConfig | null>(null);
   const [currentUser, setCurrentUser] = useState<UserAccount | null>(null);
   const [users, setUsers] = useState<UserAccount[]>([]);
+  const [media, setMedia] = useState<MediaAsset[]>([]);
+  const [uploadingMedia, setUploadingMedia] = useState(false);
+  const [showMediaUpload, setShowMediaUpload] = useState(false);
+  const [cmsAudit, setCmsAudit] = useState<CmsAudit | null>(null);
 
   // Editing state
   const [editing, setEditing] = useState<any>(null);
@@ -160,6 +434,7 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
     const canManageUsers = me.role === 'SUPER_ADMIN';
     const cfg = await getSiteConfig();
     setConfig(cfg);
+    if (canManageContent) setMedia(await adminGetMedia());
 
     if (!canManageContent) {
       const [d, l] = await Promise.all([adminGetDistributors(), adminGetLeads()]);
@@ -177,12 +452,13 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
 
     switch (tab) {
       case 'dashboard': {
-        const [c, p, i, s, n, j, d, l] = await Promise.all([
+        const [c, p, i, s, n, j, d, l, audit] = await Promise.all([
           adminGetCategories(), adminGetProducts(), adminGetIndustries(), adminGetServices(),
-          adminGetNews(), adminGetJobs(), adminGetDistributors(), adminGetLeads(),
+          adminGetNews(), adminGetJobs(), adminGetDistributors(), adminGetLeads(), adminGetCmsAudit(),
         ]);
         setCategories(c); setProducts(p); setIndustries(i); setServices(s);
         setNews(n); setJobs(j); setDistributors(d); setLeads(l);
+        setCmsAudit(audit);
         break;
       }
       case 'users': {
@@ -194,12 +470,15 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
         setCategories(await adminGetCategories());
         break;
       case 'products': {
-        const [c, p] = await Promise.all([adminGetCategories(), adminGetProducts()]);
-        setCategories(c); setProducts(p);
+        const [c, productItems] = await Promise.all([adminGetCategories(), adminGetProducts()]);
+        setCategories(c); setProducts(productItems);
         break;
       }
       case 'industries':
-        setIndustries(await adminGetIndustries());
+        {
+          const items = await adminGetIndustries();
+          setIndustries(items);
+        }
         break;
       case 'services':
         setServices(await adminGetServices());
@@ -223,6 +502,9 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
       }
       case 'settings':
         break;
+      case 'media':
+        setMedia(await adminGetMedia());
+        break;
     }
     setLoading(false);
   };
@@ -234,9 +516,16 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
 
   const handleDelete = async (type: string, id: number | string, fn: (id: number | string) => Promise<any>) => {
     if (window.confirm(`Delete this ${type}?`)) {
-      await fn(id);
-      notify('success', `${type} deleted successfully`);
-      loadAll();
+      try {
+        await fn(id);
+        notify('success', `${type} deleted successfully`);
+        loadAll();
+      } catch (error) {
+        const message = error instanceof Error && error.message.includes('currently used')
+          ? 'This media is currently used. Replace it in the related content before deleting it.'
+          : `Could not delete this ${type}`;
+        notify('error', message);
+      }
     }
   };
 
@@ -279,11 +568,28 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
   const canManageContent = currentUser?.role === 'SUPER_ADMIN' || currentUser?.role === 'ADMIN';
   const canManageUsers = currentUser?.role === 'SUPER_ADMIN';
 
+  const uploadMedia = async (file: File | undefined, usageType = 'admin-upload', altText?: string): Promise<MediaAsset | undefined> => {
+    if (!file) return undefined;
+    try {
+      setUploadingMedia(true);
+      const uploaded = await adminUploadMedia(file, altText || file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' '), usageType);
+      notify('success', 'Media uploaded to the database');
+      setMedia(current => [...current, uploaded]);
+      return uploaded;
+    } catch {
+      notify('error', 'Media upload failed');
+      return undefined;
+    } finally {
+      setUploadingMedia(false);
+    }
+  };
+
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, color: 'text-red-600', show: canManageContent },
     { id: 'users', label: 'Users & Roles', icon: Users, color: 'text-slate-700', show: canManageUsers },
-    { id: 'categories', label: 'Product Categories', icon: Cog, color: 'text-purple-600', show: canManageContent },
     { id: 'products', label: 'Products', icon: Package, color: 'text-red-600', show: canManageContent },
+    { id: 'categories', label: 'Product Categories', icon: Layers, color: 'text-amber-700', show: canManageContent },
+    { id: 'brochures', label: 'Product Brochures', icon: FileText, color: 'text-red-600', show: canManageContent },
     { id: 'industries', label: 'Industries', icon: Building2, color: 'text-emerald-600', show: canManageContent },
     { id: 'services', label: 'Services', icon: Wrench, color: 'text-orange-600', show: canManageContent },
     { id: 'news', label: 'News & Events', icon: Newspaper, color: 'text-rose-600', show: canManageContent },
@@ -291,11 +597,11 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
     { id: 'careers', label: 'Job Openings', icon: Briefcase, color: 'text-cyan-600', show: canManageContent },
     { id: 'distributors', label: 'Distributors', icon: MapPin, color: 'text-red-600', show: true },
     { id: 'leads', label: 'CRM Leads', icon: Users, color: 'text-green-600', show: true },
+    { id: 'media', label: 'Media Library', icon: Images, color: 'text-violet-600', show: canManageContent },
     { id: 'settings', label: 'Site Settings', icon: Globe, color: 'text-amber-600', show: canManageContent },
   ].filter(item => item.show);
 
   const stats = [
-    { label: 'Product Categories', count: categories.length, tab: 'categories' as Tab, icon: Cog, color: 'from-purple-500 to-purple-700' },
     { label: 'Products', count: products.length, tab: 'products' as Tab, icon: Package, color: 'from-red-500 to-red-700' },
     { label: 'Industries', count: industries.length, tab: 'industries' as Tab, icon: Building2, color: 'from-emerald-500 to-emerald-700' },
     { label: 'Services', count: services.length, tab: 'services' as Tab, icon: Wrench, color: 'from-orange-500 to-orange-700' },
@@ -308,6 +614,25 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
   const pageSettings = {
     technical: { ...defaultPageSettings.technical, ...(config?.pages?.technical || {}) },
     warranty: { ...defaultPageSettings.warranty, ...(config?.pages?.warranty || {}) },
+  };
+  const homeSettings = { ...defaultHomeSettings, ...(config?.home || {}) };
+  const navigationSettings = config?.navigation || {
+    logoUrl: '', logoAlt: config?.company.name || 'firstAir Compressor', languageLabel: 'EN', menuLabel: 'Menu',
+    loginLabel: 'Login', searchLabel: 'Search', callLabel: 'Call', requestQuoteLabel: 'Request Quote', requestQuotePage: 'contact', items: [],
+  };
+  const managedPageContent = Object.fromEntries(Object.entries(defaultPageContent).map(([key, defaults]) => [key, { ...defaults, ...(config?.pageContent?.[key] || {}) }]));
+
+  const updateHome = (updates: Partial<NonNullable<SiteConfig['home']>>) => {
+    if (!config) return;
+    setConfig({ ...config, home: { ...homeSettings, ...updates } });
+  };
+  const updateNavigation = (updates: Partial<NonNullable<SiteConfig['navigation']>>) => {
+    if (!config) return;
+    setConfig({ ...config, navigation: { ...navigationSettings, ...updates } });
+  };
+  const updateManagedPage = (page: string, value: Record<string, unknown>) => {
+    if (!config) return;
+    setConfig({ ...config, pageContent: { ...(config.pageContent || {}), [page]: value } });
   };
 
   const updateInfoPage = (page: 'technical' | 'warranty', updates: Partial<typeof defaultPageSettings.technical>) => {
@@ -488,6 +813,17 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
                   ))}
                 </div>
               </div>
+
+              {cmsAudit && <div className="mt-6 rounded-lg border border-slate-200 bg-white p-5">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div><h3 className="text-base font-black text-slate-950">CMS publishing health</h3><p className="mt-1 text-sm text-slate-500">Database-backed content visibility and media accessibility checks.</p></div>
+                  <div className={`rounded-full px-3 py-1 text-xs font-black ${cmsAudit.mediaMissingAltText ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800'}`}>{cmsAudit.mediaMissingAltText} media missing ALT text</div>
+                </div>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                  <div className="rounded-lg bg-slate-50 p-3"><div className="text-xl font-black text-slate-950">{cmsAudit.siteSections.filter(section => section.active).length}</div><div className="text-xs font-bold text-slate-500">Published site sections</div></div>
+                  {Object.entries(cmsAudit.inactive).map(([collection, count]) => <div key={collection} className="rounded-lg bg-slate-50 p-3"><div className="text-xl font-black text-slate-950">{count}</div><div className="text-xs font-bold capitalize text-slate-500">Inactive {collection}</div></div>)}
+                </div>
+              </div>}
             </div>
           )}
 
@@ -541,8 +877,8 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
 
           {/* CATEGORIES */}
           {tab === 'categories' && (
-            <ListView title="Product Categories" subtitle="Manage the 8 main product categories"
-              onAdd={() => startCreate('category', { slug: '', name: '', shortName: '', description: '', longDescription: '', icon: 'Cog', imageUrl: '', features: [], applications: [], order: categories.length + 1 })}
+            <ListView title="Product Categories" subtitle="Manage solution groups, ordering, visibility, media, and internal or external destinations"
+              onAdd={() => startCreate('category', { slug: '', name: '', shortName: '', description: '', longDescription: '', icon: 'Cog', imageUrl: '', external: false, externalUrl: '', features: [], applications: [], active: true, order: categories.length + 1 })}
               addLabel="Add Category">
               <div className="grid sm:grid-cols-2 gap-4">
                 {categories.map(c => (
@@ -565,35 +901,66 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
 
           {/* PRODUCTS */}
           {tab === 'products' && (
-            <ListView title="Products" subtitle={`${products.length} products across ${categories.length} categories`}
-              onAdd={() => startCreate('product', { categoryId: categories[0]?.id || '', model: '', name: '', series: '', description: '', longDescription: '', imageUrl: '', powerHp: 0, powerKw: 0, pressureMin: 7, pressureMax: 13, flowRateCfm: '', flowRateM3Min: '', features: [], specifications: [], applications: [] })}
+            <ListView title="Products" subtitle={`${products.length} compressor models grouped by frontend series`}
+              onAdd={() => startCreate('product', { categoryId: categories[0]?.id || '', categorySlugs: [], model: '', name: '', series: 'FAS', description: '', longDescription: '', imageUrl: '', imageUrls: [], brochureUrl: '', datasheetUrl: '', powerHp: 0, powerKw: 0, motorPower: '', pressureMin: 7, pressureMax: 13, flowRateCfm: '', flowRateM3Min: '', motorType: '', coolingMethod: '', voltage: '', frequency: '', noiseLevel: '', dimensions: '', weight: '', features: [], benefits: [], specifications: [], applications: [], active: true })}
               addLabel="Add Product">
-              <table className="w-full text-sm">
-                <thead><tr className="bg-slate-50 border-b border-slate-200 text-xs font-black uppercase text-slate-500 tracking-wider">
-                  <th className="text-left py-3 px-3">Image</th><th className="text-left py-3 px-3">Model</th><th className="text-left py-3 px-3">Category</th><th className="text-left py-3 px-3">Power</th><th className="text-right py-3 px-3">Actions</th>
-                </tr></thead>
-                <tbody className="divide-y divide-slate-100">
-                  {products.map(p => (
-                    <tr key={p.id} className="hover:bg-slate-50">
-                      <td className="py-3 px-3"><img src={p.imageUrl} alt={p.model} className="w-14 h-12 rounded-lg object-cover" /></td>
-                      <td className="py-3 px-3"><div className="font-black text-slate-900">{p.model}</div><div className="text-xs text-slate-500">{p.series} Series</div></td>
-                      <td className="py-3 px-3 text-xs text-slate-600">{categories.find(c => c.id === p.categoryId)?.shortName || '—'}</td>
-                      <td className="py-3 px-3 font-bold text-red-700">{p.powerHp} HP / {p.powerKw} kW</td>
-                      <td className="py-3 px-3 text-right"><div className="flex justify-end gap-1.5">
-                        <button onClick={() => startEdit('product', p)} className="p-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200"><Edit2 className="w-3.5 h-3.5" /></button>
-                        <button onClick={() => handleDelete('product', p.id, adminDeleteProduct)} className="p-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200"><Trash2 className="w-3.5 h-3.5" /></button>
-                      </div></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <div className="space-y-9">
+                {adminProductSeries.map(series => {
+                  const seriesProducts = productsInAdminSeries(products, series);
+                  return (
+                    <section key={series.key}>
+                      <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-300 bg-gradient-to-r from-amber-100 via-amber-50 to-white px-5 py-4 shadow-sm">
+                        <div>
+                          <p className="text-[10px] font-black uppercase tracking-[0.18em] text-red-600">Product series</p>
+                          <h2 className="mt-1 text-xl font-black text-slate-950">{series.title}</h2>
+                          <p className="text-xs font-bold text-slate-600">{series.range}</p>
+                        </div>
+                        <span className="rounded-full border border-amber-300 bg-white px-3 py-1.5 text-xs font-black text-slate-700 shadow-sm">
+                          {seriesProducts.length} {seriesProducts.length === 1 ? 'model' : 'models'}
+                        </span>
+                      </div>
+
+                      {seriesProducts.length > 0 ? (
+                        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                          {seriesProducts.map(product => (
+                            <article key={product.id} className="grid grid-cols-[92px_minmax(0,1fr)] gap-4 rounded-xl border border-slate-200 bg-white p-4 transition hover:border-amber-400 hover:shadow-md">
+                              <div className="flex h-24 items-center justify-center rounded-lg bg-slate-50 p-2">
+                                <img src={product.imageUrl} alt={product.model} className="max-h-full max-w-full object-contain" />
+                              </div>
+                              <div className="min-w-0">
+                                <div className="flex items-start justify-between gap-2">
+                                  <div>
+                                    <h3 className="font-black text-slate-950">{product.model}</h3>
+                                    <p className="truncate text-xs text-slate-500">{product.name}</p>
+                                  </div>
+                                  <span className="shrink-0 rounded bg-amber-100 px-2 py-1 text-[10px] font-black text-amber-800">{product.powerKw} kW</span>
+                                </div>
+                                <p className="mt-2 text-xs font-bold text-slate-700">{product.powerHp} HP · {product.pressureMin}–{product.pressureMax} bar</p>
+                                <p className="mt-1 truncate text-[11px] text-slate-500">{product.flowRateCfm || 'Flow rate not set'} CFM</p>
+                                <div className="mt-3 flex gap-2">
+                                  <button onClick={() => startEdit('product', product)} className="inline-flex items-center rounded bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-700 hover:bg-emerald-200"><Edit2 className="mr-1 h-3 w-3" />Edit</button>
+                                  <button onClick={() => handleDelete('product', product.id, adminDeleteProduct)} className="rounded bg-red-100 p-1.5 text-red-700 hover:bg-red-200" aria-label={`Delete ${product.model}`}><Trash2 className="h-3.5 w-3.5" /></button>
+                                </div>
+                              </div>
+                            </article>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm font-semibold text-slate-500">
+                          No models have been added to this series yet.
+                        </div>
+                      )}
+                    </section>
+                  );
+                })}
+              </div>
             </ListView>
           )}
 
           {/* INDUSTRIES */}
           {tab === 'industries' && (
             <ListView title="Industries" subtitle="Industry-specific solutions"
-              onAdd={() => startCreate('industry', { slug: '', name: '', shortDescription: '', fullDescription: '', imageUrl: '', applications: [], recommendedProducts: [], challenges: [] })}
+              onAdd={() => startCreate('industry', { slug: '', name: '', shortDescription: '', fullDescription: '', imageUrl: '', imageAlt: '', challengeIntro: '', solutionIntro: '', applications: [], benefits: [], recommendedProducts: [], challenges: [], order: industries.length + 1, active: true })}
               addLabel="Add Industry">
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {industries.map(i => (
@@ -616,7 +983,7 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
           {/* SERVICES */}
           {tab === 'services' && (
             <ListView title="Services" subtitle="Service offerings management"
-              onAdd={() => startCreate('service', { slug: '', name: '', shortDescription: '', fullDescription: '', iconName: 'Wrench', imageUrl: '', benefits: [], process: [] })}
+              onAdd={() => startCreate('service', { slug: '', name: '', shortDescription: '', fullDescription: '', serviceScope: '', iconName: 'Wrench', imageUrl: '', imageAlt: '', benefits: [], process: [], order: services.length + 1, active: true })}
               addLabel="Add Service">
               <div className="grid sm:grid-cols-2 gap-4">
                 {services.map(s => (
@@ -775,6 +1142,11 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
                           {lead.followUpDate ? ` · Follow-up ${lead.followUpDate}` : ''}
                         </p>
                         <div className="mt-3 p-3 bg-slate-50 rounded-lg text-sm text-slate-700 italic">"{lead.message}"</div>
+                        {(lead.requiredPressure || lead.requiredFad || lead.application || lead.location) && <div className="mt-3 grid gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs sm:grid-cols-2 lg:grid-cols-3">
+                          <div><b>Required pressure:</b> {lead.requiredPressure || 'Not provided'}</div><div><b>Required FAD:</b> {lead.requiredFad || 'Not provided'}</div><div><b>Operating hours/day:</b> {lead.operatingHours || 'Not provided'}</div>
+                          <div><b>Current compressor:</b> {lead.currentCompressor || 'Not provided'}</div><div><b>Application:</b> {lead.application || 'Not provided'}</div><div><b>Location:</b> {lead.location || 'Not provided'}</div>
+                          {lead.requirementDetails && <div className="sm:col-span-2 lg:col-span-3"><b>Requirement:</b> {lead.requirementDetails}</div>}
+                        </div>}
                         <div className="mt-3">
                           <input type="text" defaultValue={lead.notes} onBlur={e => adminUpdateLead(lead.id, { notes: e.target.value }).then(() => notify('success', 'Notes saved'))}
                             placeholder="Internal notes..." className="w-full px-3 py-2 rounded-lg border border-slate-200 focus:border-green-500 outline-none text-xs font-medium" />
@@ -821,15 +1193,94 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
             </div>
           )}
 
+          {/* PRODUCT BROCHURES */}
+          {tab === 'brochures' && (() => {
+            const brochures = media.filter(asset => asset.mediaType === 'document' && asset.contentType === 'application/pdf');
+            return <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.08)] lg:p-7">
+              <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
+                <div><h1 className="text-2xl font-black text-slate-900">Product Brochures</h1><p className="mt-1 text-sm text-slate-500">Upload each PDF once, then assign it to any number of products from the product editor.</p></div>
+                <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-red-600 px-5 py-3 text-sm font-black text-white shadow-lg hover:bg-red-700">
+                  <Upload className="h-4 w-4" />{uploadingMedia ? 'Uploading…' : 'Upload PDF Brochure'}
+                  <input type="file" accept="application/pdf,.pdf" disabled={uploadingMedia} className="hidden" onChange={event => { const file = event.target.files?.[0]; if (file) void uploadMedia(file, 'product-brochures'); event.target.value = ''; }} />
+                </label>
+              </div>
+              {brochures.length ? <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">{brochures.map(brochure => {
+                const assigned = products.filter(product => product.brochureUrl === brochure.url);
+                return <article key={brochure.id} className="overflow-hidden rounded-xl border border-slate-200 bg-white transition hover:border-amber-400 hover:shadow-md">
+                  <a href={brochure.url} target="_blank" rel="noopener noreferrer" className="flex h-40 flex-col items-center justify-center gap-3 bg-gradient-to-br from-red-50 to-amber-50 text-red-700"><FileText className="h-14 w-14" /><span className="text-xs font-black uppercase tracking-wider">View PDF</span></a>
+                  <div className="p-5"><h2 className="truncate text-base font-black text-slate-900">{brochure.altText || brochure.fileName}</h2><p className="mt-1 truncate text-xs text-slate-500">{brochure.fileName} · {(brochure.sizeBytes / 1024 / 1024).toFixed(2)} MB</p>
+                    <div className="mt-4 border-t border-slate-100 pt-4"><div className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">Assigned products ({assigned.length})</div>{assigned.length ? <div className="mt-2 flex flex-wrap gap-1.5">{assigned.map(product => <span key={product.id} className="rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-black text-amber-900">{product.model}</span>)}</div> : <p className="mt-2 text-xs text-slate-400">Not assigned yet</p>}</div>
+                    <div className="mt-5 flex gap-2"><a href={brochure.url} target="_blank" rel="noopener noreferrer" className="rounded-lg bg-slate-900 px-3 py-2 text-xs font-bold text-white hover:bg-slate-700">Open PDF</a><button disabled={assigned.length > 0} onClick={() => handleDelete('brochure', brochure.id, adminDeleteMedia)} title={assigned.length ? 'Remove brochure assignments from products before deleting' : 'Delete brochure'} className="rounded-lg bg-red-100 px-3 py-2 text-xs font-bold text-red-700 hover:bg-red-200 disabled:cursor-not-allowed disabled:opacity-40">Delete</button></div>
+                  </div>
+                </article>;
+              })}</div> : <div className="rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 px-6 py-14 text-center"><FileText className="mx-auto h-12 w-12 text-slate-300" /><h2 className="mt-4 font-black text-slate-800">No brochures uploaded</h2><p className="mt-2 text-sm text-slate-500">Upload a PDF to make it available in every product form.</p></div>}
+            </div>;
+          })()}
+
+          {/* MEDIA LIBRARY */}
+          {tab === 'media' && (
+            <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-[0_18px_45px_rgba(15,23,42,0.08)] lg:p-7">
+              <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
+                <div>
+                  <h1 className="text-2xl font-black text-slate-900">Media Library</h1>
+                  <p className="text-sm text-slate-500">Images and videos stored in the database and available across the website.</p>
+                </div>
+                <button type="button" onClick={() => setShowMediaUpload(true)} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-3 text-sm font-black text-white shadow-lg hover:from-amber-400 hover:to-orange-400">
+                  <Upload className="h-4 w-4" />{uploadingMedia ? 'Uploading…' : 'Upload Media'}
+                </button>
+              </div>
+              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {media.filter(asset => asset.mediaType !== 'document').map(asset => (
+                  <article key={asset.id} className="overflow-hidden rounded-xl border border-slate-200 bg-white transition hover:border-amber-400 hover:shadow-md">
+                    <div className="flex h-48 items-center justify-center bg-slate-100">
+                      {asset.mediaType === 'video' ? (
+                        <video src={asset.url} muted controls preload="metadata" className="h-full w-full object-cover" />
+                      ) : asset.mediaType === 'document' ? (
+                        <a href={asset.url} target="_blank" rel="noopener noreferrer" className="flex h-full w-full flex-col items-center justify-center gap-2 text-red-700"><FileText className="h-14 w-14" /><span className="text-xs font-black">Open PDF</span></a>
+                      ) : (
+                        <img src={asset.url} alt={asset.altText || asset.fileName} loading="lazy" className="h-full w-full object-contain p-2" />
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <h2 className="truncate text-sm font-black text-slate-900">{asset.fileName}</h2>
+                          <p className="mt-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">{asset.usageType} · {(asset.sizeBytes / 1024 / 1024).toFixed(2)} MB</p>
+                        </div>
+                        {asset.mediaType === 'video' ? <Video className="h-5 w-5 shrink-0 text-violet-600" /> : asset.mediaType === 'document' ? <FileText className="h-5 w-5 shrink-0 text-red-600" /> : <Images className="h-5 w-5 shrink-0 text-amber-600" />}
+                      </div>
+                      <p className="mt-3 truncate rounded bg-slate-50 px-2 py-1.5 font-mono text-[10px] text-slate-600">{asset.url}</p>
+                      <div className="mt-3 flex gap-2">
+                        <button onClick={() => navigator.clipboard.writeText(asset.url).then(() => notify('success', 'Media URL copied'))} className="rounded bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-200">Copy URL</button>
+                        <button onClick={() => handleDelete('media item', asset.id, adminDeleteMedia)} className="rounded bg-red-100 p-1.5 text-red-700 hover:bg-red-200" aria-label={`Delete ${asset.fileName}`}><Trash2 className="h-3.5 w-3.5" /></button>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* SETTINGS */}
           {tab === 'settings' && (
             <div className="bg-white rounded-xl border border-slate-200 shadow-[0_18px_45px_rgba(15,23,42,0.08)] p-5 lg:p-7">
               <div className="border-b border-slate-100 pb-5 mb-6">
-                <h1 className="text-2xl font-black text-slate-900">Site Settings</h1>
-                <p className="text-slate-500 text-sm">Configure global website content</p>
+                <h1 className="text-2xl font-black text-slate-900">Homepage &amp; Site Content</h1>
+                <p className="text-slate-500 text-sm">Edit the current landing page, company information, contact details, and support pages</p>
               </div>
 
-              <form onSubmit={async e => { e.preventDefault(); await adminUpdateSiteConfig(config!); notify('success', 'Settings saved'); loadAll(); }} className="space-y-6 max-w-3xl">
+              <form onSubmit={async e => {
+                e.preventDefault();
+                try {
+                  validateSiteConfig(config);
+                  await adminUpdateSiteConfig(config!);
+                  notify('success', 'Settings saved');
+                  await loadAll();
+                  refreshConfig();
+                } catch {
+                  notify('error', 'Settings could not be saved. Check the content fields and your connection, then try again.');
+                }
+              }} className="space-y-6 max-w-3xl">
                 <div className="bg-slate-50 rounded-2xl p-6">
                   <h3 className="font-black text-slate-900 mb-4">Company Info</h3>
                   <div className="grid sm:grid-cols-2 gap-4">
@@ -853,7 +1304,100 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
                 </div>
 
                 <div className="bg-slate-50 rounded-2xl p-6">
+                  <h3 className="font-black text-slate-900">Homepage Content</h3>
+                  <p className="mb-4 mt-1 text-xs text-slate-500">Controls the live sections of the redesigned landing page.</p>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <MediaField label="Hero Background Video" value={homeSettings.heroVideoUrl} kind="video" media={media} onChange={(value) => updateHome({ heroVideoUrl: value })} onUpload={(file) => uploadMedia(file, 'home-hero')} />
+                    <MediaField label="Hero Product Image" value={homeSettings.heroShowcaseImageUrl} media={media} onChange={(value) => updateHome({ heroShowcaseImageUrl: value })} onUpload={(file) => uploadMedia(file, 'home-hero')} />
+                    <div className="sm:col-span-2"><FormField label="Hero Product Image Alt Text" value={homeSettings.heroShowcaseAlt} onChange={(v: string) => updateHome({ heroShowcaseAlt: v })} /></div>
+                    <FormField label="Hero Eyebrow" value={homeSettings.heroEyebrow} onChange={(v: string) => updateHome({ heroEyebrow: v })} />
+                    <FormField label="Hero Feature Labels" value={homeSettings.heroFeatures.join(', ')} onChange={(v: string) => updateHome({ heroFeatures: v.split(',').map(x => x.trim()).filter(Boolean) })} />
+                    <FormField label="Power Range" value={homeSettings.powerRange} onChange={(v: string) => updateHome({ powerRange: v })} />
+                    <FormField label="Pressure Range" value={homeSettings.pressureRange} onChange={(v: string) => updateHome({ pressureRange: v })} />
+                    <FormField label="Product Range Heading" value={homeSettings.rangeTitle} onChange={(v: string) => updateHome({ rangeTitle: v })} />
+                    <FormField label="Why firstAir Heading" value={homeSettings.whyTitle} onChange={(v: string) => updateHome({ whyTitle: v })} />
+                    <div className="sm:col-span-2"><FormField label="Product Range Introduction" value={homeSettings.rangeIntro} onChange={(v: string) => updateHome({ rangeIntro: v })} textarea /></div>
+                    <div className="sm:col-span-2"><FormField label="Why firstAir Introduction" value={homeSettings.whyIntro} onChange={(v: string) => updateHome({ whyIntro: v })} textarea /></div>
+                    <FormField label="Industries Heading" value={homeSettings.industriesTitle} onChange={(v: string) => updateHome({ industriesTitle: v })} />
+                    <FormField label="Service Heading" value={homeSettings.serviceTitle} onChange={(v: string) => updateHome({ serviceTitle: v })} />
+                    <div className="sm:col-span-2"><FormField label="Industries Introduction" value={homeSettings.industriesIntro} onChange={(v: string) => updateHome({ industriesIntro: v })} textarea /></div>
+                    <div className="sm:col-span-2"><FormField label="Service Introduction" value={homeSettings.serviceIntro} onChange={(v: string) => updateHome({ serviceIntro: v })} textarea /></div>
+                    <FormField label="Service Card Heading" value={homeSettings.serviceCardTitle} onChange={(v: string) => updateHome({ serviceCardTitle: v })} />
+                    <FormField label="About Heading" value={homeSettings.aboutTitle} onChange={(v: string) => updateHome({ aboutTitle: v })} />
+                    <div className="sm:col-span-2"><FormField label="Service Card Text" value={homeSettings.serviceCardText} onChange={(v: string) => updateHome({ serviceCardText: v })} textarea /></div>
+                    <FormField label="Final CTA Heading" value={homeSettings.ctaTitle} onChange={(v: string) => updateHome({ ctaTitle: v })} />
+                    <FormField label="Final CTA Button" value={homeSettings.ctaButton} onChange={(v: string) => updateHome({ ctaButton: v })} />
+                    <div className="sm:col-span-2"><FormField label="Final CTA Text" value={homeSettings.ctaText} onChange={(v: string) => updateHome({ ctaText: v })} textarea /></div>
+                    <div className="sm:col-span-2"><JsonArrayField label="Product Solution Cards" value={homeSettings.solutionCards} onChange={solutionCards => updateHome({ solutionCards: solutionCards as typeof homeSettings.solutionCards })} /></div>
+                    <FormField label="Energy Eyebrow" value={homeSettings.energyEyebrow} onChange={(energyEyebrow: string) => updateHome({ energyEyebrow })} />
+                    <FormField label="Energy Heading" value={homeSettings.energyTitle} onChange={(energyTitle: string) => updateHome({ energyTitle })} />
+                    <div className="sm:col-span-2"><FormField label="Energy Introduction" value={homeSettings.energyIntro} onChange={(energyIntro: string) => updateHome({ energyIntro })} textarea /></div>
+                    <div className="sm:col-span-2"><FormField label="Energy Supporting Text" value={homeSettings.energyText} onChange={(energyText: string) => updateHome({ energyText })} textarea /></div>
+                    <FormField label="Energy Highlights" value={homeSettings.energyHighlights.join(', ')} onChange={(value: string) => updateHome({ energyHighlights: value.split(',').map(item => item.trim()).filter(Boolean) })} />
+                    <FormField label="Energy CTA" value={homeSettings.energyCta} onChange={(energyCta: string) => updateHome({ energyCta })} />
+                    <FormField label="Recommendation Eyebrow" value={homeSettings.recommendationEyebrow} onChange={(recommendationEyebrow: string) => updateHome({ recommendationEyebrow })} />
+                    <FormField label="Recommendation Heading" value={homeSettings.recommendationTitle} onChange={(recommendationTitle: string) => updateHome({ recommendationTitle })} />
+                    <div className="sm:col-span-2"><FormField label="Recommendation Text" value={homeSettings.recommendationText} onChange={(recommendationText: string) => updateHome({ recommendationText })} textarea /></div>
+                    <FormField label="Recommendation Button" value={homeSettings.recommendationButton} onChange={(recommendationButton: string) => updateHome({ recommendationButton })} />
+                    <FormField label="Recommendation Success Heading" value={homeSettings.recommendationSuccessTitle} onChange={(recommendationSuccessTitle: string) => updateHome({ recommendationSuccessTitle })} />
+                    <div className="sm:col-span-2"><FormField label="Recommendation Success Text" value={homeSettings.recommendationSuccessText} onChange={(recommendationSuccessText: string) => updateHome({ recommendationSuccessText })} textarea /></div>
+                    <div className="sm:col-span-2"><JsonObjectField label="Recommendation Form Labels" value={homeSettings.recommendationLabels} onChange={recommendationLabels => updateHome({ recommendationLabels: recommendationLabels as Record<string, string> })} /></div>
+                    <FormField label="Service Support CTA" value={homeSettings.serviceSectionCta} onChange={(serviceSectionCta: string) => updateHome({ serviceSectionCta })} />
+                    <div className="sm:col-span-2"><JsonArrayField label="Service & Support Cards" value={homeSettings.serviceCards} onChange={serviceCards => updateHome({ serviceCards: serviceCards as typeof homeSettings.serviceCards })} /></div>
+                    <FormField label="Industries Shown" value={homeSettings.industriesLimit} onChange={(industriesLimit: number) => updateHome({ industriesLimit })} type="number" />
+                    <div className="sm:col-span-2"><JsonArrayField label="Verified Company Statistics" value={homeSettings.statistics} onChange={statistics => updateHome({ statistics: statistics as typeof homeSettings.statistics })} /></div>
+                    <FormField label="Customer Logos Eyebrow" value={homeSettings.customerLogosEyebrow} onChange={(customerLogosEyebrow: string) => updateHome({ customerLogosEyebrow })} />
+                    <FormField label="Customer Logos Heading" value={homeSettings.customerLogosTitle} onChange={(customerLogosTitle: string) => updateHome({ customerLogosTitle })} />
+                    <div className="sm:col-span-2"><JsonArrayField label="Approved Customer Logos" value={homeSettings.customerLogos} onChange={customerLogos => updateHome({ customerLogos: customerLogos as typeof homeSettings.customerLogos })} /></div>
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-slate-200 bg-white p-6">
+                  <h3 className="font-black text-slate-900">Frontend Page Content</h3>
+                  <p className="mb-5 mt-1 text-xs leading-5 text-slate-500">These fields mirror the current frontend labels, headings, supporting text, image paths, and button text. Database overrides preserve the existing frontend layout and styling.</p>
+                  <div className="space-y-6">
+                    {Object.entries(managedPageContent).map(([page, value]) => <details key={page} className="rounded-xl border border-slate-200 bg-slate-50 p-4"><summary className="cursor-pointer font-black capitalize text-slate-900">{page.replace(/([A-Z])/g, ' $1')}</summary><div className="mt-4"><ManagedPageField page={page} value={value} media={media} onChange={next => updateManagedPage(page, next)} onUpload={(file) => uploadMedia(file, `${page}-page`)} /></div></details>)}
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-slate-200 bg-white p-6">
+                  <h3 className="font-black text-slate-900">Header &amp; Navigation</h3>
+                  <p className="mb-4 mt-1 text-xs text-slate-500">Controls the public logo, header actions, ordered menu hierarchy, visibility, and link destinations.</p>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <MediaField label="Header Logo" value={navigationSettings.logoUrl} media={media} onChange={logoUrl => updateNavigation({ logoUrl })} onUpload={file => uploadMedia(file, 'site-logo')} />
+                    <div className="sm:col-span-2"><FormField label="Logo Alt Text" value={navigationSettings.logoAlt} onChange={(logoAlt: string) => updateNavigation({ logoAlt })} required /></div>
+                    <FormField label="Language Label" value={navigationSettings.languageLabel} onChange={(languageLabel: string) => updateNavigation({ languageLabel })} />
+                    <FormField label="Menu Label" value={navigationSettings.menuLabel} onChange={(menuLabel: string) => updateNavigation({ menuLabel })} />
+                    <FormField label="Login Label" value={navigationSettings.loginLabel} onChange={(loginLabel: string) => updateNavigation({ loginLabel })} />
+                    <FormField label="Search Label" value={navigationSettings.searchLabel} onChange={(searchLabel: string) => updateNavigation({ searchLabel })} />
+                    <FormField label="Mobile Call Label" value={navigationSettings.callLabel} onChange={(callLabel: string) => updateNavigation({ callLabel })} />
+                    <FormField label="Request Quote Label" value={navigationSettings.requestQuoteLabel} onChange={(requestQuoteLabel: string) => updateNavigation({ requestQuoteLabel })} />
+                    <FormField label="Request Quote Page Key" value={navigationSettings.requestQuotePage} onChange={(requestQuotePage: string) => updateNavigation({ requestQuotePage })} />
+                    <NavigationEditor items={navigationSettings.items} onChange={items => updateNavigation({ items })} />
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-slate-200 bg-white p-6">
+                  <h3 className="font-black text-slate-900">Public Website Content</h3>
+                  <p className="mb-4 mt-1 text-xs text-slate-500">Manage hero slides, FAQs, series comparisons, technical checklists, brochure links and footer branding. Empty lists hide those entries. Use URLs from the media library for images and documents.</p>
+                  <JsonObjectField label="Public content" value={config.publicContent as unknown as Record<string, unknown>} onChange={publicContent => setConfig({ ...config, publicContent: publicContent as unknown as SiteConfig['publicContent'] })} />
+                </div>
+
+                <div className="rounded-2xl border border-slate-200 bg-white p-6">
+                  <h3 className="font-black text-slate-900">SEO Metadata</h3>
+                  <p className="mb-4 mt-1 text-xs text-slate-500">Manage route-level titles, descriptions, keywords, social images, canonical paths, and indexing status.</p>
+                  <JsonObjectField label="SEO routes" value={config.seo || {}} onChange={seo => setConfig({ ...config, seo: seo as NonNullable<SiteConfig['seo']> })} />
+                </div>
+
+                <div className="bg-slate-50 rounded-2xl p-6">
                   <h3 className="font-black text-slate-900 mb-4">About</h3>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <FormField label="Hero Eyebrow" value={config.about.heroEyebrow || ''} onChange={(heroEyebrow: string) => setConfig({ ...config, about: { ...config.about, heroEyebrow } })} />
+                    <FormField label="Hero Title" value={config.about.heroTitle || ''} onChange={(heroTitle: string) => setConfig({ ...config, about: { ...config.about, heroTitle } })} />
+                    <div className="sm:col-span-2"><FormField label="Hero Introduction" value={config.about.heroIntro || ''} onChange={(heroIntro: string) => setConfig({ ...config, about: { ...config.about, heroIntro } })} textarea /></div>
+                    <MediaField label="Hero Image" value={config.about.heroImageUrl || ''} kind="image" media={media} onChange={heroImageUrl => setConfig({ ...config, about: { ...config.about, heroImageUrl } })} onUpload={file => uploadMedia(file, 'about-hero')} />
+                    <FormField label="Hero Image ALT Text" value={config.about.heroImageAlt || ''} onChange={(heroImageAlt: string) => setConfig({ ...config, about: { ...config.about, heroImageAlt } })} />
+                  </div>
                   <FormField label="Short Story" value={config.about.storyShort} onChange={(v: string) => setConfig({ ...config, about: { ...config.about, storyShort: v } })} textarea required />
                   <div className="mt-4">
                     <FormField label="Full Story" value={config.about.storyLong} onChange={(v: string) => setConfig({ ...config, about: { ...config.about, storyLong: v } })} textarea required />
@@ -861,6 +1405,10 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
                   <div className="grid sm:grid-cols-2 gap-4 mt-4">
                     <FormField label="Mission" value={config.about.mission} onChange={(v: string) => setConfig({ ...config, about: { ...config.about, mission: v } })} textarea />
                     <FormField label="Vision" value={config.about.vision} onChange={(v: string) => setConfig({ ...config, about: { ...config.about, vision: v } })} textarea />
+                  </div>
+                  <div className="mt-5 space-y-4 border-t border-slate-200 pt-5">
+                    <JsonArrayField label="About Highlights" value={config.about.highlights || []} onChange={highlights => setConfig({ ...config, about: { ...config.about, highlights: highlights as NonNullable<SiteConfig['about']['highlights']> } })} />
+                    <JsonArrayField label="Verified Company Statistics" value={config.about.statistics || []} onChange={statistics => setConfig({ ...config, about: { ...config.about, statistics: statistics as NonNullable<SiteConfig['about']['statistics']> } })} />
                   </div>
                 </div>
 
@@ -933,6 +1481,10 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
           <div className="grid sm:grid-cols-2 gap-4">
             {Object.keys(editing).filter(k => k !== 'id').map(key => {
               const val = editing[key];
+              if (/(image|video|brochure)Url$/i.test(key)) {
+                const kind = /videoUrl$/i.test(key) ? 'video' : /brochureUrl$/i.test(key) ? 'document' : 'image';
+                return <MediaField key={key} label={key.replace(/([A-Z])/g, ' $1')} value={String(val || '')} kind={kind} media={media} onChange={next => setEditing({ ...editing, [key]: next })} onUpload={(file) => uploadMedia(file, kind === 'document' ? 'product-brochures' : editType || 'content')} />;
+              }
               if (Array.isArray(val)) {
                 if (val.some(item => typeof item === 'object' && item !== null)) {
                   return (
@@ -966,6 +1518,7 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
           </div>
         </Modal>
       )}
+      {showMediaUpload && <MediaUploadDialog onClose={() => setShowMediaUpload(false)} onUpload={(file, altText, usageType) => uploadMedia(file, usageType, altText)} />}
     </div>
   );
 }

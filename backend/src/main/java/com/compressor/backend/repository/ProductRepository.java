@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ProductRepository extends JpaRepository<Product, Long> {
   List<Product> findByCategory_Id(Long categoryId);
   Optional<Product> findByLegacyId(String legacyId);
+  List<Product> findAllByModelIgnoreCase(String model);
 }

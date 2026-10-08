@@ -24,6 +24,9 @@ public class ProductCategory extends BaseEntity {
   public String icon;
   @Column(length = 1000)
   public String imageUrl;
+  public Boolean external = false;
+  @Column(length = 1000)
+  public String externalUrl;
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(columnDefinition = "json")
   public List<String> features = new ArrayList<>();

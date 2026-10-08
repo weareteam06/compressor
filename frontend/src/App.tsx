@@ -1,8 +1,10 @@
-import { lazy, Suspense, useState, useEffect, useCallback } from 'react';
+import { SiteConfigProvider, useSiteConfig } from '@/lib/siteConfig';
+import CookieConsentBanner from '@/components/CookieConsentBanner';
+import { RequestProvider, useRequest } from '@/components/RequestModal';
+import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import type { SiteConfig } from '@/lib/data';
-import { getSiteConfig } from '@/lib/data';
-import Navbar from '@/components/Navbar';
+import Navbar from '@/components/NavbarOverlay';
 import Footer from '@/components/Footer';
 import Chatbot from '@/components/Chatbot';
 import FloatingWhatsAppButton from '@/components/FloatingWhatsAppButton';
@@ -18,12 +20,13 @@ import ServicesPage from '@/components/ServicesPage';
 import NewsPage from '@/components/NewsPage';
 import DistributorsPage from '@/components/DistributorsPage';
 import ContactPage from '@/components/ContactPage';
+import FaqPage from '@/components/FaqPage';
 import LoginPage from '@/components/LoginPage';
 
 const AdminDashboardPage = lazy(() => import('@/admin/pages/AdminDashboardPage'));
 const AdminUsersPage = lazy(() => import('@/admin/pages/AdminUsersPage'));
-const AdminCategoriesPage = lazy(() => import('@/admin/pages/AdminCategoriesPage'));
 const AdminProductsPage = lazy(() => import('@/admin/pages/AdminProductsPage'));
+const AdminBrochuresPage = lazy(() => import('@/admin/pages/AdminBrochuresPage'));
 const AdminIndustriesPage = lazy(() => import('@/admin/pages/AdminIndustriesPage'));
 const AdminServicesPage = lazy(() => import('@/admin/pages/AdminServicesPage'));
 const AdminNewsPage = lazy(() => import('@/admin/pages/AdminNewsPage'));
@@ -31,6 +34,7 @@ const AdminTimelinePage = lazy(() => import('@/admin/pages/AdminTimelinePage'));
 const AdminCareersPage = lazy(() => import('@/admin/pages/AdminCareersPage'));
 const AdminDistributorsPage = lazy(() => import('@/admin/pages/AdminDistributorsPage'));
 const AdminLeadsPage = lazy(() => import('@/admin/pages/AdminLeadsPage'));
+const AdminMediaPage = lazy(() => import('@/admin/pages/AdminMediaPage'));
 const AdminSettingsPage = lazy(() => import('@/admin/pages/AdminSettingsPage'));
 
 const pagePaths: Record<string, string> = {
@@ -44,7 +48,11 @@ const pagePaths: Record<string, string> = {
   distributors: '/distributors',
   support: '/support',
   contact: '/contact',
-  login: '/login',
+  faq: '/faq',
+  login: '/employee/login',
+  'employee-login': '/employee/login',
+  'admin-login': '/admin/login',
+  'dealer-login': '/dealer/login',
   admin: '/admin/dashboard',
   about: '/about/story',
   'about-story': '/about/story',
@@ -72,10 +80,10 @@ function currentPageFromPath(pathname: string) {
   if (pathname === '/support') return 'support';
   if (pathname === '/distributors') return 'distributors';
   if (pathname === '/contact') return 'contact';
-  if (pathname === '/login') return 'login';
+  if (pathname === '/faq') return 'faq';
+  if (pathname === '/login' || pathname === '/admin/login' || pathname === '/employee/login' || pathname === '/dealer/login') return 'login';
   return 'home';
 }
-
 function LoadingScreen() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-slate-50">
@@ -89,11 +97,15 @@ function LoadingScreen() {
 
 function WebsiteLayout({ config, children }: { config: SiteConfig; children: React.ReactNode }) {
   const navigate = useNavigate();
+  const openRequest = useRequest();
   const location = useLocation();
   const currentPage = currentPageFromPath(location.pathname);
 
   const navigatePage = (page: string, param?: string) => {
+    if (page === 'request') { openRequest({ title: param || 'Request a Quote', type: param?.toLowerCase().includes('service') ? 'Service Request' : 'Quote Request' }); return; }
     let path = pagePaths[page];
+    if (page === 'search') path = `/products?q=${encodeURIComponent(param || '')}`;
+    if (page === 'products' && param) path = `/products?series=${encodeURIComponent(param)}`;
     if (page === 'product-category') path = `/products/category/${encodeURIComponent(param || '')}`;
     if (page === 'product-detail') path = `/products/${encodeURIComponent(param || '')}`;
     if (page === 'industry-detail') path = `/industries/${encodeURIComponent(param || '')}`;
@@ -106,7 +118,7 @@ function WebsiteLayout({ config, children }: { config: SiteConfig; children: Rea
   return (
     <div className={`min-h-screen bg-white flex flex-col ${currentPage === 'home' ? 'home-theme' : 'interior-theme'}`}>
       <SeoHead config={config} />
-      <Navbar onNavigate={navigatePage} currentPage={currentPage} salesPhone={config.contact.salesPhone} social={config.social} />
+      <Navbar onNavigate={navigatePage} currentPage={currentPage} config={config} />
       <main className="flex-1">{children}</main>
       <Footer config={config} onNavigate={navigatePage} />
       <FloatingWhatsAppButton config={config} />
@@ -140,19 +152,16 @@ function NewsRoute({ onNavigate }: { onNavigate: (page: string, param?: string) 
   return <NewsPage slug={slug} onNavigate={onNavigate} />;
 }
 
-export default function App() {
+function AppRoutes() {
   const navigate = useNavigate();
-  const [quoteProduct, setQuoteProduct] = useState<string>('');
-  const [config, setConfig] = useState<SiteConfig | null>(null);
-
-  const refreshConfig = useCallback(() => {
-    getSiteConfig().then(setConfig);
-  }, []);
-
-  useEffect(() => { refreshConfig(); }, [refreshConfig]);
+  const openRequest = useRequest();
+  const { config, refreshConfig } = useSiteConfig();
 
   const navigatePage = (page: string, param?: string) => {
+    if (page === 'request') { openRequest({ title: param || 'Request a Quote', type: param?.toLowerCase().includes('service') ? 'Service Request' : 'Quote Request' }); return; }
     let path = pagePaths[page];
+    if (page === 'search') path = `/products?q=${encodeURIComponent(param || '')}`;
+    if (page === 'products' && param) path = `/products?series=${encodeURIComponent(param)}`;
     if (page === 'product-category') path = `/products/category/${encodeURIComponent(param || '')}`;
     if (page === 'product-detail') path = `/products/${encodeURIComponent(param || '')}`;
     if (page === 'industry-detail') path = `/industries/${encodeURIComponent(param || '')}`;
@@ -164,20 +173,23 @@ export default function App() {
 
   const handleViewProduct = (id: number | string) => navigatePage('product-detail', String(id));
   const handleQuoteFromProduct = (productModel: string) => {
-    setQuoteProduct(productModel);
-    navigatePage('contact');
+    openRequest({ product: productModel, source: 'Product Detail Quote' });
   };
 
   if (!config) return <LoadingScreen />;
 
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage onLoginSuccess={() => navigate('/admin/dashboard')} onBack={() => navigate('/')} />} />
+      <Route path="/login" element={<Navigate to="/employee/login" replace />} />
+      <Route path="/admin/login" element={<LoginPage key="admin" portal="admin" onLoginSuccess={() => navigate('/admin/dashboard', { replace: true })} onBack={() => navigate('/')} />} />
+      <Route path="/employee/login" element={<LoginPage key="employee" portal="employee" onLoginSuccess={() => navigate('/admin/dashboard', { replace: true })} onBack={() => navigate('/')} />} />
+      <Route path="/dealer/login" element={<LoginPage key="dealer" portal="dealer" onLoginSuccess={() => navigate('/admin/leads', { replace: true })} onBack={() => navigate('/')} />} />
       <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
       <Route path="/admin/dashboard" element={<Suspense fallback={<LoadingScreen />}><AdminDashboardPage refreshConfig={refreshConfig} /></Suspense>} />
       <Route path="/admin/users" element={<Suspense fallback={<LoadingScreen />}><AdminUsersPage refreshConfig={refreshConfig} /></Suspense>} />
-      <Route path="/admin/categories" element={<Suspense fallback={<LoadingScreen />}><AdminCategoriesPage refreshConfig={refreshConfig} /></Suspense>} />
+      <Route path="/admin/categories" element={<Navigate to="/admin/products" replace />} />
       <Route path="/admin/products" element={<Suspense fallback={<LoadingScreen />}><AdminProductsPage refreshConfig={refreshConfig} /></Suspense>} />
+      <Route path="/admin/brochures" element={<Suspense fallback={<LoadingScreen />}><AdminBrochuresPage refreshConfig={refreshConfig} /></Suspense>} />
       <Route path="/admin/industries" element={<Suspense fallback={<LoadingScreen />}><AdminIndustriesPage refreshConfig={refreshConfig} /></Suspense>} />
       <Route path="/admin/services" element={<Suspense fallback={<LoadingScreen />}><AdminServicesPage refreshConfig={refreshConfig} /></Suspense>} />
       <Route path="/admin/news" element={<Suspense fallback={<LoadingScreen />}><AdminNewsPage refreshConfig={refreshConfig} /></Suspense>} />
@@ -185,18 +197,19 @@ export default function App() {
       <Route path="/admin/careers" element={<Suspense fallback={<LoadingScreen />}><AdminCareersPage refreshConfig={refreshConfig} /></Suspense>} />
       <Route path="/admin/distributors" element={<Suspense fallback={<LoadingScreen />}><AdminDistributorsPage refreshConfig={refreshConfig} /></Suspense>} />
       <Route path="/admin/leads" element={<Suspense fallback={<LoadingScreen />}><AdminLeadsPage refreshConfig={refreshConfig} /></Suspense>} />
+      <Route path="/admin/media" element={<Suspense fallback={<LoadingScreen />}><AdminMediaPage refreshConfig={refreshConfig} /></Suspense>} />
       <Route path="/admin/settings" element={<Suspense fallback={<LoadingScreen />}><AdminSettingsPage refreshConfig={refreshConfig} /></Suspense>} />
       <Route path="/admin/*" element={<Navigate to="/admin/dashboard" replace />} />
 
       <Route path="*" element={
         <WebsiteLayout config={config}>
           <Routes>
-            <Route path="/" element={<HomePage onNavigate={navigatePage} onViewProduct={handleViewProduct} />} />
+            <Route path="/" element={<HomePage onNavigate={navigatePage} />} />
             <Route path="/products" element={<ProductsPage onNavigate={navigatePage} />} />
             <Route path="/products/category/:slug" element={<ProductCategoryRoute onNavigate={navigatePage} onViewProduct={handleViewProduct} />} />
             <Route path="/products/:id" element={<ProductDetailRoute onNavigate={navigatePage} onContact={handleQuoteFromProduct} />} />
             <Route path="/about" element={<Navigate to="/about/story" replace />} />
-            <Route path="/about/story" element={<FirstAirInfoPages page="about" config={config} onNavigate={navigatePage} />} />
+            <Route path="/about/story" element={<AboutPages config={config} page="about-story" onNavigate={navigatePage} />} />
             <Route path="/about/timeline" element={<AboutPages config={config} page="about-timeline" onNavigate={navigatePage} />} />
             <Route path="/about/careers" element={<AboutPages config={config} page="about-careers" onNavigate={navigatePage} />} />
             <Route path="/technical-information" element={<FirstAirInfoPages page="technical" config={config} onNavigate={navigatePage} />} />
@@ -209,7 +222,8 @@ export default function App() {
             <Route path="/news/:slug" element={<NewsRoute onNavigate={navigatePage} />} />
             <Route path="/distributors" element={<DistributorsPage onNavigate={navigatePage} />} />
             <Route path="/support" element={<DistributorsPage onNavigate={navigatePage} />} />
-            <Route path="/contact" element={<ContactPage config={config} preselectedProduct={quoteProduct} />} />
+            <Route path="/contact" element={<ContactPage config={config} />} />
+            <Route path="/faq" element={<FaqPage onNavigate={navigatePage} />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </WebsiteLayout>
@@ -217,3 +231,5 @@ export default function App() {
     </Routes>
   );
 }
+
+export default function App() { return <SiteConfigProvider><RequestProvider><AppRoutes /><CookieConsentBanner /></RequestProvider></SiteConfigProvider>; }

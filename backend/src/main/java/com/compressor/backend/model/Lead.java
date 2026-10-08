@@ -30,4 +30,12 @@ public class Lead extends BaseEntity {
   @Column(columnDefinition = "TEXT")
   public String notes;
   public String assignedTo;
+  public String requiredPressure;
+  public String requiredFad;
+  public String operatingHours;
+  public String currentCompressor;
+  public String application;
+  public String location;
+  @Column(columnDefinition = "TEXT")
+  public String requirementDetails;
 }

@@ -5,9 +5,11 @@ import { loginAdmin, setAuthToken } from '@/lib/data';
 interface LoginPageProps {
   onLoginSuccess: () => void;
   onBack: () => void;
+  portal?: 'admin' | 'employee' | 'dealer';
 }
 
-export default function LoginPage({ onLoginSuccess, onBack }: LoginPageProps) {
+export default function LoginPage({ onLoginSuccess, onBack, portal = 'employee' }: LoginPageProps) {
+  const portalName = portal === 'admin' ? 'Admin' : portal === 'dealer' ? 'Dealer' : 'Employee';
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -20,7 +22,11 @@ export default function LoginPage({ onLoginSuccess, onBack }: LoginPageProps) {
 
     try {
       const session = await loginAdmin(username.trim(), password);
+      const isDealer = session.role === 'DEALER' || session.role === 'DISTRIBUTOR';
+      if ((portal === 'dealer') !== isDealer) throw new Error('Wrong portal');
+      if (portal === 'admin' && session.role !== 'ADMIN' && session.role !== 'SUPER_ADMIN') throw new Error('Wrong portal');
       setAuthToken(session.token);
+      localStorage.setItem('compressor_login_path', `/${portal}/login`);
       onLoginSuccess();
     } catch {
       setError('Invalid username or password.');
@@ -52,9 +58,9 @@ export default function LoginPage({ onLoginSuccess, onBack }: LoginPageProps) {
           <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-red-700 bg-red-600 shadow-2xl shadow-red-700/20">
             <ShieldCheck className="w-10 h-10 text-white" />
           </div>
-          <h2 className="text-3xl font-extrabold text-slate-950 tracking-tight">Backend Portal Login</h2>
+          <h1 className="text-3xl font-extrabold text-slate-950 tracking-tight">{portalName} sign in</h1>
           <p className="mt-2 text-sm font-medium text-slate-700">
-            Certified Administration & Content Management Layer
+            {portal === 'admin' ? 'Secure access for website administrators' : portal === 'dealer' ? 'Secure access for authorised dealers and distributors' : 'Secure access to website content and enquiries'}
           </p>
         </div>
 
@@ -62,15 +68,15 @@ export default function LoginPage({ onLoginSuccess, onBack }: LoginPageProps) {
         <div className="mt-8 border border-amber-400 bg-white/95 py-8 px-4 shadow-2xl shadow-amber-900/15 backdrop-blur-xl sm:rounded-3xl sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
-              <div className="p-4 rounded-2xl bg-red-500/20 border border-red-500/30 flex items-center gap-3 text-red-200 text-sm">
-                <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+              <div className="p-4 rounded-2xl bg-red-50 border border-red-200 flex items-center gap-3 text-red-800 text-sm" role="alert">
+                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
                 <span>{error}</span>
               </div>
             )}
 
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                Administrator Username
+                {portalName} Username
               </label>
               <div className="relative rounded-2xl overflow-hidden shadow-inner">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
@@ -78,6 +84,8 @@ export default function LoginPage({ onLoginSuccess, onBack }: LoginPageProps) {
                 </div>
                 <input
                   type="text"
+                  name="username"
+                  autoComplete="username"
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -89,7 +97,7 @@ export default function LoginPage({ onLoginSuccess, onBack }: LoginPageProps) {
 
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-                Administrator Password
+                {portalName} Password
               </label>
               <div className="relative rounded-2xl overflow-hidden shadow-inner">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
@@ -97,6 +105,8 @@ export default function LoginPage({ onLoginSuccess, onBack }: LoginPageProps) {
                 </div>
                 <input
                   type="password"
+                  name="password"
+                  autoComplete="current-password"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -115,10 +125,10 @@ export default function LoginPage({ onLoginSuccess, onBack }: LoginPageProps) {
                 {loading ? (
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>Authorizing Session...</span>
+                    <span>Signing in...</span>
                   </div>
                 ) : (
-                  'Access Portal Dashboard'
+                  `Sign in to ${portal} portal`
                 )}
               </button>
             </div>
@@ -126,14 +136,14 @@ export default function LoginPage({ onLoginSuccess, onBack }: LoginPageProps) {
 
           <div className="mt-8 border-t border-amber-200 pt-6 text-center">
             <p className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
-              Database-backed administrator access
+              {portal === 'admin' ? 'Authorized administrators only' : portal === 'dealer' ? 'Authorized dealers and distributors only' : 'Authorized employees only'}
             </p>
           </div>
         </div>
 
         <div className="mt-8 text-center">
           <p className="text-xs font-medium text-slate-700">
-            Secure 256-bit AES Encryption Layer &copy; firstAir Compressed Air Systems
+            Protected by server-verified authentication &copy; firstAir Compressed Air Systems
           </p>
         </div>
       </div>

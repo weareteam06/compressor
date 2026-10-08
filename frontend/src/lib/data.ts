@@ -1,5 +1,6 @@
-import { catalogProducts } from '@/lib/catalogProducts';
-import { targetIndustries } from '@/lib/targetIndustries';
+import { validateSiteConfig } from './configValidation';
+import { resolveApiUrls } from './apiUrls';
+import type { PublicContent } from './publicContent';
 
 export interface ProductCategory {
   id: number;
@@ -11,6 +12,8 @@ export interface ProductCategory {
   longDescription: string;
   icon: string;
   imageUrl: string;
+  external?: boolean;
+  externalUrl?: string;
   features: string[];
   applications: string[];
   order: number;
@@ -32,10 +35,22 @@ export interface Product {
   pressureMax: number;
   flowRateCfm: string;
   flowRateM3Min: string;
+  motorPower?: string;
+  motorType?: string;
+  coolingMethod?: string;
+  voltage?: string;
+  frequency?: string;
+  noiseLevel?: string;
+  dimensions?: string;
+  weight?: string;
+  categorySlugs?: string[];
   features: string[];
+  benefits?: string[];
+  imageUrls?: string[];
   specifications: { label: string; value: string }[];
   applications: string[];
   brochureUrl?: string;
+  datasheetUrl?: string;
 }
 
 export interface Industry {
@@ -46,9 +61,14 @@ export interface Industry {
   shortDescription: string;
   fullDescription: string;
   imageUrl: string;
+  imageAlt?: string;
+  challengeIntro?: string;
+  solutionIntro?: string;
   applications: string[];
+  benefits?: string[];
   recommendedProducts: string[];
   challenges: { title: string; solution: string }[];
+  order?: number;
 }
 
 export interface Service {
@@ -60,8 +80,11 @@ export interface Service {
   fullDescription: string;
   iconName: string;
   imageUrl: string;
+  imageAlt?: string;
+  serviceScope?: string;
   benefits: string[];
   process: { step: number; title: string; description: string }[];
+  order?: number;
 }
 
 export interface NewsArticle {
@@ -137,6 +160,13 @@ export interface Lead {
   assignedDistributorId?: number;
   notes: string;
   assignedTo?: string;
+  requiredPressure?: string;
+  requiredFad?: string;
+  operatingHours?: string;
+  currentCompressor?: string;
+  application?: string;
+  location?: string;
+  requirementDetails?: string;
 }
 
 export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'USER' | 'DEALER' | 'DISTRIBUTOR';
@@ -154,7 +184,34 @@ export interface UserAccount {
 
 export type UserPayload = Omit<UserAccount, 'id'> & { password?: string };
 
+export interface MediaAsset {
+  id: number;
+  url: string;
+  storageKey: string;
+  fileName: string;
+  contentType: string;
+  mediaType: 'image' | 'video' | 'document';
+  sizeBytes: number;
+  altText: string;
+  usageType: string;
+}
+
 export interface SiteConfig {
+  publicContent: PublicContent;
+  pageContent?: Record<string, Record<string, unknown>>;
+  seo?: Record<string, { title: string; description: string; keywords?: string; imageUrl?: string; canonicalPath?: string; noIndex?: boolean }>;
+  navigation?: {
+    logoUrl: string;
+    logoAlt: string;
+    languageLabel: string;
+    menuLabel: string;
+    loginLabel: string;
+    searchLabel: string;
+    callLabel: string;
+    requestQuoteLabel: string;
+    requestQuotePage: string;
+    items: NavigationItem[];
+  };
   company: {
     name: string;
     tagline: string;
@@ -167,11 +224,85 @@ export interface SiteConfig {
     cta: string;
     secondaryCta: string;
   };
+  home?: {
+    heroVideoUrl: string;
+    heroShowcaseImageUrl: string;
+    heroShowcaseAlt: string;
+    heroEyebrow: string;
+    heroFeatures: string[];
+    powerRange: string;
+    pressureRange: string;
+    rangeTitle: string;
+    rangeIntro: string;
+    whyTitle: string;
+    whyIntro: string;
+    industriesTitle: string;
+    industriesIntro: string;
+    serviceTitle: string;
+    serviceIntro: string;
+    serviceCardTitle: string;
+    serviceCardText: string;
+    aboutTitle: string;
+    ctaTitle: string;
+    ctaText: string;
+    ctaButton: string;
+    heroMetricLabels: string[];
+    showcaseEyebrow: string;
+    showcaseTitle: string;
+    familyCards: { series: string; label: string; title: string; description: string }[];
+    rangeEyebrow: string;
+    modelsLabel: string;
+    viewSeriesLabel: string;
+    viewAllProductsLabel: string;
+    whyEyebrow: string;
+    benefits: { title: string; description: string }[];
+    industriesEyebrow: string;
+    industryLinkLabel: string;
+    serviceEyebrow: string;
+    serviceItems: string[];
+    servicesButton: string;
+    callSalesButton: string;
+    aboutEyebrow: string;
+    yearsLabel: string;
+    motorValue: string;
+    motorLabel: string;
+    industryValue: string;
+    industryText: string;
+    aboutButton: string;
+    solutionCards: { id: string; title: string; description: string; imageUrl: string; imageAlt: string; page?: string; param?: string; url?: string; external?: boolean; active?: boolean }[];
+    energyEyebrow: string;
+    energyTitle: string;
+    energyIntro: string;
+    energyText: string;
+    energyHighlights: string[];
+    energyCta: string;
+    recommendationEyebrow: string;
+    recommendationTitle: string;
+    recommendationText: string;
+    recommendationButton: string;
+    recommendationSuccessTitle: string;
+    recommendationSuccessText: string;
+    recommendationLabels: Record<string, string>;
+    serviceSectionCta: string;
+    serviceCards: { title: string; description: string }[];
+    statistics: { value: string; label: string; verified: boolean; active?: boolean }[];
+    customerLogosEyebrow: string;
+    customerLogosTitle: string;
+    customerLogos: { name: string; imageUrl: string; imageAlt: string; url?: string; approved: boolean; active?: boolean }[];
+    industriesLimit: number;
+  };
   about: {
     storyShort: string;
     storyLong: string;
     mission: string;
     vision: string;
+    heroEyebrow?: string;
+    heroTitle?: string;
+    heroIntro?: string;
+    heroImageUrl?: string;
+    heroImageAlt?: string;
+    highlights?: { title: string; description: string; active?: boolean }[];
+    statistics?: { value: string; label: string; verified: boolean; active?: boolean }[];
   };
   contact: {
     factoryPhone: string;
@@ -213,6 +344,17 @@ export interface SiteConfig {
   };
 }
 
+export interface NavigationItem {
+  id: string;
+  label: string;
+  page?: string;
+  param?: string;
+  url?: string;
+  external?: boolean;
+  active?: boolean;
+  children?: NavigationItem[];
+}
+
 export interface LoginResult {
   success: boolean;
   token: string;
@@ -244,7 +386,14 @@ export interface ChatbotStatus {
   model: string;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+export interface CmsAudit {
+  siteSections: { sectionKey: string; active: boolean; displayOrder: number; updatedBy: string; updatedAt?: string; fieldCount: number }[];
+  inactive: Record<string, number>;
+  mediaMissingAltText: number;
+  generatedAt: string;
+}
+
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '');
 const AUTH_TOKEN_KEY = 'compressor_auth_token';
 
 export function getAuthToken() {
@@ -260,50 +409,47 @@ export function clearAuthToken() {
 }
 
 async function api<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const token = getAuthToken();
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(options.headers || {}),
-    },
-    ...options,
-  });
+  // An expired admin session must not prevent public content from loading.
+  const token = path.startsWith('/admin/') || path === '/auth/me' ? getAuthToken() : null;
+  const controller = new AbortController();
+  const abort = () => controller.abort();
+  if (options.signal?.aborted) abort();
+  options.signal?.addEventListener('abort', abort, { once: true });
+  const timeout = window.setTimeout(abort, path === '/site-config' ? 15000 : 60000);
+  try {
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+      ...options,
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(options.headers || {}),
+      },
+    });
 
-  if (response.status === 404) return undefined as T;
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || `API request failed: ${response.status}`);
+    if (response.status === 404 && /^\/(products|product-categories|industries|services|news)\/[^/]+$/.test(path)) return undefined as T;
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error(message || `API request failed: ${response.status}`);
+    }
+    if (response.status === 204) return undefined as T;
+    return resolveApiUrls(await response.json() as T, API_BASE_URL);
+  } finally {
+    window.clearTimeout(timeout);
+    options.signal?.removeEventListener('abort', abort);
   }
-  if (response.status === 204) return undefined as T;
-  return response.json() as Promise<T>;
 }
 
 const jsonBody = (body: unknown) => JSON.stringify(body);
 
-function normalizedModel(model = '') {
-  return model.toUpperCase().replace(/^FAS(?!M)[\s-]?/, 'FAS-').trim();
+export async function getSiteConfig(signal?: AbortSignal): Promise<SiteConfig> {
+  const config = await api<SiteConfig>('/site-config', { signal });
+  validateSiteConfig(config);
+  return config;
 }
 
-function catalogProductMatches(product: Product, id: number | string) {
-  const value = String(id).toUpperCase();
-  return String(product.id).toUpperCase() === value ||
-    product.legacyId?.toUpperCase() === value ||
-    normalizedModel(product.model) === normalizedModel(String(id));
-}
-
-function mergeCatalogProducts(apiProducts: Product[]) {
-  const catalogKeys = new Set(catalogProducts.map(product => normalizedModel(product.model)));
-  const nonCatalogProducts = apiProducts.filter(product => {
-    const model = normalizedModel(product.model);
-    const isCatalogFamily = model.startsWith('FAS-') || model.startsWith('FASM') || model.startsWith('FSG');
-    return !isCatalogFamily || !catalogKeys.has(model);
-  });
-  return [...catalogProducts, ...nonCatalogProducts];
-}
-
-export function getSiteConfig(): Promise<SiteConfig> {
-  return api('/site-config');
+export function getMediaAssets(): Promise<MediaAsset[]> {
+  return api<MediaAsset[]>('/images');
 }
 
 export function getProductCategories(): Promise<ProductCategory[]> {
@@ -316,29 +462,34 @@ export function getProductCategoryBySlug(slug: string): Promise<ProductCategory 
 
 export function getProducts(categoryId?: number | string): Promise<Product[]> {
   const query = categoryId ? `?categoryId=${encodeURIComponent(categoryId)}` : '';
-  return api<Product[]>(`/products${query}`).then(mergeCatalogProducts);
+  return api<Product[]>(`/products${query}`);
 }
 
 export function getProductById(id: number | string): Promise<Product | undefined> {
-  const catalogProduct = catalogProducts.find(product => catalogProductMatches(product, id));
-  if (catalogProduct) return Promise.resolve(catalogProduct);
-  return api<Product | undefined>(`/products/${encodeURIComponent(id)}`).then(product => {
-    if (!product) return undefined;
-    return catalogProducts.find(item => catalogProductMatches(item, product.legacyId || product.model)) || product;
-  });
+  return api<Product | undefined>(`/products/${encodeURIComponent(id)}`);
 }
 
-export function getIndustries(): Promise<Industry[]> {
-  return api<Industry[]>('/industries').then(apiIndustries => {
-    const targetSlugs = new Set(targetIndustries.map(industry => industry.slug));
-    return [...targetIndustries, ...apiIndustries.filter(industry => !targetSlugs.has(industry.slug))];
-  });
+export async function getIndustries(): Promise<Industry[]> {
+  const [industries, media] = await Promise.all([
+    api<Industry[]>('/industries'),
+    api<MediaAsset[]>('/images'),
+  ]);
+  return industries.map(industry => withIndustryMedia(industry, media));
 }
 
-export function getIndustryBySlug(slug: string): Promise<Industry | undefined> {
-  const targetIndustry = targetIndustries.find(industry => industry.slug === slug);
-  if (targetIndustry) return Promise.resolve(targetIndustry);
-  return api(`/industries/${encodeURIComponent(slug)}`);
+export async function getIndustryBySlug(slug: string): Promise<Industry | undefined> {
+  const [stored, media] = await Promise.all([
+    api<Industry | undefined>(`/industries/${encodeURIComponent(slug)}`),
+    api<MediaAsset[]>('/images'),
+  ]);
+  return stored ? withIndustryMedia(stored, media) : undefined;
+}
+
+function withIndustryMedia(industry: Industry, media: MediaAsset[]): Industry {
+  const mediaSlug = industry.slug === 'manufacturing' ? 'general-manufacturing' : industry.slug;
+  const expectedKey = `industry-${mediaSlug}.`;
+  const asset = media.find(item => item.usageType === 'industries' && item.storageKey?.startsWith(expectedKey));
+  return asset ? { ...industry, imageUrl: asset.url } : industry;
 }
 
 export function getServices(): Promise<Service[]> {
@@ -419,6 +570,29 @@ export function adminUpdateProduct(id: number | string, updates: Partial<Product
 
 export function adminDeleteProduct(id: number | string) {
   return api<{ success: boolean }>(`/admin/products/${encodeURIComponent(id)}`, { method: 'DELETE' }).then(r => r.success);
+}
+
+export function adminGetMedia() {
+  return api<MediaAsset[]>('/admin/images');
+}
+
+export async function adminUploadMedia(file: File, altText = '', usageType = 'general') {
+  const body = new FormData();
+  body.append('file', file);
+  body.append('altText', altText);
+  body.append('usageType', usageType);
+  const token = getAuthToken();
+  const response = await fetch(`${API_BASE_URL}/admin/media/upload`, {
+    method: 'POST',
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body,
+  });
+  if (!response.ok) throw new Error(await response.text() || `Upload failed: ${response.status}`);
+  return response.json() as Promise<MediaAsset>;
+}
+
+export function adminDeleteMedia(id: number | string) {
+  return api<{ success: boolean }>(`/admin/images/${id}`, { method: 'DELETE' }).then(result => result.success);
 }
 
 export function adminGetIndustries() {
@@ -547,4 +721,8 @@ export function adminDeleteUser(id: number | string) {
 
 export function adminUpdateSiteConfig(updates: Partial<SiteConfig>) {
   return api<SiteConfig>('/admin/site-config', { method: 'PUT', body: jsonBody(updates) });
+}
+
+export function adminGetCmsAudit() {
+  return api<CmsAudit>('/admin/cms-audit');
 }

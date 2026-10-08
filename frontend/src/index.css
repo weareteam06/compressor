@@ -1,16 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
-  font-family: "Manrope", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Inter", Arial, sans-serif;
   color: #0f172a;
   background: #ffffff;
+  font-synthesis: none;
 }
 
 body {
   margin: 0;
-  font-family: "Manrope", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  text-rendering: optimizeLegibility;
+  font-family: "Inter", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.55;
+  text-rendering: auto;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
   background:
     linear-gradient(180deg, rgba(239, 246, 255, 0.48), rgba(255, 255, 255, 0) 420px),
     #ffffff;
@@ -21,8 +27,40 @@ h2,
 h3,
 h4,
 .brand-display {
-  font-family: "Sora", "Manrope", ui-sans-serif, system-ui, sans-serif;
-  letter-spacing: 0;
+  font-family: "Inter", Arial, sans-serif;
+  letter-spacing: -0.015em;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+p,
+li,
+label,
+input,
+select,
+textarea {
+  letter-spacing: normal;
+}
+
+.tracking-wide {
+  letter-spacing: 0.025em;
+}
+
+.tracking-wider {
+  letter-spacing: 0.045em;
+}
+
+.tracking-widest {
+  letter-spacing: 0.075em;
+}
+
+[class*="tracking-["] {
+  letter-spacing: 0.08em !important;
 }
 
 ::selection {
@@ -174,42 +212,100 @@ html {
   --tw-ring-color: rgb(249 185 22 / 0.25) !important;
 }
 
-/* One consistent hero system for every public interior page. */
-.interior-theme main .page-hero {
+/* Minimal title header for public interior pages. */
+.interior-theme main .page-intro {
+  position: relative;
   display: flex;
-  min-height: 360px;
+  min-height: 0;
   align-items: center;
-  padding-top: 4rem !important;
-  padding-bottom: 4rem !important;
-  color: #0f172a;
-  border-top: 4px solid #dc2626 !important;
-  background-color: #f9b916 !important;
-  background-image: linear-gradient(120deg, #fff1bd 0%, #ffd45f 48%, #f9b000 100%) !important;
+  padding-top: 2.5rem !important;
+  padding-bottom: 2.5rem !important;
+  color: #0f172a !important;
+  border-top: 0 !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  background-color: #ffffff !important;
+  background-image: none !important;
 }
 
-.interior-theme main .page-hero > div:not(.absolute) {
+.interior-theme main .page-intro::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: #f9b916;
+}
+
+.interior-theme main .page-intro > img,
+.interior-theme main .page-intro > .absolute {
+  display: none !important;
+}
+
+.interior-theme main .page-intro > div:not(.absolute) {
   width: 100%;
 }
 
-.interior-theme main .page-hero [class~="text-white"] {
-  color: #0f172a !important;
+.interior-theme main .page-intro h1 {
+  max-width: 48rem;
+  font-size: clamp(1.9rem, 3.5vw, 2.5rem) !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.025em;
 }
 
-.interior-theme main .page-hero [class~="text-white/70"],
-.interior-theme main .page-hero [class~="text-red-200/80"],
-.interior-theme main .page-hero [class~="text-red-100/85"] {
+.interior-theme main .page-intro h1 + p {
+  max-width: 44rem;
+  margin-top: 0.875rem !important;
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
   color: #475569 !important;
 }
 
-.interior-theme main .page-hero [class~="text-amber-300"],
-.interior-theme main .page-hero [class~="text-amber-400"] {
-  color: #b91c1c !important;
+.interior-theme main .page-intro [class~="text-white"],
+.interior-theme main .page-intro h1 {
+  color: #0f172a !important;
+}
+
+.interior-theme main .page-intro [class~="text-white/70"],
+.interior-theme main .page-intro [class~="text-red-200/80"],
+.interior-theme main .page-intro [class~="text-red-100/85"] {
+  color: #475569 !important;
+}
+
+.interior-theme main .page-intro [class~="text-amber-300"],
+.interior-theme main .page-intro [class~="text-amber-400"] {
+  color: #991b1b !important;
+}
+
+.interior-theme main .page-intro [class~="text-red-700"],
+.interior-theme main .page-intro [class~="text-red-800"] {
+  color: #991b1b !important;
+}
+
+.interior-theme main .page-intro button[class~="text-white"],
+.interior-theme main .page-intro a[class~="text-white"] {
+  color: #ffffff !important;
 }
 
 @media (max-width: 767px) {
-  .interior-theme main .page-hero {
-    min-height: 300px;
-    padding-top: 3rem !important;
-    padding-bottom: 3rem !important;
+  .interior-theme main .page-intro {
+    padding-top: 2.25rem !important;
+    padding-bottom: 2.25rem !important;
   }
+}
+
+/* Catalog artwork stays visible while highlights remain readable. */
+.catalog-hero-wash {
+  background: linear-gradient(90deg, rgba(255,250,226,.98), rgba(255,248,217,.96) 32%, rgba(255,238,186,.72) 58%, rgba(255,218,112,.38));
+}
+
+@keyframes catalog-slide-left-to-right {
+  from { opacity: 0; transform: translateX(-88px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.catalog-hero-slide {
+  animation: catalog-slide-left-to-right 900ms cubic-bezier(.22, .8, .25, 1) both;
+}
+
+@media (max-width: 1023px) {
+  .catalog-hero-wash { background: linear-gradient(180deg, rgba(255,250,226,.98), rgba(255,247,216,.94) 48%, rgba(255,222,126,.45) 78%); }
 }

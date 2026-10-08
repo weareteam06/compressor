@@ -1,349 +1,119 @@
-﻿import { useEffect, useState } from 'react';
-import { ArrowRight, CheckCircle2, ChevronLeft, ChevronRight, FileText, Phone, ShieldCheck, Wrench } from 'lucide-react';
-import type { Product, SiteConfig } from '@/lib/data';
-import { getProducts, getSiteConfig } from '@/lib/data';
-import CompressorSeriesGuide from '@/components/CompressorSeriesGuide';
-import CompressorIcon from '@/components/CompressorIcon';
+import { SiteText } from '@/lib/SiteText';
+import { useSiteConfig } from '@/lib/siteConfig';
+import ProductHeroSlider from './ProductHeroSlider';
+import { Zap, Truck, Package, Settings as SolutionSettings } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowRight, CheckCircle2, Factory, Gauge, Headphones, Leaf, Phone, Settings, ShieldCheck, Wind, Wrench } from 'lucide-react';
+import type { Industry, Product, SiteConfig } from '@/lib/data';
+import { getIndustries, getProducts } from '@/lib/data';
 
 interface HomePageProps {
   onNavigate: (page: string, param?: string) => void;
-  onViewProduct: (id: number | string) => void;
 }
 
-const bannerUrl = 'https://www.firstaircompressor.com/wp-content/uploads/files/2024/banner.jpg';
-
-const productOrder = [
-  'FAS-4', 'FAS-6', 'FAS-8', 'FAS-11', 'FAS-11(HE)',
-  'FAS-15', 'FAS-18', 'FAS-22', 'FAS-30', 'FAS-37', 'FAS-45', 'FAS-55', 'FAS-75',
-];
-
-const commonApplications = [
-  'Workshops and service bays',
-  'Manufacturing plant air',
-  'Automotive and fabrication',
-  'Packaging and food processing',
-  'CNC and precision engineering',
-  'Construction and maintenance air',
-];
-
-function firstAirProducts(products: Product[]) {
-  return products
-    .filter(product => /^FAS[-\s]?\d+/i.test(product.model))
-    .sort((a, b) => {
-      const aIndex = productOrder.indexOf(a.model);
-      const bIndex = productOrder.indexOf(b.model);
-      if (aIndex >= 0 && bIndex >= 0) return aIndex - bIndex;
-      if (aIndex >= 0) return -1;
-      if (bIndex >= 0) return 1;
-      return a.powerKw - b.powerKw;
-    });
-}
-
-export default function HomePage({ onNavigate, onViewProduct }: HomePageProps) {
+export default function HomePage({ onNavigate }: HomePageProps) {
   const [products, setProducts] = useState<Product[]>([]);
-  const [config, setConfig] = useState<SiteConfig | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [activeSlide, setActiveSlide] = useState(0);
+  const [industries, setIndustries] = useState<Industry[]>([]);
+  const { config } = useSiteConfig();
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    Promise.all([getProducts(), getSiteConfig()]).then(([p, cfg]) => {
-      setProducts(firstAirProducts(p));
-      setConfig(cfg);
-      setLoading(false);
-    });
+    Promise.all([getProducts(), getIndustries()])
+      .then(([items, industryItems]) => {
+        setProducts(items);
+        setIndustries(industryItems);
+
+
+      })
+      .catch(() => setFailed(true));
   }, []);
 
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setActiveSlide(index => (index + 1) % Math.max(1, Math.min(4, products.length + 1)));
-    }, 6000);
-    return () => window.clearInterval(timer);
-  }, [products.length]);
+  if (failed) return (
+    <section className="flex min-h-[55vh] items-center justify-center bg-slate-50 px-5 text-center">
+      <div className="max-w-lg"><h1 className="text-3xl font-bold text-slate-950"><SiteText section="HomePage" name="we_could_not_load_the_website_information" /></h1><p className="mt-3 text-slate-600"><SiteText section="HomePage" name="please_check_that_the_application_server_is_running_then_refresh_this_" /></p><button onClick={() => window.location.reload()} className="mt-6 rounded-md bg-red-600 px-6 py-3 font-bold text-white"><SiteText section="HomePage" name="try_again" /></button></div>
+    </section>
+  );
 
-  if (loading || !config) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-12 h-12 border-4 border-red-100 border-t-red-600 rounded-full animate-spin" />
-      </div>
-    );
-  }
+  if (!config) return <div className="flex min-h-[55vh] items-center justify-center"><div className="h-11 w-11 animate-spin rounded-full border-4 border-slate-200 border-t-red-600" /></div>;
 
-  const heroSlides = [
-    {
-      key: 'intro',
-      eyebrow: 'Air cooled single stage rotary screw compressors',
-      title: config.hero.title,
-      body: config.hero.subtitle,
-      image: bannerUrl,
-      actionLabel: 'View Products',
-      action: () => onNavigate('products'),
-      secondaryLabel: 'Find a Dealer',
-      secondary: () => onNavigate('distributors'),
-      product: null as Product | null,
-    },
-    ...products.slice().sort((a, b) => b.powerKw - a.powerKw).slice(0, 3).map(product => ({
-      key: String(product.id),
-      eyebrow: `${product.series} product highlight`,
-      title: `${product.model} Rotary Screw Compressor`,
-      body: product.description,
-      image: product.imageUrl,
-      actionLabel: 'View Details',
-      action: () => onViewProduct(product.id),
-      secondaryLabel: 'Get Quote',
-      secondary: () => onNavigate('contact'),
-      product,
-    })),
-  ];
-  const slide = heroSlides[activeSlide] || heroSlides[0];
-  const heroProduct = slide.product || products[products.length - 1] || null;
-  const featuredProducts = products.slice(0, 3);
-  const goToSlide = (index: number) => setActiveSlide((index + heroSlides.length) % heroSlides.length);
+  const home = config.home!;
+  const openSolution = (solution: NonNullable<SiteConfig['home']>['solutionCards'][number]) => {
+    if (solution.url) {
+      if (solution.external) window.open(solution.url, '_blank', 'noopener,noreferrer');
+      else window.location.assign(solution.url);
+      return;
+    }
+    onNavigate(solution.page || 'products', solution.param);
+  };
+  const solutionIcons = { 'oil-lubricated': SolutionSettings, 'oil-free': Package, 'variable-speed': Gauge, 'pm-motor': Zap, 'low-pressure': Wind, portable: Truck };
 
   return (
     <div className="bg-white text-slate-900">
-      <section className="relative min-h-[78vh] overflow-hidden bg-[#f9b916] text-slate-950">
-        <img src={slide.image} alt="" className="absolute inset-0 h-full w-full object-cover opacity-20 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,248,218,0.98)_0%,rgba(255,220,111,0.91)_48%,rgba(249,185,22,0.58)_100%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#f9b916]/80 to-transparent" />
+      <ProductHeroSlider slides={config.publicContent.heroSlides} products={products} onNavigate={onNavigate} />
 
-        <div className="relative mx-auto flex min-h-[78vh] max-w-[1440px] flex-col px-5 py-10 lg:px-10">
-          <div className="grid flex-1 items-center gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-            <div className="max-w-3xl py-10">
-              <div className="inline-flex items-center gap-2 border border-black/20 bg-white/55 px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-red-700">
-                <CompressorIcon className="h-4 w-4" />
-                {slide.eyebrow}
-              </div>
-              <h1 className="brand-display mt-7 text-4xl font-black leading-[1.02] text-black sm:text-5xl lg:text-7xl">{slide.title}</h1>
-              <p className="mt-6 max-w-2xl text-base font-medium leading-relaxed text-slate-800 sm:text-lg">{slide.body}</p>
-
-              <div className="mt-8 grid max-w-2xl grid-cols-3 gap-3">
-                {[
-                  { label: 'Power', value: heroProduct ? `${heroProduct.powerKw} kW` : '4-185 kW' },
-                  { label: 'CFM', value: heroProduct ? heroProduct.flowRateCfm : '9-1130' },
-                  { label: 'Pressure', value: heroProduct ? `${heroProduct.pressureMin}-${heroProduct.pressureMax} kg/cm2(g)` : '5-16 kg/cm2(g)' },
-                ].map(item => (
-                  <div key={item.label} className="border border-black/15 bg-white/55 px-4 py-4 backdrop-blur-sm">
-                    <div className="text-xl font-black text-black lg:text-2xl">{item.value}</div>
-                    <div className="mt-1 text-[10px] font-black uppercase tracking-widest text-red-700">{item.label}</div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <button onClick={slide.action} className="inline-flex items-center gap-2 bg-red-600 px-7 py-4 text-sm font-black uppercase tracking-wide text-white shadow-xl shadow-red-950/25 transition-colors hover:bg-red-700">
-                  {slide.actionLabel} <ArrowRight className="h-4 w-4" />
-                </button>
-                <button onClick={slide.secondary} className="inline-flex items-center gap-2 border border-amber-600 bg-white px-7 py-4 text-sm font-black uppercase tracking-wide text-slate-950 transition-colors hover:bg-amber-50">
-                  {slide.secondaryLabel}
-                </button>
-              </div>
-            </div>
-
-            <div className="relative flex min-h-[340px] items-center justify-center lg:min-h-[560px]">
-              <img
-                src={heroProduct?.imageUrl || bannerUrl}
-                alt={heroProduct?.model || 'firstAir compressor'}
-                className="max-h-[520px] w-full max-w-[680px] object-contain drop-shadow-2xl"
-              />
-              <div className="absolute bottom-4 right-0 border-l-4 border-red-600 bg-white/90 px-5 py-4 text-right text-slate-950 shadow-xl backdrop-blur-sm">
-                <div className="text-xs font-black uppercase tracking-[0.22em] text-red-700">Featured</div>
-                <div className="brand-display text-3xl font-black text-slate-950">{heroProduct?.model || 'FAS Range'}</div>
-              </div>
-            </div>
+      <section className="py-16 lg:py-20">
+        <Container>
+          <Heading eyebrow={home.rangeEyebrow} title={home.rangeTitle}>{home.rangeIntro}</Heading>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {home.solutionCards.filter(card => card.active !== false).map(card => <button key={card.id} onClick={() => openSolution(card)} className="group relative flex min-h-[255px] flex-col overflow-hidden rounded-xl border border-slate-200 bg-white text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-red-200 hover:shadow-xl">
+              <div className="absolute inset-y-0 left-0 w-1 bg-red-600 opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true" />
+              <div className="flex h-28 items-center border-b border-slate-100 bg-slate-50 px-6">{(() => { const Icon = solutionIcons[card.id as keyof typeof solutionIcons] || SolutionSettings; return <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-red-100 bg-white text-red-700 shadow-sm transition duration-300 group-hover:border-red-600 group-hover:bg-red-600 group-hover:text-white"><Icon aria-hidden="true" className="h-7 w-7" /></span>; })()}</div>
+              <div className="flex flex-1 flex-col p-6"><h3 className="text-lg font-extrabold leading-snug text-slate-900">{card.id === 'oil-free' ? 'Ultra Pack' : card.title}</h3><p className="mt-3 text-sm leading-6 text-slate-600">{card.description}</p><span className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-bold text-red-700">{home.viewSeriesLabel} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span></div>
+            </button>)}
           </div>
-
-          <div className="flex flex-col gap-4 border-t border-black/15 pt-5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex gap-2">
-              <button onClick={() => goToSlide(activeSlide - 1)} className="flex h-11 w-11 items-center justify-center border border-black/20 bg-white/60 text-black transition-colors hover:bg-white" aria-label="Previous hero slide">
-                <ChevronLeft className="h-5 w-5" />
-              </button>
-              <button onClick={() => goToSlide(activeSlide + 1)} className="flex h-11 w-11 items-center justify-center bg-red-600 text-white transition-colors hover:bg-red-700" aria-label="Next hero slide">
-                <ChevronRight className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="grid flex-1 grid-cols-2 gap-2 sm:grid-cols-4 lg:max-w-3xl">
-              {heroSlides.map((item, index) => {
-                const thumbProduct = item.product || products[products.length - 1] || null;
-                return (
-                  <button
-                    key={item.key}
-                    onClick={() => goToSlide(index)}
-                    className={`flex items-center gap-3 border px-3 py-2 text-left transition-colors ${activeSlide === index ? 'border-red-600 bg-white/80' : 'border-black/15 bg-white/45 hover:bg-white/70'}`}
-                    aria-label={`Go to hero slide ${index + 1}`}
-                  >
-                    <span className="flex h-12 w-14 shrink-0 items-center justify-center bg-white">
-                      <img src={thumbProduct?.imageUrl || bannerUrl} alt={item.title} className="max-h-11 max-w-full object-contain" />
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block truncate text-xs font-black text-black">{item.product?.model || 'Range'}</span>
-                      <span className="block truncate text-[10px] font-bold uppercase tracking-wider text-red-700">{item.product ? `${item.product.powerKw} kW` : 'Overview'}</span>
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
+          <div className="mt-9 text-center"><button onClick={() => onNavigate('products')} className="inline-flex items-center gap-2 rounded-md border border-slate-300 px-6 py-3 text-sm font-bold hover:bg-slate-50">{home.viewAllProductsLabel} <ArrowRight className="h-4 w-4" /></button></div>
+        </Container>
       </section>
 
-      <section className="bg-white py-18 lg:py-24">
-        <div className="max-w-[1180px] mx-auto px-5 lg:px-8 grid lg:grid-cols-[0.9fr_1.1fr] gap-12 items-center">
-          <div>
-            <div className="text-red-600 font-black text-xs uppercase tracking-[0.25em] mb-3">What is firstAir?</div>
-            <h2 className="brand-display text-4xl lg:text-5xl font-black leading-tight">A complete compressor range for industrial air demand</h2>
-          </div>
-          <div className="text-slate-600 text-lg leading-relaxed space-y-5">
-            <p>
-              firstAir brings together FAS and FSG rotary screw compressor models for workshops, service bays, manufacturing units, site work, and continuous industrial plant air.
-            </p>
-            <p>
-              The catalog starts with compact FAS packages for smaller air demand and extends through higher-output FAS and FSG models for production environments, maintenance teams, and heavy duty compressed air requirements.
-            </p>
-            <p>
-              Selection can be guided by power, air delivery, pressure, and operating pattern. With efficient motors, air-cooled package design, practical service access, and cataloged brochure data, firstAir focuses on reliable air supply and simpler ownership planning.
-            </p>
-            <div className="grid gap-3 pt-2 sm:grid-cols-3">
-              {[
-                { value: '4-185 kW', label: 'FAS + FSG range' },
-                { value: '9-1130 CFM', label: 'Air delivery' },
-                { value: '5-16 kg/cm2(g)', label: 'Pressure coverage' },
-              ].map(item => (
-                <div key={item.label} className="rounded-lg border border-amber-200 bg-[#fff8df] p-4">
-                  <div className="text-2xl font-black text-slate-950">{item.value}</div>
-                  <div className="mt-1 text-[10px] font-black uppercase tracking-widest text-red-600">{item.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+      <section className="bg-slate-950 py-16 text-white lg:py-20"><Container><div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+        <div><div className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-400">{home.whyEyebrow}</div><h2 className="mt-3 text-3xl font-extrabold sm:text-4xl">{home.whyTitle}</h2><p className="mt-5 leading-7 text-slate-300">{home.whyIntro}</p></div>
+        <div className="grid gap-9 sm:grid-cols-2">{home.benefits.map((benefit, index) => <Benefit key={benefit.title} icon={[Leaf, ShieldCheck, Wrench, Headphones][index % 4]} title={benefit.title}>{benefit.description}</Benefit>)}</div>
+      </div></Container></section>
+
+      <section className="py-16 lg:py-20"><Container>
+        <Heading eyebrow="Solutions for your industry" title={`${home.industriesTitle} — Every Industrial Application`}>{home.industriesIntro}</Heading>
+        <div className="mt-10 grid gap-1 overflow-hidden rounded-xl bg-white sm:grid-cols-2 lg:grid-cols-3">
+          {industries.slice(0, home.industriesLimit).map((industry, index) => {
+            const Icon = [Factory, Settings, ShieldCheck, Gauge, Wrench, CheckCircle2][index % 6];
+            return <button key={industry.id} onClick={() => onNavigate('industry-detail', industry.slug)} className="group relative min-h-[280px] overflow-hidden bg-slate-950 p-7 text-left text-white">
+              <img src={industry.imageUrl} alt="" className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105" onError={event => { event.currentTarget.style.display = 'none'; }} />
+              <span className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-slate-950/15 transition group-hover:via-slate-950/60" />
+              <span className="relative flex h-full min-h-[224px] flex-col justify-end">
+                <span className="mb-auto flex h-11 w-11 items-center justify-center rounded-lg border border-white/25 bg-slate-950/55 backdrop-blur-sm"><Icon className="h-6 w-6 text-amber-400" /></span>
+                <span className="text-xl font-extrabold">{industry.name}</span>
+                <span className="mt-2 line-clamp-2 text-sm leading-6 text-slate-200">{industry.shortDescription}</span>
+                <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-amber-400">{home.industryLinkLabel} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span>
+              </span>
+            </button>;
+          })}
         </div>
-      </section>
+      </Container></section>
 
-      <CompressorSeriesGuide onNavigate={onNavigate} />
+      <section className="border-y border-slate-200 bg-amber-50 py-16 lg:py-20"><Container><div className="grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+        <div><Eyebrow>{home.energyEyebrow}</Eyebrow><h2 className="mt-3 text-3xl font-extrabold sm:text-4xl">{home.energyTitle}</h2><p className="mt-5 leading-7 text-slate-700">{home.energyIntro}</p><p className="mt-4 leading-7 text-slate-600">{home.energyText}</p><button onClick={() => onNavigate('request', 'Request an Energy Assessment')} className="mt-7 inline-flex items-center gap-2 rounded-md bg-red-600 px-6 py-3.5 text-sm font-bold text-white">{home.energyCta}<ArrowRight className="h-4 w-4" /></button></div>
+        <div className="grid gap-3 sm:grid-cols-2">{home.energyHighlights.map((item, index) => <div key={item} className="rounded-xl border border-amber-200 bg-white p-5"><div className="text-xs font-black text-red-600"><SiteText section="HomePage" name="0" />{index + 1}</div><div className="mt-3 font-extrabold text-slate-950">{item}</div></div>)}</div>
+      </div></Container></section>
 
-      <section className="border-y border-amber-100 bg-white py-18 lg:py-24">
-        <div className="max-w-[1180px] mx-auto px-5 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-12">
-            <div>
-              <div className="text-red-600 font-black text-xs uppercase tracking-[0.25em] mb-3">Products</div>
-              <h2 className="brand-display text-4xl lg:text-5xl font-black">FAS Air Compressors</h2>
-            </div>
-          </div>
+      <section className="bg-slate-950 py-16 text-white"><Container><Eyebrow>{home.recommendationEyebrow}</Eyebrow><h2 className="mt-4 text-3xl font-extrabold">{home.recommendationTitle}</h2><p className="mt-4 text-slate-300">{home.recommendationText}</p><button onClick={() => onNavigate('request', 'Compressor Recommendation')} className="mt-6 rounded-md bg-red-600 px-6 py-3 font-bold">{home.recommendationButton}</button></Container></section>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-7">
-            {featuredProducts.map(product => (
-              <button key={product.id} onClick={() => onViewProduct(product.id)} className="group bg-white border border-red-100 text-left rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-red-950/10 hover:border-amber-300 transition-all">
-                <div className="relative aspect-square bg-gradient-to-br from-[#fff7df] via-white to-red-50 flex items-center justify-center p-7 border-b border-red-50">
-                  <span className="absolute top-4 left-4 rounded-full bg-red-600 text-white px-3 py-1 text-[10px] font-black uppercase tracking-widest">FAS</span>
-                  <img src={product.imageUrl} alt={product.model} className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" />
-                </div>
-                <div className="p-6">
-                  <h3 className="brand-display text-3xl font-black group-hover:text-red-700 transition-colors">{product.model}</h3>
-                  <p className="text-sm text-slate-500 mt-2">Free air delivery: {product.flowRateCfm} CFM</p>
-                  <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4">
-                    <span className="text-xs font-black uppercase tracking-widest text-slate-500">{product.powerKw} kW</span>
-                    <span className="inline-flex items-center gap-1 text-red-700 font-black text-xs uppercase tracking-wide group-hover:text-amber-600">
-                      Read more <ArrowRight className="w-3 h-3" />
-                    </span>
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
+      <section className="border-y border-slate-200 bg-[#f7f7f5] py-16 lg:py-20"><Container><div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+        <div><Eyebrow>{home.serviceEyebrow}</Eyebrow><h2 className="mt-3 text-3xl font-extrabold sm:text-4xl">{home.serviceTitle}</h2><p className="mt-5 leading-7 text-slate-600">{home.serviceIntro}</p><div className="mt-7 grid gap-4 sm:grid-cols-2">{home.serviceCards.map(item => <div key={item.title} className="border-l-2 border-green-600 pl-4"><div className="flex items-center gap-2 text-sm font-extrabold"><CheckCircle2 className="h-5 w-5 text-green-600" />{item.title}</div><p className="mt-2 text-xs leading-5 text-slate-600">{item.description}</p></div>)}</div></div>
+        <div className="rounded-xl bg-[#f9b916] p-7 sm:p-9"><Wrench className="h-10 w-10" /><h3 className="mt-5 text-2xl font-extrabold">{home.serviceCardTitle}</h3><p className="mt-3 leading-7 text-slate-800">{home.serviceCardText}</p><div className="mt-7 flex flex-col gap-3 sm:flex-row"><button onClick={() => onNavigate('request', 'Request Service Support')} className="rounded-md bg-slate-950 px-5 py-3 text-sm font-bold text-white">{home.serviceSectionCta}</button><a href={`tel:${config.contact.salesPhone.replace(/\s/g, '')}`} className="inline-flex items-center justify-center gap-2 rounded-md border border-slate-900/30 bg-white/70 px-5 py-3 text-sm font-bold"><Phone className="h-4 w-4" /> {home.callSalesButton}</a></div></div>
+      </div></Container></section>
 
-          <div className="mt-10 flex justify-center">
-            <button onClick={() => onNavigate('products')} className="inline-flex items-center gap-2 rounded-xl border border-amber-500 bg-[#f9b916] px-7 py-4 text-sm font-black uppercase tracking-wide text-slate-950 hover:bg-amber-400 transition-colors shadow-xl shadow-amber-900/15">
-              Browse Complete FAS Range <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </section>
+      {home.customerLogos.some(logo => logo.approved && logo.active !== false) && <section className="border-y border-slate-200 bg-slate-50 py-14"><Container><Heading eyebrow={home.customerLogosEyebrow} title={home.customerLogosTitle}>{home.whyIntro}</Heading><div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">{home.customerLogos.filter(logo => logo.approved && logo.active !== false).map(logo => <a key={logo.name} href={logo.url || undefined} target={logo.url ? '_blank' : undefined} rel={logo.url ? 'noopener noreferrer' : undefined} className="flex h-24 items-center justify-center rounded-lg border border-slate-200 bg-white p-4"><img src={logo.imageUrl} alt={logo.imageAlt} loading="lazy" className="max-h-full max-w-full object-contain" /></a>)}</div></Container></section>}
 
-      <section className="border-y border-amber-200 bg-[#fff8df] py-18 lg:py-24">
-        <div className="max-w-[1180px] mx-auto px-5 lg:px-8 grid lg:grid-cols-3 gap-7">
-          {[
-            {
-              icon: Wrench,
-              title: 'Maintenance friendly design',
-              text: 'FAS packages use accessible layouts and proven V-belt drive architecture for practical daily operation.',
-            },
-            {
-              icon: CheckCircle2,
-              title: 'IE3 main motors',
-              text: 'Driving motors are classified in IE3 energy efficiency class with IP55 protection and Class F insulation.',
-            },
-            {
-              icon: ShieldCheck,
-              title: '5 year warranty',
-              text: 'Extended warranty support is available when maintenance is performed with genuine firstAir parts.',
-            },
-          ].map(({ icon: Icon, title, text }) => (
-            <div key={title} className="rounded-sm border border-amber-200 bg-white p-7 shadow-sm">
-              <Icon className="w-9 h-9 text-red-600 mb-6" />
-              <h3 className="text-2xl font-black tracking-tight">{title}</h3>
-              <p className="text-slate-600 mt-3 leading-relaxed">{text}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <section className="py-16 lg:py-20"><Container><div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
+        <div className="grid grid-cols-2 gap-3">{home.statistics.filter(stat => stat.verified && stat.active !== false).map((stat, index) => <div key={stat.label} className={`rounded-xl p-6 ${index % 2 ? 'bg-red-600 text-white' : 'bg-slate-950 text-white'}`}><div className="text-3xl font-extrabold text-amber-400">{stat.value}</div><div className="mt-2 text-sm text-white/75">{stat.label}</div></div>)}</div>
+        <div><Eyebrow>{home.aboutEyebrow}</Eyebrow><h2 className="mt-3 text-3xl font-extrabold sm:text-4xl">{home.aboutTitle}</h2><p className="mt-5 leading-7 text-slate-600">{config.about.storyShort}</p><button onClick={() => onNavigate('about-story')} className="mt-7 inline-flex items-center gap-2 text-sm font-bold text-red-700">{home.aboutButton} <ArrowRight className="h-4 w-4" /></button></div>
+      </div></Container></section>
 
-      <section className="bg-white py-16 lg:py-20">
-        <div className="mx-auto max-w-[1180px] px-5 lg:px-8 grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
-          <div>
-            <div className="mb-3 text-xs font-black uppercase tracking-[0.25em] text-red-600">Common Applications</div>
-            <h2 className="brand-display text-4xl font-black text-slate-950 lg:text-5xl">Compressed air for daily industrial work</h2>
-            <p className="mt-4 text-base leading-relaxed text-slate-600">
-              firstAir compressors are positioned for practical plant air needs: tools, production equipment, packaging lines, cleaning air, CNC support, and site maintenance.
-            </p>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2">
-            {commonApplications.map(item => (
-              <div key={item} className="flex items-center gap-3 rounded-lg border border-amber-200 bg-[#fffdf7] p-4 shadow-sm">
-                <CheckCircle2 className="h-5 w-5 shrink-0 text-red-600" />
-                <span className="text-sm font-bold text-slate-700">{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-18 lg:py-24 border-y border-amber-400 bg-gradient-to-br from-[#fff8df] to-[#f9b916] text-slate-950">
-        <div className="max-w-[1180px] mx-auto px-5 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <div className="text-red-700 font-black text-xs uppercase tracking-[0.25em] mb-3">Technical Information</div>
-            <h2 className="text-4xl lg:text-5xl font-black tracking-tight leading-tight">Documents and compressor sizing details</h2>
-            <p className="text-slate-700 text-lg mt-5 leading-relaxed">
-              Use the technical information area for flow, pressure, dimensions, installation, service, and operation documents across the FAS and FSG catalog ranges.
-            </p>
-          </div>
-          <div className="bg-white text-slate-900 p-8 rounded-sm">
-            <FileText className="w-10 h-10 text-red-600 mb-5" />
-            <h3 className="text-2xl font-black">Not sure which model fits?</h3>
-            <p className="text-slate-600 mt-3 leading-relaxed">Share your required pressure, estimated CFM, application, and working hours. The team can help shortlist the right model and accessories.</p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <button onClick={() => onNavigate('technical')} className="bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded-lg font-black text-sm uppercase tracking-wide">
-                Technical Information
-              </button>
-              <button onClick={() => onNavigate('contact')} className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-3 rounded-sm font-black text-sm uppercase tracking-wide">
-                Contact Us
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-red-600 text-white">
-        <div className="max-w-[1180px] mx-auto px-5 lg:px-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
-            <h2 className="text-3xl lg:text-4xl font-black tracking-tight">Contact Us</h2>
-            <p className="text-white/85 mt-2">{config.contact.email} | support@firstaircompressor.com | {config.contact.salesPhone}</p>
-          </div>
-          <button onClick={() => onNavigate('contact')} className="inline-flex items-center justify-center gap-2 bg-white text-red-700 hover:bg-slate-100 px-7 py-4 rounded-lg font-black uppercase tracking-wide text-sm">
-            <Phone className="w-4 h-4" /> Send Us a Message
-          </button>
-        </div>
-      </section>
+      <section className="bg-red-600 py-12 text-white"><Container><div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between"><div><h2 className="text-2xl font-extrabold sm:text-3xl">{home.ctaTitle}</h2><p className="mt-2 text-red-100">{home.ctaText}</p></div><button onClick={() => onNavigate('request')} className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-white px-6 py-3.5 text-sm font-bold text-red-700">{home.ctaButton} <ArrowRight className="h-4 w-4" /></button></div></Container></section>
     </div>
   );
 }
 
-
+function Container({ children }: { children: React.ReactNode }) { return <div className="mx-auto max-w-[1180px] px-5 lg:px-8">{children}</div>; }
+function Eyebrow({ children }: { children: React.ReactNode }) { return <div className="flex items-center gap-3 text-xs font-extrabold uppercase tracking-[0.18em] text-red-600"><span className="h-0.5 w-8 bg-red-600" />{children}</div>; }
+function Heading({ eyebrow, title, children }: { eyebrow: string; title: string; children: React.ReactNode }) { return <div className="mx-auto max-w-2xl text-center"><div className="text-xs font-extrabold uppercase tracking-[0.18em] text-red-600">{eyebrow}</div><h2 className="mt-3 text-3xl font-extrabold sm:text-4xl">{title}</h2><p className="mt-4 leading-7 text-slate-600">{children}</p></div>; }
+function Benefit({ icon: Icon, title, children }: { icon: typeof Leaf; title: string; children: React.ReactNode }) { return <div className="border-l border-slate-700 pl-5"><Icon className="h-7 w-7 text-amber-400" /><h3 className="mt-4 text-lg font-extrabold">{title}</h3><p className="mt-2 text-sm leading-6 text-slate-400">{children}</p></div>; }

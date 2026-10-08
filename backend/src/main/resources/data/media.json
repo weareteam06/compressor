@@ -1,0 +1,247 @@
+[
+  {
+    "path": "hero-industrial.mp4",
+    "key": "hero-industrial.mp4",
+    "contentType": "video/mp4",
+    "usageType": "home-hero",
+    "altText": "Industrial compressor hero video"
+  },
+  {
+    "path": "FSG.mp4",
+    "key": "home-hero-fsg.mp4",
+    "contentType": "video/mp4",
+    "usageType": "home-hero",
+    "altText": "firstAir FSG compressor range"
+  },
+  {
+    "path": "hero-products-showcase.png",
+    "key": "hero-products-showcase.png",
+    "contentType": "image/png",
+    "usageType": "home-hero",
+    "altText": "firstAir compressor product range"
+  },
+  {
+    "path": "products/fas-4-11-product.png",
+    "key": "fas-4-11-product.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS 4 to 11 kW compressor"
+  },
+  {
+    "path": "catalogs/FAS-15-250KW-cover.jpg",
+    "key": "catalogs-fas-15-250kw-cover.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "products",
+    "altText": "FAS 15 to 250 kW compressor range"
+  },
+  {
+    "path": "catalogs/FAS-4-11-cover.jpg",
+    "key": "catalogs-fas-4-11-cover.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "products",
+    "altText": "FAS 4 to 11 kW compressor range"
+  },
+  {
+    "path": "catalogs/FASM-product.png",
+    "key": "catalogs-fasm-product.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FASM compressor"
+  },
+  {
+    "path": "catalogs/FASM-product-v2.png",
+    "key": "catalogs-fasm-product-v2.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FASM 37 compressor"
+  },
+  {
+    "path": "catalogs/FSL-product.png",
+    "key": "catalogs-fsl-product.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSL low-pressure compressor"
+  },
+  {
+    "path": "catalogs/FSG-45-185KW-cover.jpg",
+    "key": "catalogs-fsg-45-185kw-cover.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "products",
+    "altText": "FSG 45 to 185 kW compressor range"
+  },
+  {
+    "path": "catalogs/FSG-product.png",
+    "key": "catalogs-fsg-product.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSG compressor"
+  },
+  {
+    "path": "catalogs/FAS-4-11.pdf",
+    "key": "catalog-fas-4-11.pdf",
+    "contentType": "application/pdf",
+    "usageType": "product-brochures",
+    "altText": "FAS 4 to 11 kW product brochure"
+  },
+  {
+    "path": "catalogs/FAS-15-250KW.pdf",
+    "key": "catalog-fas-15-250kw.pdf",
+    "contentType": "application/pdf",
+    "usageType": "product-brochures",
+    "altText": "FAS 15 to 250 kW product brochure"
+  },
+  {
+    "path": "catalogs/FASM.pdf",
+    "key": "catalog-fasm.pdf",
+    "contentType": "application/pdf",
+    "usageType": "product-brochures",
+    "altText": "FASM variable-speed product brochure"
+  },
+  {
+    "path": "catalogs/FSL.pdf",
+    "key": "catalog-fsl.pdf",
+    "contentType": "application/pdf",
+    "usageType": "product-brochures",
+    "altText": "FSL and FSLV 30 to 220 kW low-pressure compressor brochure"
+  },
+  {
+    "path": "catalogs/FSG-45-185KW.pdf",
+    "key": "catalog-fsg-45-185kw.pdf",
+    "contentType": "application/pdf",
+    "usageType": "product-brochures",
+    "altText": "FSG 45 to 185 kW product brochure"
+  },
+  {
+    "path": "industries/automotive.jpg",
+    "key": "industry-automotive.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "industries",
+    "altText": "Automotive production"
+  },
+  {
+    "path": "industries/cement.jpg",
+    "key": "industry-cement.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "industries",
+    "altText": "Cement industry"
+  },
+  {
+    "path": "industries/food-and-beverage.jpg",
+    "key": "industry-food-and-beverage.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "industries",
+    "altText": "Food and beverage production"
+  },
+  {
+    "path": "industries/general-manufacturing.jpg",
+    "key": "industry-general-manufacturing.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "industries",
+    "altText": "General manufacturing"
+  },
+  {
+    "path": "industries/general-plant-air.jpg",
+    "key": "industry-general-plant-air.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "industries",
+    "altText": "General plant air"
+  },
+  {
+    "path": "industries/healthcare.jpg",
+    "key": "industry-healthcare.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "industries",
+    "altText": "Healthcare industry"
+  },
+  {
+    "path": "industries/mining.jpg",
+    "key": "industry-mining.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "industries",
+    "altText": "Mining industry"
+  },
+  {
+    "path": "industries/oil-and-gas.jpg",
+    "key": "industry-oil-and-gas.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "industries",
+    "altText": "Oil and gas industry"
+  },
+  {
+    "path": "industries/packaging.jpg",
+    "key": "industry-packaging.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "industries",
+    "altText": "Packaging industry"
+  },
+  {
+    "path": "industries/pharmaceutical.jpg",
+    "key": "industry-pharmaceutical.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "industries",
+    "altText": "Pharmaceutical production"
+  },
+  {
+    "path": "industries/plastics.jpg",
+    "key": "industry-plastics.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "industries",
+    "altText": "Plastics industry"
+  },
+  {
+    "path": "industries/railway-and-locomotive.jpg",
+    "key": "industry-railway-and-locomotive.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "industries",
+    "altText": "Railway and locomotive workshop"
+  },
+  {
+    "path": "industries/woodworking.jpg",
+    "key": "industry-woodworking.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "industries",
+    "altText": "Woodworking production"
+  },
+  {
+    "path": "industries/workshops.jpg",
+    "key": "industry-workshops.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "industries",
+    "altText": "Industrial workshop"
+  },
+  {
+    "path": "hero/fas-background.jpg",
+    "key": "hero-fas-background.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "public-content",
+    "altText": "fas background jpg"
+  },
+  {
+    "path": "hero/fas-small-product.png",
+    "key": "hero-fas-small-product.png",
+    "contentType": "image/png",
+    "usageType": "public-content",
+    "altText": "fas small product png"
+  },
+  {
+    "path": "hero/fasm-background.jpg",
+    "key": "hero-fasm-background.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "public-content",
+    "altText": "fasm background jpg"
+  },
+  {
+    "path": "catalogs/FSL-product-transparent.png",
+    "key": "catalogs-fsl-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "public-content",
+    "altText": "FSL product transparent png"
+  },
+  {
+    "path": "hero/fsg-background.jpg",
+    "key": "hero-fsg-background.jpg",
+    "contentType": "image/jpeg",
+    "usageType": "public-content",
+    "altText": "fsg background jpg"
+  }
+]

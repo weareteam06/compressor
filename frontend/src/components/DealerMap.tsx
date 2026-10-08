@@ -40,7 +40,7 @@ const userIcon = divIcon({
 
 export default function DealerMap({ dealers, selectedId, userLocation, onSelect }: Props) {
   return (
-    <MapContainer center={[22.8, 79.5]} zoom={5} scrollWheelZoom className="h-full min-h-[460px] w-full">
+    <MapContainer center={[22.8, 79.5]} zoom={5} scrollWheelZoom className="relative z-0 h-full min-h-[460px] w-full">
       <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
       <MapView dealers={dealers} selectedId={selectedId} userLocation={userLocation} />
       {dealers.filter(d => d.latitude != null && d.longitude != null).map(dealer => (

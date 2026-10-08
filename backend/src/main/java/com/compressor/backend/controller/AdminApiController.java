@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import com.compressor.backend.model.ImageAsset;
 
 @CrossOrigin
 @RestController
@@ -36,6 +40,25 @@ public class AdminApiController {
   @GetMapping("/database-summary")
   public Map<String, Object> databaseSummary() {
     return contentService.databaseSummary();
+  }
+
+  @GetMapping("/site-content")
+  public List<Map<String, Object>> siteContentInventory() {
+    return contentService.siteContentInventory();
+  }
+
+  @GetMapping("/cms-audit")
+  public Map<String, Object> cmsAudit() {
+    return contentService.cmsAudit();
+  }
+
+  @PostMapping(value = "/media/upload", consumes = "multipart/form-data")
+  @ResponseStatus(HttpStatus.CREATED)
+  public ImageAsset uploadMedia(
+      @RequestParam("file") MultipartFile file,
+      @RequestParam(defaultValue = "") String altText,
+      @RequestParam(defaultValue = "general") String usageType) throws IOException {
+    return contentService.uploadMedia(file, altText, usageType);
   }
 
   @GetMapping("/" + COLLECTION_PATTERN)

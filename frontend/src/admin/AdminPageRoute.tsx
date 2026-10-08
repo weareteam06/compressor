@@ -1,6 +1,5 @@
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import AdminPanel, { type AdminTab } from '@/components/AdminPanel';
-import LoginPage from '@/components/LoginPage';
 import { clearAuthToken, getAuthToken } from '@/lib/data';
 
 const pagePaths: Record<string, string> = {
@@ -14,7 +13,9 @@ const pagePaths: Record<string, string> = {
   distributors: '/distributors',
   support: '/support',
   contact: '/contact',
-  login: '/login',
+  login: '/employee/login',
+  'employee-login': '/employee/login',
+  'dealer-login': '/dealer/login',
   admin: '/admin/dashboard',
   about: '/about/story',
   'about-story': '/about/story',
@@ -29,9 +30,12 @@ interface Props {
 
 export default function AdminPageRoute({ tab, refreshConfig }: Props) {
   const navigate = useNavigate();
+  const savedLoginPath = localStorage.getItem('compressor_login_path');
+  const loginPath = savedLoginPath && ['/admin/login', '/employee/login', '/dealer/login'].includes(savedLoginPath)
+    ? savedLoginPath : '/admin/login';
 
   if (!getAuthToken()) {
-    return <LoginPage onLoginSuccess={() => navigate('/admin/dashboard')} onBack={() => navigate('/')} />;
+    return <Navigate to={loginPath} replace />;
   }
 
   return (
@@ -41,7 +45,7 @@ export default function AdminPageRoute({ tab, refreshConfig }: Props) {
       onLogout={() => {
         clearAuthToken();
         refreshConfig();
-        navigate('/');
+        navigate(loginPath, { replace: true });
       }}
       onNavigateFrontend={(page) => {
         refreshConfig();

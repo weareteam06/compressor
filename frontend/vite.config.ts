@@ -13,7 +13,9 @@ const apiProxyTarget = process.env.VITE_API_PROXY_TARGET || "http://localhost:80
 export default defineConfig({
   plugins: [react(), tailwindcss(), viteSingleFile()],
   server: {
-    port: 5174,
+    port: 5175,
+    strictPort: true,
+    host: "127.0.0.1",
     allowedHosts: ["polytomous-likely-eneida.ngrok-free.dev"],
     proxy: {
       "/api": {

@@ -1,7 +1,9 @@
+import { SiteText } from '@/lib/SiteText';
 import { useEffect, useState } from 'react';
 import { ArrowRight, ArrowLeft, Calendar, User, Tag } from 'lucide-react';
 import type { NewsArticle } from '@/lib/data';
 import { getNewsArticles, getNewsBySlug } from '@/lib/data';
+import { defaultPageContent, usePageContent } from '@/lib/pageContent';
 
 interface Props {
   onNavigate: (page: string, param?: string) => void;
@@ -9,6 +11,7 @@ interface Props {
 }
 
 export default function NewsPage({ onNavigate, slug }: Props) {
+  const copy = usePageContent('news', defaultPageContent.news);
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [current, setCurrent] = useState<NewsArticle | null>(null);
   const [filter, setFilter] = useState<string>('All');
@@ -27,8 +30,7 @@ export default function NewsPage({ onNavigate, slug }: Props) {
         <div className="bg-slate-900 text-white py-4">
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
             <button onClick={() => onNavigate('news')} className="flex items-center gap-2 text-amber-400 hover:text-amber-300 text-sm font-bold">
-              <ArrowLeft className="w-4 h-4" /> Back to News
-            </button>
+              <ArrowLeft className="w-4 h-4" />{" "}<SiteText section="NewsPage" name="back_to_news" />{" "}</button>
           </div>
         </div>
 
@@ -45,7 +47,7 @@ export default function NewsPage({ onNavigate, slug }: Props) {
 
           <div className="flex items-center gap-2 mt-4 text-sm text-slate-500">
             <User className="w-4 h-4 text-amber-500" />
-            <span>By <strong className="text-slate-700">{current.author}</strong></span>
+            <span><SiteText section="NewsPage" name="by" />{" "}<strong className="text-slate-700">{current.author}</strong></span>
           </div>
 
           <div className="aspect-[16/9] rounded-2xl overflow-hidden my-8 shadow-xl">
@@ -59,11 +61,8 @@ export default function NewsPage({ onNavigate, slug }: Props) {
 
           <div className="mt-12 pt-8 border-t border-slate-200 flex justify-between items-center">
             <button onClick={() => onNavigate('news')} className="text-amber-600 font-black uppercase tracking-wider text-sm flex items-center gap-2 hover:text-amber-700">
-              <ArrowLeft className="w-4 h-4" /> All News
-            </button>
-            <button onClick={() => onNavigate('contact')} className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-xl text-sm shadow-lg">
-              Contact Us
-            </button>
+              <ArrowLeft className="w-4 h-4" />{" "}<SiteText section="NewsPage" name="all_news" />{" "}</button>
+            <button onClick={() => onNavigate('contact')} className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-xl text-sm shadow-lg">{" "}<SiteText section="NewsPage" name="contact_us" />{" "}</button>
           </div>
         </article>
       </div>
@@ -77,15 +76,8 @@ export default function NewsPage({ onNavigate, slug }: Props) {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
-      <section className="page-hero bg-gradient-to-br from-slate-900 via-red-950 to-slate-900 py-20">
-        <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
-          <div className="text-amber-400 font-black text-xs uppercase tracking-widest mb-3">News & Events</div>
-          <h1 className="text-4xl lg:text-6xl font-black text-white tracking-tight">Latest Updates</h1>
-          <p className="mt-4 text-lg text-red-200/80 max-w-3xl">Stay informed about our latest product launches, industry events, technical insights, and company news.</p>
-        </div>
-      </section>
-
       <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-12">
+        <div className="mb-8 grid gap-4 border-b border-slate-300 pb-6 md:grid-cols-[1fr_1fr] md:items-end"><div><div className="text-xs font-black uppercase tracking-widest text-red-700"><SiteText section="NewsPage" name="news_insights" /></div><h1 className="mt-2 text-3xl font-black text-slate-950">{String(copy.heroTitle)}</h1></div><p className="text-sm leading-6 text-slate-600"><SiteText section="NewsPage" name="product_launches_industry_events_technical_insights_and_company_news" /></p></div>
         <div className="flex flex-wrap gap-2 mb-8">
           {categories.map(c => (
             <button key={c} onClick={() => setFilter(c)}
@@ -105,14 +97,14 @@ export default function NewsPage({ onNavigate, slug }: Props) {
               </div>
               <div className="p-8 lg:p-12 flex flex-col justify-center">
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="px-3 py-1 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full">Featured</span>
+                  <span className="px-3 py-1 bg-amber-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full"><SiteText section="NewsPage" name="featured" /></span>
                   <span className="px-3 py-1 bg-red-100 text-red-700 text-[10px] font-black uppercase tracking-widest rounded-full">{featured.category}</span>
                 </div>
                 <h2 className="text-3xl lg:text-4xl font-black text-slate-900 group-hover:text-red-700 transition-colors leading-tight">{featured.title}</h2>
                 <p className="text-slate-600 mt-4 leading-relaxed">{featured.excerpt}</p>
                 <div className="mt-6 flex items-center gap-4">
                   <span className="text-sm text-slate-500 flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5 text-amber-500" />{new Date(featured.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
-                  <span className="text-amber-600 font-black text-sm uppercase tracking-wider flex items-center gap-1">Read More <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" /></span>
+                  <span className="text-amber-600 font-black text-sm uppercase tracking-wider flex items-center gap-1"><SiteText section="NewsPage" name="read_more" />{" "}<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" /></span>
                 </div>
               </div>
             </div>

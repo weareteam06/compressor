@@ -1,4 +1,157 @@
 {
+  "seo": {
+    "/": {
+      "title": "firstAir Compressor | Industrial Compressed Air Solutions",
+      "description": "Reliable and energy-efficient industrial compressed-air solutions, products, service and application support from firstAir.",
+      "keywords": "firstAir compressor, industrial compressed air, rotary screw compressor",
+      "imageUrl": "/api/media/hero-products-showcase.png",
+      "canonicalPath": "/",
+      "noIndex": false
+    },
+    "/products": {
+      "title": "Industrial Air Compressors | firstAir",
+      "description": "Explore firstAir industrial compressor products by technology, pressure, flow and application.",
+      "keywords": "industrial compressor products, screw compressor, firstAir",
+      "canonicalPath": "/products",
+      "noIndex": false
+    },
+    "/industries": {
+      "title": "Industry Compressed Air Solutions | firstAir",
+      "description": "Explore application-focused compressed-air solutions for industries across India.",
+      "keywords": "industry air compressor solutions, compressed air India",
+      "canonicalPath": "/industries",
+      "noIndex": false
+    },
+    "/services": {
+      "title": "Compressor Service & Support | firstAir",
+      "description": "Installation, maintenance, spare parts and technical support for industrial compressed-air systems.",
+      "keywords": "compressor service, compressor maintenance, spare parts",
+      "canonicalPath": "/services",
+      "noIndex": false
+    },
+    "/contact": {
+      "title": "Contact firstAir | Sales & Service Enquiry",
+      "description": "Contact firstAir for compressor selection, quotations, service support and spare-parts enquiries.",
+      "keywords": "compressor quote, firstAir contact, compressor service enquiry",
+      "canonicalPath": "/contact",
+      "noIndex": false
+    }
+  },
+  "navigation": {
+    "logoUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/logo.svg",
+    "logoAlt": "firstAir Compressor",
+    "languageLabel": "EN",
+    "menuLabel": "Menu",
+    "loginLabel": "Login",
+    "searchLabel": "Search",
+    "callLabel": "Call",
+    "requestQuoteLabel": "Request Quote",
+    "requestQuotePage": "contact",
+    "items": [
+      {
+        "id": "home",
+        "label": "Home",
+        "page": "home",
+        "active": true
+      },
+      {
+        "id": "about",
+        "label": "About Us",
+        "active": true,
+        "children": [
+          {
+            "id": "about-story",
+            "label": "About firstAir",
+            "page": "about-story",
+            "active": true
+          },
+          {
+            "id": "about-careers",
+            "label": "Careers",
+            "page": "about-careers",
+            "active": true
+          }
+        ]
+      },
+      {
+        "id": "products",
+        "label": "Products",
+        "active": true,
+        "children": [
+          {
+            "id": "fas",
+            "label": "FAS fixed-speed compressors",
+            "page": "products",
+            "param": "fas",
+            "active": true
+          },
+          {
+            "id": "fasm",
+            "label": "FASM variable-speed compressors",
+            "page": "products",
+            "param": "fasm",
+            "active": true
+          },
+          {
+            "id": "fsl",
+            "label": "FSL / FSLV low-pressure compressors",
+            "page": "products",
+            "param": "fsl",
+            "active": true
+          },
+          {
+            "id": "fsg",
+            "label": "FSG high-capacity compressors",
+            "page": "products",
+            "param": "fsg",
+            "active": true
+          },
+          {
+            "id": "all-products",
+            "label": "View all products",
+            "page": "products",
+            "active": true
+          }
+        ]
+      },
+      {
+        "id": "industries",
+        "label": "Industries",
+        "page": "industries",
+        "active": true
+      },
+      {
+        "id": "solutions",
+        "label": "Solutions",
+        "url": "/solutions",
+        "active": false
+      },
+      {
+        "id": "services",
+        "label": "Service & Support",
+        "page": "services",
+        "active": true
+      },
+      {
+        "id": "case-studies",
+        "label": "Case Studies",
+        "url": "/case-studies",
+        "active": false
+      },
+      {
+        "id": "downloads",
+        "label": "Downloads",
+        "url": "/downloads",
+        "active": false
+      },
+      {
+        "id": "contact",
+        "label": "Contact Us",
+        "page": "contact",
+        "active": true
+      }
+    ]
+  },
   "company": {
     "name": "firstAir Compressor",
     "tagline": "Air cooled single stage rotary screw compressors",
@@ -6,21 +159,493 @@
     "yearsOfExcellence": 1
   },
   "hero": {
-    "title": "Air cooled single stage rotary screw compressors",
-    "subtitle": "FAS and FSG air-cooled rotary screw compressor ranges from 4 kW up to 185 kW for workshops, plant air, site work, and heavy duty industrial use.",
-    "cta": "View Products",
-    "secondaryCta": "Technical Information"
+    "title": "Reliable Compressed Air Solutions for Every Industry",
+    "subtitle": "High-performance industrial air compressors engineered for reliable operation, energy efficiency and long-term performance.",
+    "cta": "Explore Compressors",
+    "secondaryCta": "Talk to an Expert"
+  },
+  "home": {
+    "heroVideoUrl": "/hero-industrial.mp4",
+    "heroShowcaseImageUrl": "/hero-products-showcase.png",
+    "heroShowcaseAlt": "firstAir FASM22, FSG340, and FAS37 compressor range",
+    "heroEyebrow": "Industrial compressed-air solutions across India",
+    "heroFeatures": [
+      "4 kW to 250 kW",
+      "Oil-Free & Oil-Lubricated Solutions",
+      "Pan-India Sales & Service"
+    ],
+    "powerRange": "4–250 kW",
+    "pressureRange": "5–16 bar",
+    "rangeTitle": "Our Compressed Air Solutions",
+    "rangeIntro": "Explore our range of industrial compressors designed to meet different pressure, flow, efficiency and application requirements.",
+    "whyTitle": "Why Choose FirstAir?",
+    "whyIntro": "Application-focused compressed-air solutions supported by dependable equipment, energy-efficient technology and responsive service.",
+    "industriesTitle": "Compressed Air Solutions for Every Industry",
+    "industriesIntro": "Application-specific compressed air for manufacturing, process and plant requirements across India.",
+    "serviceTitle": "Complete Service & Support",
+    "serviceIntro": "Support from installation and commissioning through planned maintenance, genuine parts, breakdown assistance and energy audits.",
+    "serviceCardTitle": "Need service or technical help?",
+    "serviceCardText": "Connect with our team for application advice, service support, and compressor enquiries.",
+    "aboutTitle": "Industrial experience. Straightforward solutions.",
+    "ctaTitle": "Let’s find the right compressor for your business.",
+    "ctaText": "Share your required pressure, flow, and application with our team.",
+    "ctaButton": "Request a consultation",
+    "heroMetricLabels": [
+      "Compressor families",
+      "Power range",
+      "Pressure range"
+    ],
+    "showcaseEyebrow": "FAS · FASM · FSG",
+    "showcaseTitle": "Engineered for every demand",
+    "familyCards": [
+      {
+        "series": "FAS",
+        "label": "Fixed speed",
+        "title": "Fixed Speed Screw Compressors",
+        "description": "Dependable, easy-to-maintain compressors for steady industrial air demand."
+      },
+      {
+        "series": "FASM",
+        "label": "Variable speed",
+        "title": "Variable Speed Compressors",
+        "description": "Permanent-magnet variable-speed systems for changing demand and lower energy use."
+      },
+      {
+        "series": "FSG",
+        "label": "High capacity",
+        "title": "High-Capacity Compressors",
+        "description": "Robust compressor packages for large plants and demanding applications."
+      }
+    ],
+    "rangeEyebrow": "Our compressor range",
+    "modelsLabel": "models",
+    "viewSeriesLabel": "View series",
+    "viewAllProductsLabel": "See all compressors",
+    "whyEyebrow": "Why firstAir",
+    "benefits": [
+      {
+        "title": "Reliable Performance",
+        "description": "Engineered to deliver consistent compressed air and dependable performance in demanding industrial environments."
+      },
+      {
+        "title": "Energy Efficient",
+        "description": "Designed to optimize energy consumption and help reduce the overall operating cost of compressed-air systems."
+      },
+      {
+        "title": "Industrial Expertise",
+        "description": "Application-focused compressor solutions designed around the specific requirements of different industries."
+      },
+      {
+        "title": "Pan-India Support",
+        "description": "Supported by an expanding network of sales, service and channel partners across India."
+      },
+      {
+        "title": "Complete Solutions",
+        "description": "From compressor selection and installation to preventive maintenance, spare parts and technical support."
+      }
+    ],
+    "industriesEyebrow": "Solutions by industry",
+    "industryLinkLabel": "Explore solution",
+    "serviceEyebrow": "Service throughout the lifecycle",
+    "serviceItems": [
+      "Installation & Commissioning",
+      "Preventive Maintenance",
+      "Breakdown Support",
+      "Genuine Spare Parts",
+      "AMC",
+      "Energy Audit"
+    ],
+    "servicesButton": "Our services",
+    "callSalesButton": "Call sales",
+    "aboutEyebrow": "About firstAir",
+    "yearsLabel": "years of expertise",
+    "motorValue": "IE3/IE4",
+    "motorLabel": "motor technology",
+    "industryValue": "Made for industry",
+    "industryText": "Practical systems for workshops and production plants.",
+    "aboutButton": "Learn about our company",
+    "solutionCards": [
+      {
+        "id": "oil-lubricated",
+        "title": "Oil-Lubricated Screw Compressors",
+        "description": "Reliable rotary screw compressors for general industrial compressed-air applications.",
+        "imageUrl": "/api/media/hero-products-showcase.png",
+        "imageAlt": "Oil-lubricated firstAir screw compressor",
+        "page": "products",
+        "active": true
+      },
+      {
+        "id": "oil-free",
+        "title": "Oil-Free Compressors",
+        "description": "Oil-free compressed-air technologies for applications requiring high air quality.",
+        "imageUrl": "/api/media/hero-products-showcase.png",
+        "imageAlt": "Oil-free industrial compressor",
+        "url": "https://www.fscurtis.com/",
+        "external": true,
+        "active": true
+      },
+      {
+        "id": "variable-speed",
+        "title": "Variable Speed Compressors",
+        "description": "Variable-speed systems that match compressor output to changing air demand.",
+        "imageUrl": "/api/media/hero-products-showcase.png",
+        "imageAlt": "Variable-speed firstAir compressor",
+        "page": "products",
+        "param": "fasm",
+        "active": true
+      },
+      {
+        "id": "pm-motor",
+        "title": "Permanent Magnet Motor Compressors",
+        "description": "Permanent-magnet motor technology designed for efficient variable-demand operation.",
+        "imageUrl": "/api/media/hero-products-showcase.png",
+        "imageAlt": "Permanent magnet motor compressor",
+        "page": "products",
+        "param": "fasm",
+        "active": true
+      },
+      {
+        "id": "low-pressure",
+        "title": "Low Pressure Compressors",
+        "description": "Application-focused compressor packages for lower-pressure industrial requirements.",
+        "imageUrl": "/api/media/hero-products-showcase.png",
+        "imageAlt": "Low-pressure industrial compressor",
+        "page": "products",
+        "active": true
+      },
+      {
+        "id": "portable",
+        "title": "Portable Compressors",
+        "description": "Mobile compressed-air solutions for site, maintenance and demanding field applications.",
+        "imageUrl": "/api/media/hero-products-showcase.png",
+        "imageAlt": "Portable industrial compressor",
+        "page": "products",
+        "active": true
+      }
+    ],
+    "energyEyebrow": "Energy efficiency",
+    "energyTitle": "Reduce Your Compressed Air Energy Costs",
+    "energyIntro": "Compressed air can be one of the largest energy consumers in an industrial facility. Selecting the right compressor, optimizing operating pressure and maintaining the compressed-air system can significantly improve overall system efficiency.",
+    "energyText": "FirstAir provides energy-efficient compressor solutions designed to deliver reliable compressed air while helping industries reduce operating costs.",
+    "energyHighlights": [
+      "Energy Efficiency",
+      "Variable Speed Technology",
+      "Permanent Magnet Technology",
+      "System Optimization"
+    ],
+    "energyCta": "Request an Energy Assessment",
+    "recommendationEyebrow": "Compressor selection support",
+    "recommendationTitle": "Not Sure Which Compressor You Need?",
+    "recommendationText": "Tell us about your compressed-air requirement and our technical team will help you identify the right solution.",
+    "recommendationButton": "Get My Compressor Recommendation",
+    "recommendationSuccessTitle": "Requirement received",
+    "recommendationSuccessText": "Our technical team will review your information and contact you with the next steps.",
+    "recommendationLabels": {
+      "name": "Name",
+      "company": "Company Name",
+      "phone": "Mobile Number",
+      "email": "Email",
+      "industry": "Industry",
+      "industryPlaceholder": "Select industry",
+      "requiredPressure": "Required Pressure",
+      "requiredFad": "Required FAD",
+      "operatingHours": "Operating Hours/Day",
+      "currentCompressor": "Current Compressor",
+      "application": "Application",
+      "location": "Location",
+      "requirementDetails": "Requirement Details",
+      "submitting": "Submitting…",
+      "submitAnother": "Submit another requirement",
+      "error": "We could not submit your requirement. Please try again."
+    },
+    "serviceSectionCta": "Request Service Support",
+    "serviceCards": [
+      {
+        "title": "Installation & Commissioning",
+        "description": "Professional installation and commissioning to ensure reliable compressor performance."
+      },
+      {
+        "title": "Preventive Maintenance",
+        "description": "Planned maintenance programs designed to maximize compressor reliability and equipment life."
+      },
+      {
+        "title": "Breakdown Support",
+        "description": "Technical assistance to minimize downtime and restore production quickly."
+      },
+      {
+        "title": "Genuine Spare Parts",
+        "description": "Genuine replacement parts to maintain compressor performance and reliability."
+      },
+      {
+        "title": "AMC",
+        "description": "Annual Maintenance Contracts tailored to your operating requirements."
+      },
+      {
+        "title": "Energy Audit",
+        "description": "Identify energy losses and opportunities to improve compressed-air system efficiency."
+      }
+    ],
+    "statistics": [
+      {
+        "value": "80+",
+        "label": "Channel Partners",
+        "verified": false,
+        "active": false
+      },
+      {
+        "value": "Pan-India",
+        "label": "Sales & Service Network",
+        "verified": false,
+        "active": false
+      },
+      {
+        "value": "Multiple",
+        "label": "Industrial Applications",
+        "verified": true,
+        "active": true
+      },
+      {
+        "value": "Complete",
+        "label": "Compressed-Air Solutions",
+        "verified": true,
+        "active": true
+      }
+    ],
+    "customerLogosEyebrow": "Customer trust",
+    "customerLogosTitle": "Trusted by Industries Across India",
+    "customerLogos": [],
+    "industriesLimit": 8
+  },
+  "pageContent": {
+    "products": {
+      "heroEyebrow": "Industrial compressed air",
+      "heroTitle": "Our Product Range",
+      "heroIntro": "Compare compressor technologies and shortlist models by power, pressure, and airflow.",
+      "categoriesEyebrow": "Compressor solutions",
+      "categoriesTitle": "Browse by compressor type",
+      "categoriesIntro": "Choose a solution category or compare all available models below.",
+      "searchPlaceholder": "Search products, features, power, flow...",
+      "selectionEyebrow": "Selection controls",
+      "selectionTitle": "Build your shortlist",
+      "allCategoriesLabel": "All compressor types",
+      "modelsLabel": "Models",
+      "categoriesLabel": "Categories",
+      "resultsLabel": "products",
+      "emptyText": "No products match the selected filters.",
+      "clearFiltersLabel": "Clear filters",
+      "externalLabel": "Visit product website"
+    },
+    "industries": {
+      "heroEyebrow": "Industries we serve",
+      "heroTitle": "Compressed Air Solutions for Every Industry",
+      "heroIntro": "Explore application-focused compressor solutions for production, process, instrumentation and plant utility air.",
+      "countLabel": "Industry solutions",
+      "directoryEyebrow": "Industry solutions",
+      "directoryTitle": "Choose your industry",
+      "directoryIntro": "Select your industry to review compressed-air requirements, operating challenges, suitable technologies and recommended compressor models.",
+      "applicationsLabel": "Typical compressed-air uses"
+    },
+    "industryDetail": {
+      "eyebrow": "Industry solution",
+      "backLabel": "All industries",
+      "notFoundText": "Industry solution not found.",
+      "heroPrefix": "Compressed Air Solutions for",
+      "primaryCta": "Discuss Your Application",
+      "sizingFact": "Correct sizing",
+      "serviceFact": "Service support",
+      "adviceFact": "Expert advice",
+      "challengeLabel": "Industry requirement",
+      "challengeTitle": "The compressed-air challenge",
+      "solutionLabel": "FirstAir approach",
+      "solutionTitle": "The FirstAir solution",
+      "applicationsTitle": "Applications",
+      "benefitsTitle": "Benefits",
+      "challengesEyebrow": "Application engineering",
+      "challengesTitle": "Industry Challenges & Our Solutions",
+      "recommendationsTitle": "Recommended Products",
+      "relatedEyebrow": "Recommended equipment",
+      "relatedIntro": "Use these models as a starting point. Final selection must be based on measured FAD, working pressure, duty cycle, air quality and site conditions.",
+      "allProductsLabel": "View all products",
+      "noProductsText": "Recommended models will be published after technical review.",
+      "ctaEyebrow": "Talk to our technical team",
+      "ctaTitle": "Discuss Your Application With Our Experts",
+      "ctaText": "Share your pressure, FAD, operating hours and application requirements with FirstAir."
+    },
+    "services": {
+      "heroEyebrow": "Service & support",
+      "heroTitle": "Complete Service & Support",
+      "heroIntro": "Support throughout the equipment lifecycle—from installation and commissioning to preventive maintenance, breakdown response, genuine parts, AMC and energy audits.",
+      "countLabel": "Service solutions",
+      "directoryEyebrow": "Equipment lifecycle support",
+      "directoryTitle": "How FirstAir supports your operation",
+      "directoryIntro": "Choose the service requirement closest to your current need and send the technical team the relevant equipment and site information.",
+      "exploreLabel": "Explore service",
+      "ctaEyebrow": "Service assistance",
+      "ctaTitle": "Not sure what support you need?",
+      "ctaText": "Tell us about the compressor, application and concern. Our team will help identify the right next step.",
+      "ctaButton": "Talk to our service team",
+      "errorTitle": "We could not load the services.",
+      "errorText": "Please check your connection and try again.",
+      "retryLabel": "Try again"
+    },
+    "serviceDetail": {
+      "eyebrow": "Service & support",
+      "backLabel": "All services",
+      "notFoundText": "That service is no longer available.",
+      "overviewEyebrow": "How we help",
+      "overviewTitle": "Support built around your operation",
+      "benefitsTitle": "Key Benefits",
+      "ctaButton": "Request Service",
+      "processEyebrow": "Clear service workflow",
+      "processTitle": "Our Service Process",
+      "formEyebrow": "Service request",
+      "formTitle": "Tell us what support you need",
+      "formText": "Provide the equipment, location and urgency details so the request can be reviewed and prioritized.",
+      "nameLabel": "Name",
+      "companyLabel": "Company",
+      "phoneLabel": "Mobile Number",
+      "emailLabel": "Email",
+      "locationLabel": "Location",
+      "compressorLabel": "Compressor Model / Serial Number",
+      "urgencyLabel": "Urgency",
+      "requirementLabel": "Describe the service requirement",
+      "submitLabel": "Submit Service Request",
+      "submittingLabel": "Submitting…",
+      "successText": "Your service request has been recorded. Our team will review the details and contact you.",
+      "errorText": "The service request could not be submitted. Please try again."
+    },
+    "news": {
+      "heroTitle": "Latest Updates"
+    },
+    "distributors": {
+      "heroTitle": "Find a Dealer / Distributor",
+      "partnerTitle": "Become an Authorized Distributor"
+    },
+    "contact": {
+      "heroTitle": "Send Us A Message",
+      "formTitle": "Inquiry Form",
+      "successTitle": "Thank You!"
+    },
+    "productCategory": {
+      "featuresTitle": "Key Features",
+      "helpTitle": "Need Help Choosing?",
+      "modelsTitle": "Available Models"
+    },
+    "productDetail": {
+      "eyebrow": "Industrial air compressor",
+      "backLabel": "Back to Products",
+      "notFoundText": "Product not found.",
+      "modelLabel": "Model",
+      "powerLabel": "Power Rating",
+      "fadLabel": "FAD",
+      "pressureLabel": "Working Pressure",
+      "motorLabel": "Motor Efficiency",
+      "datasheetLabel": "Technical Datasheet",
+      "brochureLabel": "Product Brochure",
+      "expertButton": "Talk to Our Expert",
+      "featuresTitle": "Key Features",
+      "benefitsTitle": "Key Benefits",
+      "specificationsTitle": "Technical Specifications",
+      "modelsTitle": "Available Models",
+      "applicationsTitle": "Applications",
+      "emptySectionText": "Information available on request",
+      "enquiryEyebrow": "Product enquiry",
+      "enquiryTitle": "Need help selecting the right compressor?",
+      "enquiryText": "Share your operating requirement and our technical team will help confirm the appropriate compressor and package.",
+      "enquiryButton": "Submit Enquiry",
+      "fullEnquiryLabel": "Open detailed enquiry form",
+      "enquirySuccess": "Thank you. Our technical team will contact you shortly.",
+      "enquiryError": "The enquiry could not be submitted. Please try again.",
+      "submittingLabel": "Submitting…",
+      "preparingLabel": "Preparing…",
+      "downloadButton": "Download Document",
+      "relatedTitle": "Related Products"
+    },
+    "about": {
+      "heroEyebrow": "About FirstAir",
+      "missionTitle": "Our Mission",
+      "visionTitle": "Our Vision",
+      "storyEyebrow": "Who we are",
+      "storyTitle": "Industrial compressed-air solutions for India",
+      "highlightsEyebrow": "How we help",
+      "highlightsTitle": "Support across the compressed-air lifecycle",
+      "statisticsEyebrow": "Approved company facts",
+      "statisticsTitle": "FirstAir at a glance",
+      "productsButton": "Explore Compressors",
+      "contactButton": "Talk to Our Team"
+    },
+    "timeline": {
+      "heroTitle": "Company Timeline"
+    },
+    "careers": {
+      "heroTitle": "Careers",
+      "introTitle": "Build Your Career With Us",
+      "openingsTitle": "Current Openings"
+    },
+    "chrome": {
+      "productsHeading": "Products",
+      "companyHeading": "Company",
+      "contactHeading": "Contact",
+      "adminLoginLabel": "Admin login"
+    }
   },
   "about": {
-    "storyShort": "firstAir offers FAS and FSG air-cooled rotary screw compressor ranges for industrial compressed air users.",
-    "storyLong": "firstAir compressors support workshops, manufacturing units, service teams, site work, and continuous plant air requirements with cataloged models from compact packages through high-capacity industrial compressors.",
-    "mission": "To provide practical, economical, and reliable air compressor packages for industrial users.",
-    "vision": "To make compressor selection simple through clear FAS and FSG model data, technical information, warranty support, and responsive service."
+    "storyShort": "FirstAir is an industrial compressed-air solutions brand focused on reliable, efficient and application-specific compressor solutions for industries across India.",
+    "storyLong": "FirstAir supports industrial compressed-air requirements from initial application review and compressor selection through installation, commissioning, preventive maintenance, genuine spare parts and system-efficiency support.",
+    "mission": "To help industrial customers select and operate dependable compressed-air systems suited to their pressure, FAD, duty cycle and application requirements.",
+    "vision": "To be a trusted compressed-air solutions partner through clear technical guidance, reliable equipment and responsive lifecycle support.",
+    "heroEyebrow": "About FirstAir",
+    "heroTitle": "Industrial experience. Application-focused compressed-air solutions.",
+    "heroIntro": "FirstAir helps industries across India evaluate, select and support compressed-air equipment around real operating requirements.",
+    "heroImageUrl": "/api/media/hero-products-showcase.png",
+    "heroImageAlt": "FirstAir industrial compressor solutions",
+    "highlights": [
+      {
+        "title": "Application Engineering",
+        "description": "Selection support based on pressure, FAD, operating hours, air quality and site conditions.",
+        "active": true
+      },
+      {
+        "title": "Equipment & Installation",
+        "description": "Compressor supply supported by site-readiness, installation and commissioning guidance.",
+        "active": true
+      },
+      {
+        "title": "Lifecycle Support",
+        "description": "Preventive maintenance, breakdown assistance, genuine parts, AMC and efficiency review.",
+        "active": true
+      }
+    ],
+    "statistics": [
+      {
+        "value": "80+",
+        "label": "Channel Partners",
+        "verified": false,
+        "active": false
+      },
+      {
+        "value": "Pan-India",
+        "label": "Sales & Service Network",
+        "verified": false,
+        "active": false
+      },
+      {
+        "value": "Multiple",
+        "label": "Industrial Applications",
+        "verified": true,
+        "active": true
+      },
+      {
+        "value": "Complete",
+        "label": "Compressed-Air Solutions",
+        "verified": true,
+        "active": true
+      }
+    ]
   },
   "contact": {
-    "factoryPhone": "1-877-287-0222",
-    "salesPhone": "1-877-287-0222",
-    "email": "sales@firstaircompressor.com",
+    "salesPhone": "+91 7420056998",
+    "email": "info@fscurtis.in",
     "headquarters": {
       "name": "firstAir Compressor",
       "address": "Contact firstAir for sales, service, parts, and warranty information."
@@ -31,24 +656,22 @@
         "address": "firstAir Compressor",
         "contactPerson": "Sales Team",
         "designation": "Product inquiries",
-        "phone": "1-877-287-0222",
-        "email": "sales@firstaircompressor.com"
+        "email": "info@fscurtis.in"
       },
       {
         "region": "Support",
         "address": "firstAir Compressor",
         "contactPerson": "Support Team",
         "designation": "Service and warranty support",
-        "phone": "1-877-287-0222",
-        "email": "support@firstaircompressor.com"
+        "email": "info@fscurtis.in"
       }
     ]
   },
   "social": {
-    "linkedin": "",
-    "facebook": "",
+    "linkedin": "https://www.linkedin.com/company/fs-compressors-india/",
+    "facebook": "https://www.facebook.com/profile.php?id=61590244457735",
     "youtube": "",
-    "instagram": ""
+    "instagram": "https://www.instagram.com/fscompressors_india/"
   },
   "pages": {
     "technical": {
@@ -58,7 +681,7 @@
       "points": [
         "Operating pressure: 8 to 10 bar(g)",
         "Air discharge range: 0.52 m3/min to 5.94 m3/min",
-        "Motor nominal power range: 4 kW to 37 kW",
+        "Catalog motor power range: 4 kW to 250 kW",
         "IE3 energy efficiency class motors",
         "IP55 protection and Class F insulation",
         "Receiver and dryer package options on selected lower-kW models"
@@ -66,15 +689,783 @@
     },
     "warranty": {
       "eyebrow": "Warranty Information",
-      "title": "5 year warranty support with genuine firstAir parts",
+      "title": "5 year extended warranty support with genuine firstAir parts",
       "intro": "firstAir warranty support is designed around correct maintenance, genuine parts, and regular service practices that protect compressor reliability.",
       "points": [
-        "5 year warranty program for eligible compressors",
+        "5 year extended warranty program for eligible compressors",
         "Use genuine firstAir parts during recommended service intervals",
         "Keep maintenance records for warranty support",
         "Contact the support team for service, parts, and warranty guidance",
         "Support email: support@firstaircompressor.com"
       ]
+    }
+  },
+  "publicContent": {
+    "categoryDisplayNames": { "oil-free-compressors": "Ultra Pack" },
+    "heroSlides": [
+      {
+        "id": "fas-small",
+        "series": "FAS",
+        "tab": "FAS 4-11",
+        "range": "4-11 kW",
+        "title": "Screw Air\nCompressor Range",
+        "background": "/api/media/hero-fas-background.jpg",
+        "preferredModels": [
+          "FAS-8",
+          "FAS-4",
+          "FAS-11"
+        ],
+        "intro": "Compact compressed-air systems built for continuous industrial duty.",
+        "highlights": [
+          "IE3 efficiency-class electric motors",
+          "Air receiver, dryer and filter options",
+          "Integrated oil separator and two-stage suction filtration",
+          "Cooling designed for ambient temperatures up to 45 deg C"
+        ],
+        "imageUrl": "/api/media/hero-fas-small-product.png"
+      },
+      {
+        "id": "fas-large",
+        "series": "FAS",
+        "tab": "FAS 15-250",
+        "range": "15-250 kW",
+        "title": "Built for\nIndustrial Demand",
+        "background": "/api/media/hero-fas-background.jpg",
+        "preferredModels": [
+          "FAS-30",
+          "FAS-37",
+          "FAS-45"
+        ],
+        "intro": "Air-cooled screw compressors designed for 24/7 operation.",
+        "highlights": [
+          "IE3 premium-efficiency drive",
+          "Compact footprint with easy maintenance access",
+          "EUCOMP airend technology",
+          "Intelligent control with maintenance and fault indication"
+        ],
+        "imageUrl": ""
+      },
+      {
+        "id": "fasm",
+        "series": "FASM",
+        "tab": "FASM",
+        "range": "7.5-37 kW",
+        "title": "Performance without\nCompromise",
+        "background": "/api/media/hero-fasm-background.jpg",
+        "preferredModels": [
+          "FASM22A",
+          "FASM30A",
+          "FASM37A"
+        ],
+        "intro": "Permanent magnet variable-speed technology for lower operating costs.",
+        "highlights": [
+          "IE4 permanent magnet motor",
+          "Intelligent inverter for precise pressure control",
+          "7-inch touchscreen with smart monitoring",
+          "Remote control for convenient system management"
+        ],
+        "imageUrl": ""
+      },
+      {
+        "id": "fsl",
+        "series": "FSL",
+        "tab": "FSL",
+        "range": "30-220 kW",
+        "title": "Low Pressure,\nHigh Efficiency",
+        "background": "/api/media/hero-fas-background.jpg",
+        "preferredModels": [
+          "FSL185A-4.5",
+          "FSL110A-4.5",
+          "FSL75A-4.5"
+        ],
+        "intro": "Purpose-built screw compressors for high-volume air at 3.5 to 4.5 bar.",
+        "highlights": [
+          "Dedicated low-pressure screw airend",
+          "IE3 motor with IP55 protection and Class F insulation",
+          "Air-cooled package for continuous industrial duty",
+          "Fixed-speed and VFD configurations from 30 to 220 kW"
+        ],
+        "imageUrl": "/api/media/catalogs-fsl-product-transparent.png"
+      },
+      {
+        "id": "fsg",
+        "series": "FSG",
+        "tab": "FSG",
+        "range": "45-185 kW",
+        "title": "Electric Portable\nScrew Air Compressor",
+        "background": "/api/media/hero-fsg-background.jpg",
+        "preferredModels": [
+          "FSG340A",
+          "FSG460A",
+          "FSG760A"
+        ],
+        "intro": "Electric-powered compressed air for quarrying and demanding site applications.",
+        "highlights": [
+          "Three-phase TEFC motor with Class F insulation",
+          "Forklift slots and external lifting points",
+          "Centralised, user-friendly control panel",
+          "Easy access for maintenance and service"
+        ],
+        "imageUrl": ""
+      }
+    ],
+    "faqs": [
+      [
+        "How do I choose the right compressor?",
+        "Start with your required air flow (CFM), working pressure, operating hours, air-quality requirement, and future expansion plans. Our team can help you select a suitable model."
+      ],
+      [
+        "What is the difference between fixed-speed and variable-speed compressors?",
+        "Fixed-speed compressors are a practical choice for steady air demand. Variable-speed compressors adjust output to changing demand and can reduce energy use where demand varies."
+      ],
+      [
+        "How often should a compressor be serviced?",
+        "Service intervals depend on the model, operating environment, and running hours. Follow the recommended maintenance schedule and use genuine parts to protect reliability and warranty support."
+      ],
+      [
+        "Do you provide installation and commissioning support?",
+        "Yes. firstAir can support compressor selection, site-readiness guidance, installation, commissioning, and ongoing maintenance."
+      ],
+      [
+        "Can I get spare parts and breakdown support?",
+        "Yes. Contact our service team with your compressor model, serial number, location, and requirement for genuine parts or technical support."
+      ],
+      [
+        "Which industries use firstAir compressors?",
+        "Our compressors support workshops, manufacturing, automotive, packaging, food and beverage, pharmaceuticals, mining, and general plant-air applications."
+      ]
+    ],
+    "seriesGuide": [
+      {
+        "series": "FAS Fixed Speed",
+        "capacity": "4-250 kW",
+        "technology": "Fixed speed rotary screw",
+        "pressure": "7-13 bar",
+        "positioning": "Standard industrial compressor",
+        "industries": "Engineering, automotive, textile, food, pharma, steel, cement, plastics",
+        "summary": "Best for stable air demand and everyday industrial compressed air use."
+      },
+      {
+        "series": "FAS VFD",
+        "capacity": "4-250 kW",
+        "technology": "Variable Frequency Drive (VFD)",
+        "pressure": "7-13 bar",
+        "positioning": "Energy-saving compressor",
+        "industries": "Manufacturing plants with variable air demand",
+        "summary": "Best when air consumption changes during shifts and energy saving matters."
+      },
+      {
+        "series": "FASM",
+        "capacity": "7.5-37 kW",
+        "technology": "PM motor + VFD",
+        "pressure": "7-13 bar",
+        "positioning": "Premium energy-efficient compressor",
+        "industries": "Automotive, electronics, packaging, pharma, food, CNC, precision engineering",
+        "summary": "Best for high-efficiency operation in precision and continuous-use applications."
+      },
+      {
+        "series": "FSG",
+        "capacity": "As per catalogue",
+        "technology": "Portable electric screw compressor",
+        "pressure": "7-13 bar",
+        "positioning": "Mobile compressed air",
+        "industries": "Construction, mining, infrastructure, maintenance, rental",
+        "summary": "Best for project sites, mobile service needs, and rental fleets."
+      }
+    ],
+    "infoPages": {
+      "about": {
+        "eyebrow": "About Us",
+        "title": "firstAir compressed air solutions for industrial users",
+        "intro": "firstAir offers FAS and FSG air-cooled rotary screw compressor ranges for workshops, manufacturing units, service teams, and continuous plant air requirements from compact packages to high-capacity industrial models.",
+        "icon": "CheckCircle2",
+        "points": [
+          "FAS models from compact 4 kW packages through 250 kW industrial units",
+          "FSG catalog models from 45 kW through 185 kW for higher-capacity demand",
+          "Catalog coverage from 9 to 1130 CFM free air delivery",
+          "Pressure coverage from 5 to 16 kg/cm2(g), depending on model and series",
+          "Designed for practical ownership with service access, catalog data, and support guidance"
+        ]
+      },
+      "technical": {
+        "eyebrow": "Technical Information",
+        "title": "Technical documents for selecting and operating FAS compressors",
+        "intro": "Use the product data sheets and technical information to compare air discharge, pressure, power, dimensions, weight, and package options across the FAS compressor range.",
+        "icon": "FileText",
+        "points": [
+          "Operating pressure: 8 to 10 bar(g)",
+          "Air discharge range: 0.52 m3/min to 5.94 m3/min",
+          "Catalog motor power range: 4 kW to 250 kW",
+          "IE3 energy efficiency class motors",
+          "IP55 protection and Class F insulation",
+          "Receiver and dryer package options on selected lower-kW models"
+        ]
+      },
+      "warranty": {
+        "eyebrow": "Warranty Information",
+        "title": "5 year extended warranty support with genuine firstAir parts",
+        "intro": "firstAir warranty support is designed around correct maintenance, genuine parts, and regular service practices that protect compressor reliability.",
+        "icon": "ShieldCheck",
+        "points": [
+          "5 year extended warranty program for eligible compressors",
+          "Use genuine firstAir parts during recommended service intervals",
+          "Keep maintenance records for warranty support",
+          "Contact the support team for service, parts, and warranty guidance",
+          "Support email: support@firstaircompressor.com"
+        ]
+      }
+    },
+    "technicalChecklist": [
+      {
+        "icon": "CompressorIcon",
+        "title": "Confirm Air Demand",
+        "text": "Estimate current and future CFM requirement, including leakage, standby equipment, and peak production demand."
+      },
+      {
+        "icon": "Gauge",
+        "title": "Select Working Pressure",
+        "text": "Choose pressure based on the highest required tool or process pressure, then allow margin for pipe losses."
+      },
+      {
+        "icon": "ShieldCheck",
+        "title": "Match Duty Pattern",
+        "text": "Use fixed speed for steady demand, VFD for variable demand, portable units for site work, and low pressure units for high-volume process air."
+      }
+    ],
+    "brochures": [
+      {
+        "title": "FAS 4-11 kW Catalog",
+        "detail": "Compact FAS range for smaller industrial air requirements.",
+        "href": "/api/media/catalog-fas-4-11.pdf"
+      },
+      {
+        "title": "FAS 15-250 kW Catalog",
+        "detail": "Larger FAS models for heavy duty plant air applications.",
+        "href": "/api/media/catalog-fas-15-250kw.pdf"
+      },
+      {
+        "title": "FSL / FSLV 30-220 kW Catalog",
+        "detail": "Fixed-speed and VFD low-pressure compressors for high-volume process air.",
+        "href": "/api/media/catalog-fsl.pdf"
+      },
+      {
+        "title": "FSG 45-185 kW Catalog",
+        "detail": "FSG compressor range for higher capacity requirements.",
+        "href": "/api/media/catalog-fsg-45-185kw.pdf"
+      }
+    ],
+    "technicalFaqs": [
+      {
+        "question": "How do I choose the right CFM?",
+        "answer": "Add the air consumption of tools or machines that run together, then include margin for leakage and future demand. CFM is usually more important than motor kW during model selection."
+      },
+      {
+        "question": "When should I add an air receiver?",
+        "answer": "A receiver helps stabilize pressure, reduce short cycling, and support short bursts of high demand. It is especially useful for workshops and intermittent air use."
+      },
+      {
+        "question": "Do I need a dryer and filters?",
+        "answer": "Use a refrigeration dryer and filtration when air quality matters for tools, pneumatic valves, painting, food processing, packaging, CNC, or moisture-sensitive equipment."
+      },
+      {
+        "question": "What pressure should I select?",
+        "answer": "Start from the highest required point-of-use pressure and include allowance for pressure drop through piping, dryer, filters, and distance from the compressor room."
+      }
+    ],
+    "warrantyFaqs": [
+      {
+        "question": "What helps keep warranty support valid?",
+        "answer": "Use genuine firstAir parts, follow recommended service intervals, maintain clean ventilation, and keep service records for oil, filters, separator elements, and inspections."
+      },
+      {
+        "question": "Who should service the compressor?",
+        "answer": "Use an authorized or qualified service technician familiar with rotary screw compressors, electrical checks, oil systems, separator elements, and safety procedures."
+      },
+      {
+        "question": "What information is useful for warranty support?",
+        "answer": "Share the model, serial number, running hours, installation details, maintenance history, fault symptoms, and photos or videos when available."
+      },
+      {
+        "question": "Does air quality affect warranty life?",
+        "answer": "Dusty rooms, poor ventilation, high ambient temperature, blocked coolers, or incorrect oil and filters can reduce reliability and should be corrected early."
+      }
+    ],
+    "aboutHighlights": [
+      {
+        "icon": "Factory",
+        "title": "Built Around Real Applications",
+        "text": "The catalog supports workshops, automotive service, fabrication, packaging, food processing, CNC support, plant air, construction, maintenance, and rental use."
+      },
+      {
+        "icon": "Gauge",
+        "title": "Selection Starts With Demand",
+        "text": "Model selection is guided by required CFM, pressure, duty pattern, operating hours, receiver sizing, dryer need, and future expansion."
+      },
+      {
+        "icon": "Wrench",
+        "title": "Designed For Ownership",
+        "text": "firstAir content focuses on practical operation: readable specifications, brochure downloads, maintenance notes, warranty guidance, and easy contact paths."
+      }
+    ],
+    "productOrder": [
+      "FAS-4",
+      "FAS-6",
+      "FAS-8",
+      "FAS-11",
+      "FAS-11(HE)",
+      "FAS-15",
+      "FAS-18",
+      "FAS-22",
+      "FAS-30",
+      "FAS-37",
+      "FAS-45",
+      "FAS-55",
+      "FAS-75",
+      "FAS-90",
+      "FAS-110",
+      "FAS-132",
+      "FAS-160",
+      "FAS-185",
+      "FAS-200",
+      "FAS-220",
+      "FAS-250",
+      "FSG270A",
+      "FSG340A",
+      "FSG460A",
+      "FSG760A",
+      "FSG860A",
+      "FSG1060A",
+      "FASM08A",
+      "FASM11A",
+      "FASM15A",
+      "FASM18A",
+      "FASM22A",
+      "FASM30A",
+      "FASM37A"
+    ],
+    "productSeries": [
+      {
+        "key": "fas-small",
+        "title": "FAS Series",
+        "range": "4-11 kW",
+        "family": "FAS",
+        "min": 4,
+        "max": 11
+      },
+      {
+        "key": "fas-large",
+        "title": "FAS Series",
+        "range": "15-250 kW",
+        "family": "FAS",
+        "min": 15,
+        "max": 250
+      },
+      {
+        "key": "fsl",
+        "title": "FSL / FSLV Series",
+        "range": "30-220 kW Low Pressure",
+        "family": "FSL",
+        "min": 30,
+        "max": 220
+      },
+      {
+        "key": "fsg",
+        "title": "FSG Series",
+        "range": "45-185 kW",
+        "family": "FSG",
+        "min": 45,
+        "max": 185
+      },
+      {
+        "key": "fasm",
+        "title": "FASM Series",
+        "range": "7.5-37 kW Permanent Magnet VFD",
+        "family": "FASM",
+        "min": 7.5,
+        "max": 37
+      }
+    ],
+    "footer": {
+      "logoUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/logo-white.svg"
+    },
+    "productLinks": [
+      {
+        "label": "All Compressors",
+        "page": "products"
+      },
+      {
+        "label": "FAS Fixed Speed",
+        "page": "products"
+      },
+      {
+        "label": "FASM Variable Speed",
+        "page": "products"
+      },
+      {
+        "label": "FSG High Capacity",
+        "page": "products"
+      },
+      {
+        "label": "Technical Information",
+        "page": "technical"
+      }
+    ],
+    "companyLinks": [
+      {
+        "label": "About firstAir",
+        "page": "about-story"
+      },
+      {
+        "label": "Industries",
+        "page": "industries"
+      },
+      {
+        "label": "Services",
+        "page": "services"
+      },
+      {
+        "label": "Dealer Finder",
+        "page": "distributors"
+      },
+      {
+        "label": "Careers",
+        "page": "about-careers"
+      },
+      {
+        "label": "Warranty",
+        "page": "warranty"
+      }
+    ],
+    "routeMeta": {
+      "/": {
+        "title": "firstAir Compressor | Rotary Screw Air Compressors",
+        "description": "firstAir Compressor offers FAS, FASM, and FSG rotary screw compressors from 4 kW to 250 kW for industrial air applications.",
+        "keywords": "firstAir compressor, rotary screw compressor, air cooled compressor, industrial air compressor, FAS compressor"
+      },
+      "/products": {
+        "title": "Air Compressor Products | firstAir Compressor",
+        "description": "Compare firstAir FAS and FSG compressor models by power, pressure, CFM, brochure, and industrial application.",
+        "keywords": "compressor models, FAS compressor, FSG compressor, screw air compressor products, compressor catalogue"
+      },
+      "/technical-information": {
+        "title": "Technical Information | firstAir Compressor",
+        "description": "Review technical information for firstAir compressors including pressure range, CFM, kW, motor efficiency, and package options.",
+        "keywords": "compressor technical information, compressor CFM, compressor pressure, compressor kW, IE3 motor compressor"
+      },
+      "/warranty-information": {
+        "title": "Warranty Information | firstAir Compressor",
+        "description": "Learn about firstAir compressor warranty support, genuine parts, service practices, and maintenance records.",
+        "keywords": "compressor warranty, firstAir warranty, compressor service, genuine compressor parts"
+      },
+      "/faq": {
+        "title": "Frequently Asked Questions | firstAir Compressor",
+        "description": "Find answers about selecting, operating, servicing, and supporting firstAir industrial air compressors.",
+        "keywords": "air compressor FAQ, compressor selection, compressor maintenance, compressor service support"
+      },
+      "/industries": {
+        "title": "Industries Served | firstAir Compressor",
+        "description": "Explore industrial applications for firstAir rotary screw compressors across manufacturing, workshops, plant air, and service environments.",
+        "keywords": "industrial compressor applications, manufacturing compressor, workshop air compressor, plant air compressor"
+      },
+      "/services": {
+        "title": "Compressor Services | firstAir Compressor",
+        "description": "Contact firstAir for compressor consultation, installation, maintenance, parts, warranty, and service support.",
+        "keywords": "compressor service, compressor maintenance, compressor installation, compressor parts"
+      },
+      "/distributors": {
+        "title": "Dealer Network | firstAir Compressor",
+        "description": "Find firstAir dealer and distributor support for sales, service, parts, warranty, and compressor enquiries.",
+        "keywords": "compressor dealer, firstAir distributor, compressor sales, compressor service network"
+      },
+      "/contact": {
+        "title": "Contact firstAir Compressor | Sales and Service Enquiry",
+        "description": "Contact firstAir Compressor for product enquiries, quotations, technical information, service support, and dealer assistance.",
+        "keywords": "contact firstAir compressor, compressor quote, compressor sales enquiry, compressor service enquiry"
+      },
+      "/about/story": {
+        "title": "About firstAir Compressor",
+        "description": "Learn about firstAir Compressor and its practical range of air cooled single stage rotary screw compressors.",
+        "keywords": "about firstAir compressor, compressor company, rotary screw compressor manufacturer"
+      },
+      "/about/timeline": {
+        "title": "Company Timeline | firstAir Compressor",
+        "description": "View firstAir Compressor milestones and product information updates.",
+        "keywords": "firstAir timeline, compressor company history, firstAir milestones"
+      },
+      "/about/careers": {
+        "title": "Careers | firstAir Compressor",
+        "description": "Explore career opportunities with firstAir Compressor.",
+        "keywords": "firstAir careers, compressor jobs, engineering careers"
+      }
+    },
+    "productGuidance": [
+      {
+        "family": "FSG",
+        "minPowerKw": 0,
+        "duty": "Heavy duty industrial",
+        "bestFor": "Construction, maintenance, rental, and high-capacity site air"
+      },
+      {
+        "family": "",
+        "minPowerKw": 75,
+        "duty": "Heavy duty industrial",
+        "bestFor": "Large production lines and continuous plant air"
+      },
+      {
+        "family": "",
+        "minPowerKw": 30,
+        "duty": "Factory plant air",
+        "bestFor": "Factory plant air, automotive, packaging, and fabrication"
+      },
+      {
+        "family": "",
+        "minPowerKw": 15,
+        "duty": "Small manufacturing",
+        "bestFor": "Small manufacturing, workshops, CNC, and general plant air"
+      },
+      {
+        "family": "",
+        "minPowerKw": 0,
+        "duty": "Small workshop",
+        "bestFor": "Small workshops, service bays, tools, and compact production areas"
+      }
+    ],
+    "quickActions": [
+      {
+        "label": "Products",
+        "prompt": "Show me your compressor products",
+        "icon": "PackageSearch"
+      },
+      {
+        "label": "Service",
+        "prompt": "I need compressor service support",
+        "icon": "Wrench"
+      },
+      {
+        "label": "About",
+        "prompt": "I want to know about us",
+        "icon": "Building2"
+      },
+      {
+        "label": "Warranty",
+        "prompt": "Tell me about warranty information",
+        "icon": "LifeBuoy"
+      },
+      {
+        "label": "Contact",
+        "prompt": "How can I contact your team?",
+        "icon": "Mail"
+      }
+    ],
+    "chatbot": {
+      "greeting": "Hi, I am the {company} assistant. Ask me about products, service, warranty, technical details, dealers, or contact information.",
+      "greetingLinks": [
+        {
+          "label": "Browse products",
+          "page": "products"
+        },
+        {
+          "label": "Request quote",
+          "page": "request"
+        }
+      ],
+      "thinking": "Checking the latest website information…",
+      "unavailable": "The assistant is temporarily unavailable. Please try again or contact our team.",
+      "checking": "Connecting",
+      "ready": "Assistant ready",
+      "offline": "Assistant unavailable"
+    },
+    "text": {
+      "FaqPage": {
+        "help_centre": "Help centre",
+        "frequently_asked_questions": "Frequently Asked Questions",
+        "quick_answers_about_selecting_operating_and_supporting_your_firstair_c": "Quick answers about selecting, operating, and supporting your firstAir compressed-air system.",
+        "still_need_help": "Still need help?",
+        "talk_to_our_team_about_your_compressor_requirement_service_or_technica": "Talk to our team about your compressor requirement, service, or technical question.",
+        "contact_us": "Contact us"
+      },
+      "FirstAirInfoPages": {
+        "firstair_compressor": "firstAir Compressor",
+        "firstair_helps_buyers_compare_compressor_series_review_technical_data_": "firstAir helps buyers compare compressor series, review technical data, download brochures, and contact the team with clearer requirements before selecting a model.",
+        "view_products": "View Products",
+        "contact_us": "Contact Us",
+        "how_we_help": "How We Help",
+        "clear_compressor_information_for_confident_buying": "Clear compressor information for confident buying",
+        "the_about_us_page_should_do_more_than_introduce_the_brand_it_should_he": "The About Us page should do more than introduce the brand. It should help visitors understand what firstAir sells, where the compressors fit, and how to start the selection conversation.",
+        "before_selection": "Before Selection",
+        "what_buyers_should_check_first": "What buyers should check first",
+        "a_compressor_should_be_selected_from_the_real_site_requirement_not_onl": "A compressor should be selected from the real site requirement, not only from motor kW. These checks make the inquiry clearer and help the team recommend the right model.",
+        "catalog_downloads": "Catalog Downloads",
+        "product_brochures": "Product brochures",
+        "request_technical_help": "Request Technical Help",
+        "open_pdf": "Open PDF",
+        "faq": "FAQ"
+      },
+      "CompressorSeriesGuide": {
+        "selection_guide": "Selection Guide",
+        "compare_compressor_series": "Compare Compressor Series",
+        "use_this_guide_to_understand_which_compressor_family_fits_your_capacit": "Use this guide to understand which compressor family fits your capacity, pressure, mobility, and industry requirement before selecting a model.",
+        "get_sizing_help": "Get Sizing Help",
+        "capacity": "Capacity:",
+        "technology": "Technology:",
+        "industries": "Industries:",
+        "choose_the_right_compressor_series": "Choose the right compressor series",
+        "start_with_the_application_steady_demand_variable_demand_mobile_air_or": "Start with the application: steady demand, variable demand, mobile air, or low-pressure high-volume use. Then compare the exact model by kW, CFM, and pressure."
+      },
+      "HomePage": {
+        "0": "0",
+        "we_could_not_load_the_website_information": "We could not load the website information.",
+        "please_check_that_the_application_server_is_running_then_refresh_this_": "Please check that the application server is running, then refresh this page.",
+        "try_again": "Try again"
+      },
+      "ProductHeroSlider": {
+        "series": "Series",
+        "explore": "Explore",
+        "fsl_series": "FSL Series",
+        "contact_our_team_for_current_product_availability": "Contact our team for current product availability."
+      },
+      "ProductsPage": {
+        "best_for": "Best for:",
+        "power": "Power",
+        "kw": "kW",
+        "fad": "FAD",
+        "pressure": "Pressure",
+        "view_details": "View Details",
+        "clear_filters": "Clear filters",
+        "showing_only_the": "Showing only the",
+        "product_series": "product series.",
+        "view_all_product_series": "View all product series",
+        "showing": "Showing",
+        "of": "of",
+        "filter_by_series_power_pressure_and_airflow": "Filter by series, power, pressure, and airflow",
+        "products": "products"
+      },
+      "ProductCategoryPage": {
+        "category_not_found": "Category not found.",
+        "back_to_all_products": "Back to all products",
+        "products": "Products /",
+        "series": "series",
+        "our_experts_can_help_you_select_the_perfect_compressor_for_your_specif": "Our experts can help you select the perfect compressor for your specific application.",
+        "talk_to_an_expert": "Talk to an Expert",
+        "more_products_in_this_category_coming_soon_contact_us_for_current_avai": "More products in this category coming soon. Contact us for current availability.",
+        "series_2": "Series",
+        "kw": "kW",
+        "power": "Power",
+        "cfm": "CFM",
+        "pressure": "Pressure",
+        "view_details": "View Details"
+      },
+      "ProductDetailPage": {
+        "kw": "kW",
+        "cfm": "CFM",
+        "bar": "bar",
+        "kw_2": "kW ·"
+      },
+      "IndustriesPage": {
+        "kw": "kW ·",
+        "cfm": "CFM"
+      },
+      "NewsPage": {
+        "back_to_news": "Back to News",
+        "by": "By",
+        "all_news": "All News",
+        "contact_us": "Contact Us",
+        "news_insights": "News / Insights",
+        "product_launches_industry_events_technical_insights_and_company_news": "Product launches, industry events, technical insights, and company news.",
+        "featured": "Featured",
+        "read_more": "Read More"
+      },
+      "DistributorsPage": {
+        "authorized_distribution_network": "Authorized distribution network",
+        "find_certified_representatives_for_equipment_sales_package_guidance_in": "Find certified representatives for equipment sales, package guidance, installation, parts, and service support.",
+        "your_location": "Your location",
+        "search_radius": "Search radius",
+        "results": "Results",
+        "region": "Region",
+        "category_filter": "Category filter",
+        "use_my_location": "Use my location",
+        "showing": "Showing",
+        "certified_representatives": "certified representatives",
+        "directions": "Directions",
+        "contact": "Contact",
+        "no_dealers_match_the_selected_filters": "No dealers match the selected filters.",
+        "interested_in_joining_the_firstair_network_connect_with_us_for_partner": "Interested in joining the firstAir network? Connect with us for partnership opportunities.",
+        "become_a_partner": "Become a Partner"
+      },
+      "ContactPage": {
+        "your_inquiry_has_been_received_our_team_will_contact_you_within_24_hou": "Your inquiry has been received. Our team will contact you within 24 hours to discuss your compressed air requirements.",
+        "submit_another_inquiry": "Submit Another Inquiry",
+        "contact_enquiry": "Contact / Enquiry",
+        "product_enquiries_technical_information_warranty_questions_and_service": "Product enquiries, technical information, warranty questions, and service support.",
+        "fields_marked_with_are_required": "Fields marked with * are required.",
+        "name": "Name *",
+        "company": "Company",
+        "email": "Email",
+        "phone": "Phone *",
+        "how_can_we_help": "How can we help? *",
+        "industry": "Industry",
+        "product_service_of_interest": "Product / Service of Interest",
+        "message": "Message",
+        "sending": "Sending...",
+        "submit_inquiry": "Submit Inquiry",
+        "firstair_compressor": "firstAir Compressor",
+        "phone_2": "Phone:",
+        "regional_offices": "Regional Offices"
+      },
+      "AboutPages": {
+        "we_have_been_a_trusted_name_in_the_compressed_air_industry_for_over_17": "We have been a trusted name in the compressed air industry for over 170 years. Over the decades, the company and our products have evolved through innovation and new technologies. But those commitments to quality and service remain unchanged.",
+        "explore_how_you_can_become_part_of_our_diverse_team_and_continue_the_l": "Explore how you can become part of our diverse team and continue the legacy of being the most trusted and dependable compressed air provider. We are committed to a diverse workforce and are an Equal Opportunity Employer.",
+        "requirements": "Requirements",
+        "apply_now": "Apply Now",
+        "no_current_openings_please_check_back_soon": "No current openings. Please check back soon!",
+        "company_about": "Company / About"
+      },
+      "Footer": {
+        "fixed_speed_fas_permanent_magnet_variable_speed_fasm_and_high_capacity": "Fixed-speed FAS, permanent-magnet variable-speed FASM, and high-capacity FSG rotary screw compressors for workshops and demanding industrial plants.",
+        "4_250_kw": "4–250 kW",
+        "5_16_bar": "5–16 bar",
+        "up_to_1_130_cfm": "Up to 1,130 CFM",
+        "contact": "Contact",
+        "for_sales_amp_service_enquiry": "For Sales & Service Enquiry",
+        "email": "Email",
+        "info_fscurtis_in": "info@fscurtis.in",
+        "support_amp_enquiries": "Support & enquiries",
+        "view_contact_details": "View contact details",
+        "all_rights_reserved": ". All rights reserved.",
+        "faq": "FAQ",
+        "warranty": "Warranty",
+        "cookie_preferences": "Cookie preferences",
+        "admin_login": "Admin login"
+      },
+      "NavbarOverlay": {
+        "dealer_login": "Dealer Login",
+        "employee_login": "Employee Login"
+      },
+      "RequestModal": {
+        "request_received": "Request received",
+        "our_team_will_contact_you_about_your_requirement": "Our team will contact you about your requirement.",
+        "close": "Close",
+        "urgency": "Urgency",
+        "application_and_technical_details_optional": "Application and technical details (optional)",
+        "requirement_details": "Requirement details",
+        "we_could_not_submit_your_request_your_details_are_saved_here_please_tr": "We could not submit your request. Your details are saved here; please try again."
+      },
+      "Chatbot": {
+        "intelligent_assistant": "Intelligent Assistant",
+        "call_sales": "Call sales",
+        "email_team": "Email team"
+      },
+      "CookieConsentBanner": {
+        "your_privacy_choices": "Your privacy choices",
+        "we_use_essential_storage_to_make_this_site_work_with_your_permission_w": "We use essential storage to make this site work. With your permission, we may also use analytics to improve the site and marketing cookies to measure campaigns.",
+        "manage_preferences": "Manage preferences",
+        "reject_non_essential": "Reject non-essential",
+        "save_preferences": "Save preferences",
+        "accept_all": "Accept all"
+      },
+      "DocumentDownload": {
+        "preview_pdf": "Preview PDF"
+      }
     }
   }
 }

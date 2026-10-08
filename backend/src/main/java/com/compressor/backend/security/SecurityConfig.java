@@ -39,6 +39,7 @@ public class SecurityConfig {
                 "/api/jobs",
                 "/api/distributors",
                 "/api/images",
+                "/api/media/**",
                 "/api/chatbot/status").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/leads").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/chatbot").permitAll()

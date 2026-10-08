@@ -1,47 +1,8 @@
 [
-  {
-    "id": "srv-product-selection",
-    "slug": "compressor-selection",
-    "name": "Compressor Selection",
-    "shortDescription": "Help choosing the correct FAS model by power, flow, duty, and application.",
-    "fullDescription": "firstAir support helps customers compare FAS models from 3 kW to 37 kW using maximum air discharge, operating pressure, package dimensions, and application requirements.",
-    "iconName": "Gauge",
-    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS37-400x400.png",
-    "benefits": ["Model comparison", "Power and flow guidance", "Application matching", "Dealer coordination"],
-    "process": [
-      { "step": 1, "title": "Requirement Review", "description": "Collect pressure, air demand, duty cycle, and site details." },
-      { "step": 2, "title": "Model Shortlist", "description": "Compare FAS models by kW and maximum air discharge." },
-      { "step": 3, "title": "Quote Support", "description": "Connect the customer with sales or an authorized dealer." }
-    ]
-  },
-  {
-    "id": "srv-installation",
-    "slug": "installation-support",
-    "name": "Installation Support",
-    "shortDescription": "Guidance for compressor placement, ventilation, electrical readiness, and commissioning.",
-    "fullDescription": "Installation support helps customers prepare the site for air cooled FAS compressor packages, including ventilation, clearance, electrical connection, and safe commissioning checks.",
-    "iconName": "Wrench",
-    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS22-400x400.png",
-    "benefits": ["Site readiness guidance", "Commissioning support", "Ventilation review", "Installation checklist"],
-    "process": [
-      { "step": 1, "title": "Site Check", "description": "Review space, ventilation, and power availability." },
-      { "step": 2, "title": "Installation", "description": "Coordinate equipment placement and connection." },
-      { "step": 3, "title": "Commissioning", "description": "Verify start-up, pressure, and operating conditions." }
-    ]
-  },
-  {
-    "id": "srv-maintenance",
-    "slug": "maintenance-support",
-    "name": "Maintenance Support",
-    "shortDescription": "Maintenance guidance and service planning for FAS rotary screw compressors.",
-    "fullDescription": "The FAS range is designed for maintenance friendly access. Service support helps customers plan inspections, parts replacement, and routine compressor care.",
-    "iconName": "ShieldCheck",
-    "imageUrl": "https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS15-400x400.png",
-    "benefits": ["Maintenance planning", "Parts guidance", "Dealer service coordination", "Warranty support"],
-    "process": [
-      { "step": 1, "title": "Inspection", "description": "Review operating hours and compressor condition." },
-      { "step": 2, "title": "Service Plan", "description": "Plan routine service items and genuine parts." },
-      { "step": 3, "title": "Support", "description": "Coordinate with the dealer network for service work." }
-    ]
-  }
+  {"id":"srv-installation","slug":"installation-commissioning","name":"Installation & Commissioning","shortDescription":"Professional installation and commissioning to ensure reliable compressor performance.","fullDescription":"Correct placement, ventilation, electrical readiness, piping and start-up checks are essential for safe and dependable compressor operation.","serviceScope":"FirstAir supports site-readiness review, equipment placement, connection checks, operating-parameter verification and customer handover.","iconName":"Wrench","imageUrl":"/services/installation-support.png","imageAlt":"Industrial compressor installation and commissioning support","benefits":["Site-readiness guidance","Correct equipment placement","Commissioning checks","Operating-team handover"],"process":[{"step":1,"title":"Site Review","description":"Review space, ventilation, electrical supply, piping and access."},{"step":2,"title":"Installation Support","description":"Coordinate placement and verify installation requirements."},{"step":3,"title":"Commissioning","description":"Verify start-up, pressure, controls and operating conditions."},{"step":4,"title":"Handover","description":"Record commissioning data and explain routine operation."}],"order":1,"active":true},
+  {"id":"srv-maintenance","slug":"preventive-maintenance","name":"Preventive Maintenance","shortDescription":"Planned maintenance programs designed to maximize compressor reliability and equipment life.","fullDescription":"Preventive maintenance aligns inspections, consumables and service work with operating hours and actual site conditions.","serviceScope":"FirstAir helps plan recurring inspection and service activities, maintain records and coordinate genuine replacement parts.","iconName":"ShieldCheck","imageUrl":"/services/maintenance-support.png","imageAlt":"Preventive maintenance for an industrial air compressor","benefits":["Improved equipment reliability","Planned service intervals","Reduced unexpected downtime","Longer equipment life"],"process":[{"step":1,"title":"Equipment Review","description":"Capture model, operating hours, condition and maintenance history."},{"step":2,"title":"Maintenance Plan","description":"Define inspection and replacement activities around the duty cycle."},{"step":3,"title":"Scheduled Service","description":"Complete agreed work using appropriate parts and procedures."},{"step":4,"title":"Service Record","description":"Document observations, work completed and follow-up recommendations."}],"order":2,"active":true},
+  {"id":"srv-breakdown","slug":"breakdown-support","name":"Breakdown Support","shortDescription":"Technical assistance to minimize downtime and restore production quickly.","fullDescription":"When compressor problems interrupt production, clear equipment information and operating symptoms help the service team prioritize diagnosis and response.","serviceScope":"FirstAir captures the fault condition, equipment identity, location and operational impact before coordinating technical support and corrective action.","iconName":"Settings","imageUrl":"/services/maintenance-support.png","imageAlt":"Industrial compressor breakdown technical support","benefits":["Prioritized technical response","Structured fault information","Reduced production disruption","Corrective-action guidance"],"process":[{"step":1,"title":"Request Triage","description":"Capture model, serial details, alarm information and production impact."},{"step":2,"title":"Technical Review","description":"Review symptoms and determine the appropriate response path."},{"step":3,"title":"Corrective Support","description":"Coordinate remote guidance, site service or required parts."},{"step":4,"title":"Closure Review","description":"Record the action and identify preventive follow-up work."}],"order":3,"active":true},
+  {"id":"srv-spares","slug":"genuine-spare-parts","name":"Genuine Spare Parts","shortDescription":"Genuine replacement parts to maintain compressor performance and reliability.","fullDescription":"Correct part identification helps protect compressor performance, service life and maintenance quality.","serviceScope":"FirstAir uses equipment model, serial information and part requirements to support identification and supply enquiries.","iconName":"Package","imageUrl":"/services/maintenance-support.png","imageAlt":"Genuine industrial compressor spare parts support","benefits":["Correct part identification","Compatibility support","Maintenance reliability","Parts enquiry traceability"],"process":[{"step":1,"title":"Equipment Identification","description":"Provide compressor model, serial number and site details."},{"step":2,"title":"Part Requirement","description":"Share part numbers, descriptions or supporting photographs."},{"step":3,"title":"Verification","description":"Confirm compatibility and required quantities."},{"step":4,"title":"Supply Coordination","description":"Coordinate quotation and fulfilment through the appropriate channel."}],"order":4,"active":true},
+  {"id":"srv-amc","slug":"annual-maintenance-contracts","name":"Annual Maintenance Contracts","shortDescription":"Annual Maintenance Contracts tailored to operating requirements.","fullDescription":"An AMC provides a structured framework for recurring compressor inspections, planned service and maintenance coordination.","serviceScope":"FirstAir reviews the installed equipment, operating pattern, service history and site expectations before proposing an appropriate maintenance scope.","iconName":"RefreshCw","imageUrl":"/services/maintenance-support.png","imageAlt":"Annual maintenance contract support for compressor equipment","benefits":["Predictable maintenance planning","Scheduled service coordination","Documented equipment history","Reduced maintenance uncertainty"],"process":[{"step":1,"title":"Installed Base Review","description":"Record equipment, operating hours and current condition."},{"step":2,"title":"Scope Definition","description":"Agree service frequency, coverage and responsibilities."},{"step":3,"title":"Planned Visits","description":"Complete scheduled inspection and maintenance activities."},{"step":4,"title":"Performance Review","description":"Review service history and update future actions."}],"order":5,"active":true},
+  {"id":"srv-energy-audit","slug":"energy-audit","name":"Energy Audit","shortDescription":"Identify energy losses and opportunities to improve compressed-air system efficiency.","fullDescription":"Compressed-air efficiency depends on actual demand, generation pressure, controls, leaks, distribution losses and operating practices.","serviceScope":"FirstAir reviews system information and operating requirements to identify practical opportunities for pressure optimization, demand matching and system improvement.","iconName":"Gauge","imageUrl":"/services/compressor-selection.png","imageAlt":"Compressed-air system energy audit","benefits":["Energy-loss identification","Pressure optimization opportunities","Demand and capacity review","Actionable system recommendations"],"process":[{"step":1,"title":"System Discovery","description":"Collect compressor, operating-hour, pressure and production information."},{"step":2,"title":"System Review","description":"Assess demand patterns, pressure settings and potential losses."},{"step":3,"title":"Opportunity Analysis","description":"Identify practical efficiency and optimization actions."},{"step":4,"title":"Recommendation","description":"Present prioritized improvement opportunities and next steps."}],"order":6,"active":true}
 ]

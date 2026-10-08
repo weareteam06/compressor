@@ -36,5 +36,6 @@ D:\Tushar\VSCode\compressor\backend\src\main\java\com\compressor\backend\securit
 D:\Tushar\VSCode\compressor\backend\src\main\java\com\compressor\backend\security\SecurityConfig.java
 D:\Tushar\VSCode\compressor\backend\src\main\java\com\compressor\backend\service\ChatbotService.java
 D:\Tushar\VSCode\compressor\backend\src\main\java\com\compressor\backend\service\ContentService.java
+D:\Tushar\VSCode\compressor\backend\src\main\java\com\compressor\backend\service\ContentShape.java
 D:\Tushar\VSCode\compressor\backend\src\main\java\com\compressor\backend\service\DatabaseSeeder.java
 D:\Tushar\VSCode\compressor\backend\src\main\java\com\compressor\backend\service\UserAdminService.java

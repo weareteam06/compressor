@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.time.LocalDate;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -97,7 +99,10 @@ public class ContentService {
 
   public JsonNode getSiteConfig() {
     ObjectNode root = objectMapper.createObjectNode();
-    siteSections.findAll().forEach(section -> root.set(section.sectionKey, section.content));
+    siteSections.findAll().stream()
+        .filter(section -> !Boolean.FALSE.equals(section.active))
+        .sorted(java.util.Comparator.comparing(section -> Optional.ofNullable(section.displayOrder).orElse(0)))
+        .forEach(section -> root.set(section.sectionKey, section.content));
     if (root.isEmpty()) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Site content not found");
     }
@@ -105,10 +110,25 @@ public class ContentService {
   }
 
   public JsonNode updateSiteConfig(JsonNode updates) {
+    if (updates == null || !updates.isObject()) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Site settings must be an object");
+    }
+    if (updates.has("publicContent")) {
+      try (var stream = new org.springframework.core.io.ClassPathResource("data/site-config.json").getInputStream()) {
+        JsonNode template = objectMapper.readTree(stream).path("publicContent");
+        if (!ContentShape.matches(updates.get("publicContent"), template)) {
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Public content has missing fields or invalid value types. Keep field names and use empty arrays to hide lists.");
+        }
+      } catch (java.io.IOException exception) {
+        throw new IllegalStateException("Public content schema is unavailable", exception);
+      }
+    }
     updates.fields().forEachRemaining(entry -> {
       SiteContentSection section = siteSections.findById(entry.getKey()).orElseGet(SiteContentSection::new);
       section.sectionKey = entry.getKey();
       section.content = entry.getValue();
+      section.active = true;
+      section.updatedBy = currentUsername();
       siteSections.save(section);
     });
     return getSiteConfig();
@@ -132,17 +152,49 @@ public class ContentService {
     return summary;
   }
 
+  public List<Map<String, Object>> siteContentInventory() {
+    return siteSections.findAll().stream()
+        .sorted(java.util.Comparator.comparing(section -> Optional.ofNullable(section.displayOrder).orElse(0)))
+        .map(section -> {
+          Map<String, Object> item = new LinkedHashMap<>();
+          item.put("sectionKey", section.sectionKey);
+          item.put("active", !Boolean.FALSE.equals(section.active));
+          item.put("displayOrder", Optional.ofNullable(section.displayOrder).orElse(0));
+          item.put("updatedBy", Optional.ofNullable(section.updatedBy).orElse("system"));
+          item.put("updatedAt", section.updatedAt);
+          item.put("fieldCount", section.content != null && section.content.isObject() ? section.content.size() : 0);
+          return item;
+        }).toList();
+  }
+
+  public Map<String, Object> cmsAudit() {
+    Map<String, Object> audit = new LinkedHashMap<>();
+    audit.put("siteSections", siteContentInventory());
+    audit.put("inactive", Map.of(
+        "categories", inactiveCount(categories.findAll()),
+        "products", inactiveCount(products.findAll()),
+        "industries", inactiveCount(industries.findAll()),
+        "services", inactiveCount(services.findAll()),
+        "news", inactiveCount(news.findAll())));
+    audit.put("mediaMissingAltText", images.findAll().stream()
+        .filter(image -> !Boolean.FALSE.equals(image.active))
+        .filter(image -> image.altText == null || image.altText.isBlank())
+        .count());
+    audit.put("generatedAt", java.time.Instant.now());
+    return audit;
+  }
+
   public List<?> listPublic(String collection, Optional<String> categoryId) {
     return switch (collection) {
-      case "categories" -> categories.findAllByOrderByOrderAsc();
-      case "products" -> categoryId.map(this::productsByCategory).orElseGet(products::findAll);
-      case "industries" -> industries.findAll();
-      case "services" -> services.findAll();
-      case "news" -> news.findAllByOrderByDateDesc();
-      case "timeline" -> timeline.findAllByOrderByYearAsc();
+      case "categories" -> published(categories.findAllByOrderByOrderAsc());
+      case "products" -> categoryId.map(this::productsByCategory).orElseGet(() -> published(uniqueProducts(products.findAll())));
+      case "industries" -> published(industries.findAllByOrderByOrderAsc());
+      case "services" -> published(services.findAllByOrderByOrderAsc());
+      case "news" -> published(news.findAllByOrderByDateDesc());
+      case "timeline" -> published(timeline.findAllByOrderByYearAsc());
       case "jobs" -> jobs.findByStatus("Open");
       case "distributors" -> distributors.findByStatus("Active");
-      case "images" -> images.findAll();
+      case "images" -> images.findAll().stream().filter(image -> !Boolean.FALSE.equals(image.active) && image.data != null && image.data.length > 0).toList();
       default -> throw notFound();
     };
   }
@@ -150,7 +202,7 @@ public class ContentService {
   public List<?> listAdmin(String collection) {
     return switch (collection) {
       case "categories" -> categories.findAll();
-      case "products" -> products.findAll();
+      case "products" -> uniqueProducts(products.findAll());
       case "industries" -> industries.findAll();
       case "services" -> services.findAll();
       case "news" -> news.findAll();
@@ -158,14 +210,14 @@ public class ContentService {
       case "jobs" -> jobs.findAll();
       case "distributors" -> distributors.findAll();
       case "leads" -> visibleLeads();
-      case "images" -> images.findAll();
+      case "images" -> images.findAll().stream().filter(image -> image.data != null && image.data.length > 0).toList();
       default -> throw notFound();
     };
   }
 
   public Object findById(String collection, String id) {
     Long numericId = parseId(id);
-    return switch (collection) {
+    Object found = switch (collection) {
       case "products" -> numericId == null
           ? products.findByLegacyId(id).orElseThrow(this::notFound)
           : products.findById(numericId).orElseThrow(this::notFound);
@@ -182,16 +234,30 @@ public class ContentService {
       case "images" -> images.findById(requiredId(id)).orElseThrow(this::notFound);
       default -> throw notFound();
     };
+    return found;
   }
 
   public Object findBySlug(String collection, String slug) {
-    return switch (collection) {
+    Object found = switch (collection) {
       case "categories" -> categories.findBySlug(slug).orElseThrow(this::notFound);
       case "industries" -> industries.findBySlug(slug).orElseThrow(this::notFound);
       case "services" -> services.findBySlug(slug).orElseThrow(this::notFound);
       case "news" -> news.findBySlug(slug).orElseThrow(this::notFound);
       default -> throw notFound();
     };
+    return found;
+  }
+
+  public Object findPublicById(String collection, String id) {
+    Object found = findById(collection, id);
+    if (found instanceof BaseEntity entity && Boolean.FALSE.equals(entity.active)) throw notFound();
+    return found;
+  }
+
+  public Object findPublicBySlug(String collection, String slug) {
+    Object found = findBySlug(collection, slug);
+    if (found instanceof BaseEntity entity && Boolean.FALSE.equals(entity.active)) throw notFound();
+    return found;
   }
 
   public Object create(String collection, JsonNode body) {
@@ -242,7 +308,7 @@ public class ContentService {
       case "jobs" -> jobs.deleteById(numericId);
       case "distributors" -> distributors.deleteById(numericId);
       case "leads" -> leads.deleteById(numericId);
-      case "images" -> images.deleteById(numericId);
+      case "images" -> deleteMedia(numericId);
       default -> throw notFound();
     }
   }
@@ -281,18 +347,45 @@ public class ContentService {
   }
 
   void saveSiteSection(String sectionKey, JsonNode content) {
-    SiteContentSection section = new SiteContentSection();
+    SiteContentSection section = siteSections.findById(sectionKey).orElseGet(SiteContentSection::new);
     section.sectionKey = sectionKey;
     section.content = content;
+    section.active = true;
+    section.updatedBy = currentUsername();
     siteSections.save(section);
+  }
+
+  private <T extends BaseEntity> List<T> published(List<T> items) {
+    return items.stream().filter(item -> !Boolean.FALSE.equals(item.active)).toList();
+  }
+
+  private long inactiveCount(List<? extends BaseEntity> items) {
+    return items.stream().filter(item -> Boolean.FALSE.equals(item.active)).count();
+  }
+
+  private String currentUsername() {
+    var authentication = SecurityContextHolder.getContext().getAuthentication();
+    return authentication == null || !authentication.isAuthenticated() ? "system" : authentication.getName();
   }
 
   long siteSectionCount() {
     return siteSections.count();
   }
 
+  boolean siteSectionExists(String sectionKey) {
+    return siteSections.existsById(sectionKey);
+  }
+
+  boolean productExistsByLegacyId(String legacyId) {
+    return legacyId != null && !legacyId.isBlank() && products.findByLegacyId(legacyId).isPresent();
+  }
+
+  boolean productExistsByModel(String model) {
+    return model != null && !model.isBlank() && !products.findAllByModelIgnoreCase(model).isEmpty();
+  }
+
   void saveImage(String url, String altText, String usageType, Long ownerId) {
-    if (url == null || url.isBlank() || images.findByUrl(url).isPresent()) {
+    if (url == null || url.isBlank() || images.existsByUrl(url)) {
       return;
     }
     ImageAsset image = new ImageAsset();
@@ -302,6 +395,103 @@ public class ContentService {
     image.ownerType = usageType;
     image.ownerId = ownerId;
     images.save(image);
+  }
+
+  public ImageAsset saveMedia(String storageKey, String fileName, String contentType, byte[] data, String altText, String usageType) {
+    ImageAsset image = images.findByStorageKey(storageKey).orElseGet(ImageAsset::new);
+    image.storageKey = storageKey;
+    image.fileName = fileName;
+    image.contentType = contentType;
+    image.mediaType = "application/pdf".equalsIgnoreCase(contentType) ? "document"
+        : contentType != null && contentType.startsWith("video/") ? "video" : "image";
+    image.sizeBytes = (long) data.length;
+    image.data = data;
+    image.altText = altText;
+    image.usageType = usageType;
+    image.ownerType = "site-media";
+    image.url = "/api/media/" + storageKey;
+    return images.save(image);
+  }
+
+  public ImageAsset uploadMedia(MultipartFile file, String altText, String usageType) throws IOException {
+    String originalName = Optional.ofNullable(file.getOriginalFilename()).orElse("media");
+    String baseKey = originalName.toLowerCase()
+        .replaceAll("[^a-z0-9._-]+", "-")
+        .replaceAll("(^-+|-+$)", "");
+    if (baseKey.isBlank()) baseKey = "media";
+    String storageKey = baseKey;
+    int suffix = 2;
+    while (images.findByStorageKey(storageKey).isPresent()) {
+      storageKey = suffix++ + "-" + baseKey;
+    }
+    return saveMedia(storageKey, originalName,
+        Optional.ofNullable(file.getContentType()).orElse("application/octet-stream"),
+        file.getBytes(), altText, usageType);
+  }
+
+  public ImageAsset getMedia(String storageKey) {
+    return images.findByStorageKey(storageKey)
+        .filter(image -> !Boolean.FALSE.equals(image.active))
+        .orElseThrow(this::notFound);
+  }
+
+  public boolean mediaExists(String storageKey) {
+    return images.findByStorageKey(storageKey).filter(image -> image.data != null && image.data.length > 0).isPresent();
+  }
+
+  public void replaceMediaUrls(Map<String, String> replacements) {
+    products.findAll().forEach(item -> {
+      boolean changed = false;
+      if (replacements.containsKey(item.imageUrl)) { item.imageUrl = replacements.get(item.imageUrl); changed = true; }
+      if (replacements.containsKey(item.brochureUrl)) { item.brochureUrl = replacements.get(item.brochureUrl); changed = true; }
+      if (replacements.containsKey(item.datasheetUrl)) { item.datasheetUrl = replacements.get(item.datasheetUrl); changed = true; }
+      if (item.imageUrls != null) {
+        for (int index = 0; index < item.imageUrls.size(); index++) {
+          String replacement = replacements.get(item.imageUrls.get(index));
+          if (replacement != null) { item.imageUrls.set(index, replacement); changed = true; }
+        }
+      }
+      if (changed) products.save(item);
+    });
+    categories.findAll().forEach(item -> { if (replacements.containsKey(item.imageUrl)) { item.imageUrl = replacements.get(item.imageUrl); categories.save(item); } });
+    industries.findAll().forEach(item -> { if (replacements.containsKey(item.imageUrl)) { item.imageUrl = replacements.get(item.imageUrl); industries.save(item); } });
+    services.findAll().forEach(item -> { if (replacements.containsKey(item.imageUrl)) { item.imageUrl = replacements.get(item.imageUrl); services.save(item); } });
+    news.findAll().forEach(item -> { if (replacements.containsKey(item.imageUrl)) { item.imageUrl = replacements.get(item.imageUrl); news.save(item); } });
+    siteSections.findAll().forEach(section -> {
+      JsonNode replaced = replaceUrls(section.content, replacements);
+      if (!replaced.equals(section.content)) { section.content = replaced; siteSections.save(section); }
+    });
+  }
+
+  private void deleteMedia(Long id) {
+    ImageAsset media = images.findById(id).orElseThrow(this::notFound);
+    String url = media.url;
+    boolean used = products.findAll().stream().anyMatch(item -> url.equals(item.imageUrl) || url.equals(item.brochureUrl) || url.equals(item.datasheetUrl) || (item.imageUrls != null && item.imageUrls.contains(url)))
+        || categories.findAll().stream().anyMatch(item -> url.equals(item.imageUrl))
+        || industries.findAll().stream().anyMatch(item -> url.equals(item.imageUrl))
+        || services.findAll().stream().anyMatch(item -> url.equals(item.imageUrl))
+        || news.findAll().stream().anyMatch(item -> url.equals(item.imageUrl))
+        || siteSections.findAll().stream().anyMatch(section -> containsText(section.content, url));
+    if (used) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "This media file is currently used by website content. Replace it there before deleting it.");
+    }
+    images.delete(media);
+  }
+
+  private boolean containsText(JsonNode node, String value) {
+    if (node.isTextual()) return value.equals(node.asText());
+    if (node.isContainerNode()) {
+      for (JsonNode child : node) if (containsText(child, value)) return true;
+    }
+    return false;
+  }
+
+  private JsonNode replaceUrls(JsonNode node, Map<String, String> replacements) {
+    if (node.isTextual()) return objectMapper.getNodeFactory().textNode(replacements.getOrDefault(node.asText(), node.asText()));
+    JsonNode copy = node.deepCopy();
+    if (copy.isObject()) copy.fields().forEachRemaining(entry -> ((ObjectNode) copy).set(entry.getKey(), replaceUrls(entry.getValue(), replacements)));
+    else if (copy.isArray()) for (int i = 0; i < copy.size(); i++) ((com.fasterxml.jackson.databind.node.ArrayNode) copy).set(i, replaceUrls(copy.get(i), replacements));
+    return copy;
   }
 
   private void syncImageFromPayload(String collection, Object saved, JsonNode payload) {
@@ -315,6 +505,10 @@ public class ContentService {
     String legacyId = normalized.path("legacyId").asText("");
     if (!legacyId.isBlank()) {
       products.findByLegacyId(legacyId).ifPresent(existing -> normalized.put("id", existing.id));
+    }
+    if (!normalized.has("id")) {
+      String model = normalized.path("model").asText("");
+      products.findAllByModelIgnoreCase(model).stream().findFirst().ifPresent(existing -> normalized.put("id", existing.id));
     }
     normalized.remove("categoryId");
     Product product = objectMapper.convertValue(normalized, Product.class);
@@ -354,12 +548,22 @@ public class ContentService {
   private List<Product> productsByCategory(String categoryId) {
     Long numericId = parseId(categoryId);
     if (numericId != null) {
-      return products.findByCategory_Id(numericId);
+      return published(uniqueProducts(products.findByCategory_Id(numericId)));
     }
     ProductCategory category = categories.findByLegacyId(categoryId)
         .or(() -> categories.findBySlug(categoryId))
         .orElseThrow(this::notFound);
-    return products.findByCategory_Id(category.id);
+    if (Boolean.FALSE.equals(category.active)) throw notFound();
+    return published(uniqueProducts(products.findByCategory_Id(category.id)));
+  }
+
+  private List<Product> uniqueProducts(List<Product> items) {
+    Map<String, Product> unique = new LinkedHashMap<>();
+    items.stream()
+        .sorted((left, right) -> left.id.compareTo(right.id))
+        .forEach(product -> unique.putIfAbsent(
+            product.model == null ? "id:" + product.id : product.model.trim().toUpperCase(), product));
+    return List.copyOf(unique.values());
   }
 
   private ObjectNode normalizeIdentity(JsonNode payload) {

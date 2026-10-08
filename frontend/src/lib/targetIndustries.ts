@@ -1,5 +1,3 @@
-const productImage = 'https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS37-400x400.png';
-
 function industry(
   id: number,
   slug: string,
@@ -10,7 +8,7 @@ function industry(
   recommendedProducts: string[],
   challenges: { title: string; solution: string }[],
 ) {
-  return { id, slug, name, shortDescription, fullDescription, imageUrl: productImage, applications, recommendedProducts, challenges };
+  return { id, slug, name, shortDescription, fullDescription, imageUrl: `/industries/${slug}.jpg`, applications, recommendedProducts, challenges };
 }
 
 export const targetIndustries = [

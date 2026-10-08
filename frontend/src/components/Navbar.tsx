@@ -1,10 +1,11 @@
 ﻿import { useEffect, useState } from 'react';
-import { BookOpen, ChevronDown, FileText, Menu, Phone, Search, ShieldCheck, X } from 'lucide-react';
+import { BookOpen, ChevronDown, FileText, Globe2, Mail, MapPin, Menu, Phone, Search, ShieldCheck, X } from 'lucide-react';
 
 interface NavbarProps {
   onNavigate: (page: string, param?: string) => void;
   currentPage: string;
   salesPhone: string;
+  email: string;
   social: {
     linkedin?: string;
     youtube?: string;
@@ -18,6 +19,10 @@ const productOrder = [
   'FAS-4', 'FAS-6', 'FAS-8', 'FAS-11', 'FAS-11(HE)',
   'FAS-15', 'FAS-18', 'FAS-22', 'FAS-30', 'FAS-37', 'FAS-45', 'FAS-55', 'FAS-75',
   'FASM08A', 'FASM11A', 'FASM15A', 'FASM18A', 'FASM22A', 'FASM30A', 'FASM37A',
+  'FSL30A-4.5', 'FSLV30A-4.5', 'FSL37A-4.5', 'FSLV37A-4.5', 'FSL55A-4.5', 'FSLV55A-4.5',
+  'FSL75A-4.5', 'FSLV75-4.5', 'FSL90A-4.5', 'FSLV90A-4.5', 'FSL110A-4.5', 'FSLV110A-4.5',
+  'FSL132A-4.5', 'FSLV132A-4.5', 'FSL160A-4.5', 'FSLV160A-4.5', 'FSL185A-4.5', 'FSLV185A-4.5',
+  'FSL220A-4.5', 'FSLV220A-4.5',
   'FSG270A', 'FSG340A', 'FSG460A', 'FSG760A', 'FSG860A', 'FSG1060A',
 ];
 
@@ -26,6 +31,7 @@ type MenuProduct = { id: number | string; model: string; powerKw: number; flowRa
 const productSeries = [
   { title: 'FAS Series', range: '4-11 kW', family: 'FAS', min: 4, max: 11 },
   { title: 'FAS Series', range: '15-250 kW', family: 'FAS', min: 15, max: 250 },
+  { title: 'FSL / FSLV Series', range: '30-220 kW', family: 'FSL', min: 30, max: 220 },
   { title: 'FSG Series', range: '45-185 kW', family: 'FSG', min: 45, max: 185 },
   { title: 'FASM Series', range: '7.5-37 kW', family: 'FASM', min: 7.5, max: 37 },
 ];
@@ -91,12 +97,12 @@ const navItems = [
     dropdownItems: [
       { id: 'distributors', label: 'Dealer Finder', desc: 'Find sales and service support near you', icon: Search },
       { id: 'technical', label: 'Technical Info', desc: 'Sizing, flow, pressure, and installation details', icon: FileText },
-      { id: 'warranty', label: 'Warranty', desc: '5 year warranty guidance and support notes', icon: ShieldCheck },
+      { id: 'warranty', label: 'Warranty', desc: '5 year extended warranty guidance and support notes', icon: ShieldCheck },
     ],
   },
 ];
 
-export default function Navbar({ onNavigate, currentPage, salesPhone, social }: NavbarProps) {
+export default function Navbar({ onNavigate, currentPage, salesPhone, email, social }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileSubOpen, setMobileSubOpen] = useState<string | null>(null);
@@ -136,60 +142,30 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, social }: 
 
   return (
     <>
-      <div className="hidden lg:block bg-[#171717] text-white text-xs border-b border-amber-400/60">
-        <div className="max-w-[1280px] mx-auto px-6 py-2 flex items-center justify-between">
-          <div className="flex items-center gap-5">
-            <span className="text-amber-200 font-semibold">Air cooled rotary screw compressors from 3 kW to 37 kW</span>
-            <span className="h-3 w-px bg-amber-300/30" />
-            <a href={`tel:${salesPhone}`} className="flex items-center gap-2 font-bold hover:text-red-300 transition-colors">
-              <Phone className="w-3.5 h-3.5 text-amber-300" />
-              {salesPhone}
-            </a>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="mr-1 text-sm font-semibold text-white/85">Engage With Us</span>
-            {[
-              { label: 'LinkedIn', href: social.linkedin || 'https://www.linkedin.com/' },
-              { label: 'YouTube', href: social.youtube || 'https://www.youtube.com/' },
-              { label: 'Instagram', href: social.instagram || 'https://www.instagram.com/' },
-            ].map(({ label, href }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={label}
-                title={`Open ${label}`}
-                className="flex h-9 w-9 items-center justify-center rounded-md border border-white/25 bg-white/10 text-white transition-all hover:-translate-y-0.5 hover:border-amber-300 hover:bg-white hover:text-slate-950"
-              >
-                {label === 'LinkedIn' && <span className="rounded-sm border-2 border-current px-0.5 text-[12px] font-black leading-[14px]">in</span>}
-                {label === 'YouTube' && (
-                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="2.5" y="5.5" width="19" height="13" rx="4" />
-                    <path d="m10 9 5 3-5 3Z" fill="currentColor" stroke="none" />
-                  </svg>
-                )}
-                {label === 'Instagram' && (
-                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="3" y="3" width="18" height="18" rx="5" />
-                    <circle cx="12" cy="12" r="4" />
-                    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-                  </svg>
-                )}
-              </a>
-            ))}
+      <nav className={`sticky top-0 z-50 bg-white transition-shadow ${scrolled ? 'shadow-xl shadow-slate-950/10' : 'shadow-sm'}`}>
+        <div className="flex h-9 items-center justify-between bg-slate-950 px-4 text-[10px] font-semibold text-white lg:hidden">
+          <a href={`tel:${salesPhone.replace(/\s/g, '')}`} className="flex items-center gap-1.5"><Phone className="h-3 w-3 text-amber-400" />{salesPhone}</a>
+          <button onClick={() => handleNav('distributors')} className="uppercase tracking-[0.1em] text-slate-200">Find a dealer</button>
+        </div>
+        <div className="hidden bg-slate-950 text-white lg:block">
+          <div className="mx-auto flex h-10 max-w-[1400px] items-center justify-between px-6 text-[11px] font-semibold">
+            <div className="flex items-center gap-2 text-slate-300"><MapPin className="h-3.5 w-3.5 text-amber-400" />Industrial compressed-air solutions across India</div>
+            <div className="flex h-full items-center divide-x divide-white/15">
+              <a href={`tel:${salesPhone.replace(/\s/g, '')}`} className="flex h-full items-center gap-2 px-4 text-slate-200 transition hover:bg-white/10 hover:text-white"><Phone className="h-3.5 w-3.5 text-amber-400" />{salesPhone}</a>
+              <a href={`mailto:${email}`} className="flex h-full items-center gap-2 px-4 text-slate-200 transition hover:bg-white/10 hover:text-white"><Mail className="h-3.5 w-3.5 text-amber-400" />{email}</a>
+              <button onClick={() => handleNav('distributors')} className="h-full px-4 uppercase tracking-[0.12em] text-slate-200 transition hover:bg-white/10 hover:text-white">Dealer finder</button>
+              {social.linkedin && <a href={social.linkedin} target="_blank" rel="noreferrer" aria-label="firstAir on LinkedIn" className="flex h-full items-center px-4 text-xs font-black text-slate-200 transition hover:bg-white/10 hover:text-white">in</a>}
+              <span className="flex h-full items-center gap-2 px-4 text-white"><Globe2 className="h-3.5 w-3.5 text-amber-400" />EN</span>
+            </div>
           </div>
         </div>
-      </div>
-
-      <nav className={`sticky top-0 z-50 bg-[#f9b916]/95 backdrop-blur border-b border-amber-500 transition-shadow ${scrolled ? 'shadow-xl shadow-amber-950/15' : 'shadow-sm'}`}>
-        <div className="max-w-[1280px] mx-auto px-4 lg:px-6">
-          <div className="flex justify-between items-center h-16 lg:h-20">
+        <div className="mx-auto max-w-[1400px] px-4 lg:px-6">
+          <div className="flex h-16 items-center justify-between lg:h-[86px]">
             <button onClick={() => handleNav('home')} className="flex items-center gap-3 flex-shrink-0">
-              <img src={logoUrl} alt="firstAir Compressor" className="h-10 lg:h-12 w-auto" />
+              <img src={logoUrl} alt="firstAir Compressor" className="h-9 w-auto lg:h-12" />
             </button>
 
-            <div className="hidden lg:flex items-center gap-1">
+            <div className="hidden h-full items-center lg:flex">
               {navItems.map(item => {
                 const isActive = currentPage === item.id || (item.id === 'products' && currentPage.startsWith('product'));
 
@@ -206,8 +182,8 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, social }: 
                     >
                       <button
                         onClick={() => handleNav(item.id)}
-                        className={`px-3.5 py-2 rounded-md text-sm font-black uppercase tracking-wide flex items-center gap-1 transition-all ${
-                          isActive ? 'text-black border-b-4 border-red-600 rounded-none' : 'text-black hover:text-red-700 hover:bg-amber-300/60'
+                        className={`flex h-[86px] items-center gap-1 border-b-[3px] px-4 text-[13px] font-bold uppercase tracking-[0.06em] transition-all ${
+                          isActive ? 'border-red-600 text-red-700' : 'border-transparent text-slate-800 hover:border-amber-400 hover:text-red-700'
                         }`}
                       >
                         {item.label}
@@ -215,7 +191,7 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, social }: 
                       </button>
 
                       {openDropdown === item.id && (
-                        <div className="absolute top-full left-[-100px] pt-3 z-50">
+                        <div className="absolute left-[-100px] top-full z-50">
                           <div className={`${selectedSeries ? 'w-[1060px]' : 'w-[560px]'} bg-white rounded-lg shadow-2xl border border-slate-100 overflow-hidden transition-[width] duration-200`}>
                             <div className={`grid ${selectedSeries ? 'grid-cols-[250px_240px_570px]' : 'grid-cols-[250px_310px]'}`}>
                               <div className="bg-slate-950 text-white p-5 border-t-4 border-amber-400">
@@ -325,8 +301,8 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, social }: 
                     >
                       <button
                         onClick={() => handleNav('industries')}
-                        className={`px-3.5 py-2 rounded-md text-sm font-black uppercase tracking-wide flex items-center gap-1 transition-all ${
-                          currentPage.startsWith('industr') ? 'text-black border-b-4 border-red-600 rounded-none' : 'text-black hover:text-red-700 hover:bg-amber-300/60'
+                        className={`flex h-[86px] items-center gap-1 border-b-[3px] px-4 text-[13px] font-bold uppercase tracking-[0.06em] transition-all ${
+                          currentPage.startsWith('industr') ? 'border-red-600 text-red-700' : 'border-transparent text-slate-800 hover:border-amber-400 hover:text-red-700'
                         }`}
                       >
                         Industries
@@ -334,7 +310,7 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, social }: 
                       </button>
 
                       {openDropdown === item.id && (
-                        <div className="absolute left-0 top-full z-50 pt-3">
+                        <div className="absolute left-0 top-full z-50">
                           <div className="w-[310px] overflow-hidden border-t-4 border-amber-400 bg-white shadow-2xl">
                             <div className="py-2">
                               {industryMenuItems.map(industry => (
@@ -370,8 +346,8 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, social }: 
                     >
                       <button
                         onClick={() => setOpenDropdown(openDropdown === item.id ? null : item.id)}
-                        className={`px-3.5 py-2 rounded-md text-sm font-black uppercase tracking-wide flex items-center gap-1 transition-all ${
-                          isResourceActive ? 'text-black border-b-4 border-red-600 rounded-none' : 'text-black hover:text-red-700 hover:bg-amber-300/60'
+                        className={`flex h-[86px] items-center gap-1 border-b-[3px] px-4 text-[13px] font-bold uppercase tracking-[0.06em] transition-all ${
+                          isResourceActive ? 'border-red-600 text-red-700' : 'border-transparent text-slate-800 hover:border-amber-400 hover:text-red-700'
                         }`}
                       >
                         {item.label}
@@ -379,7 +355,7 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, social }: 
                       </button>
 
                       {openDropdown === item.id && (
-                        <div className="absolute top-full right-0 pt-3 z-50">
+                        <div className="absolute right-0 top-full z-50">
                           <div className="w-[360px] bg-white rounded-lg shadow-2xl border border-slate-100 p-3">
                             {item.dropdownItems.map(resource => {
                               const Icon = resource.icon;
@@ -412,8 +388,8 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, social }: 
                   <button
                     key={item.id}
                     onClick={() => handleNav(item.id)}
-                    className={`px-3.5 py-2 rounded-md text-sm font-black uppercase tracking-wide transition-all ${
-                      isActive ? 'text-black border-b-4 border-red-600 rounded-none' : 'text-black hover:text-red-700 hover:bg-amber-300/60'
+                    className={`h-[86px] border-b-[3px] px-4 text-[13px] font-bold uppercase tracking-[0.06em] transition-all ${
+                      isActive ? 'border-red-600 text-red-700' : 'border-transparent text-slate-800 hover:border-amber-400 hover:text-red-700'
                     }`}
                   >
                     {item.label}
@@ -423,7 +399,7 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, social }: 
 
               <button
                 onClick={() => handleNav('contact')}
-                className="ml-3 px-5 py-2.5 bg-black hover:bg-red-700 text-white text-sm font-black rounded-sm shadow-lg transition-colors uppercase tracking-wide border-b-4 border-red-600"
+                className="ml-4 bg-red-600 px-5 py-3 text-xs font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-slate-950"
               >
                 Contact Us
               </button>
@@ -445,7 +421,7 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, social }: 
         </div>
 
         {mobileOpen && (
-          <div className="lg:hidden border-t border-amber-500 bg-[#fff8df] max-h-[80vh] overflow-y-auto">
+          <div className="max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-slate-200 bg-white lg:hidden">
             <div className="px-4 py-4 space-y-1">
               {navItems.map(item => {
                 if (item.hasProducts) {

@@ -24,10 +24,15 @@ public class ServiceOffering extends BaseEntity {
   public String iconName;
   @Column(length = 1000)
   public String imageUrl;
+  public String imageAlt;
+  @Column(columnDefinition = "TEXT")
+  public String serviceScope;
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(columnDefinition = "json")
   public List<String> benefits = new ArrayList<>();
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(columnDefinition = "json")
   public List<Map<String, Object>> process = new ArrayList<>();
+  @Column(name = "display_order")
+  public Integer order;
 }

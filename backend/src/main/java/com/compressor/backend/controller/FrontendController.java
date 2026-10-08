@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class FrontendController {
-  @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
+  @GetMapping(value = { "/", "/products", "/products/**", "/industries", "/industries/**",
+      "/services", "/services/**", "/news", "/news/**", "/about", "/about/**",
+      "/technical-information", "/warranty-information", "/faq", "/contact",
+      "/distributors", "/support", "/login", "/admin", "/admin/**", "/dealer/login", "/employee/login" },
+      produces = MediaType.TEXT_HTML_VALUE)
   public ResponseEntity<String> index() throws Exception {
     Path userDir = Path.of(System.getProperty("user.dir")).toAbsolutePath();
     String configured = System.getenv("FRONTEND_DIST");

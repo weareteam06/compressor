@@ -1,129 +1,53 @@
 import { useEffect, useState } from 'react';
-import { ArrowRight, ArrowLeft, CheckCircle2, Wrench, Settings, RefreshCw, Heart, Cpu, Package } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Gauge, Package, PhoneCall, RefreshCw, Settings, ShieldCheck, Wrench } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import type { Service } from '@/lib/data';
 import { getServices, getServiceBySlug } from '@/lib/data';
+import { defaultPageContent, usePageContent } from '@/lib/pageContent';
 
-interface Props {
-  onNavigate: (page: string, param?: string) => void;
-  slug?: string;
-}
-
-const iconMap: Record<string, any> = { Wrench, Settings, RefreshCw, Heart, Cpu, Package, Tool: Settings };
+interface Props { onNavigate: (page: string, param?: string) => void; slug?: string }
+const iconMap: Record<string, LucideIcon> = { Wrench, Settings, RefreshCw, Package, Gauge, ShieldCheck };
 
 export default function ServicesPage({ onNavigate, slug }: Props) {
+  const listCopy = usePageContent('services', defaultPageContent.services);
+  const detailCopy = usePageContent('serviceDetail', defaultPageContent.serviceDetail);
   const [services, setServices] = useState<Service[]>([]);
   const [current, setCurrent] = useState<Service | null>(null);
   const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    if (slug) getServiceBySlug(slug).then(s => { setCurrent(s || null); setLoading(false); });
-    else getServices().then(s => { setServices(s); setLoading(false); });
+    setLoading(true); setFailed(false);
+    const request = slug ? getServiceBySlug(slug) : getServices();
+    request.then(result => slug ? setCurrent((result as Service | undefined) || null) : setServices(result as Service[])).catch(() => setFailed(true)).finally(() => setLoading(false));
   }, [slug]);
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="w-12 h-12 border-4 border-red-200 border-t-red-600 rounded-full animate-spin" /></div>;
+  if (loading) return <PageState><div className="h-11 w-11 animate-spin rounded-full border-4 border-slate-200 border-t-red-600" /></PageState>;
+  if (failed) return <PageState><h1 className="text-3xl font-black">{String(listCopy.errorTitle)}</h1><p className="mt-3 text-slate-600">{String(listCopy.errorText)}</p><button onClick={() => window.location.reload()} className="mt-6 bg-red-600 px-6 py-3 text-sm font-bold text-white">{String(listCopy.retryLabel)}</button></PageState>;
+  if (slug && !current) return <PageState><h1 className="text-3xl font-black">{String(detailCopy.notFoundText)}</h1><button onClick={() => onNavigate('services')} className="mt-6 inline-flex items-center gap-2 bg-slate-950 px-6 py-3 text-sm font-bold text-white"><ArrowLeft className="h-4 w-4"/>{String(detailCopy.backLabel)}</button></PageState>;
+  if (current) return <ServiceDetail service={current} copy={detailCopy} onNavigate={onNavigate}/>;
 
-  if (slug && current) {
-    const Icon = iconMap[current.iconName] || Wrench;
-    return (
-      <div className="min-h-screen bg-slate-50 pb-20">
-        <section className="page-hero relative bg-gradient-to-br from-slate-900 via-red-950 to-slate-900 py-20 overflow-hidden">
-          <div className="absolute inset-0 opacity-20"><img src={current.imageUrl} alt="" onError={(event) => { event.currentTarget.style.display = 'none'; }} className="w-full h-full object-cover" /><div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" /></div>
-          <div className="relative max-w-[1400px] mx-auto px-4 lg:px-8">
-            <button onClick={() => onNavigate('services')} className="flex items-center gap-2 text-amber-400 hover:text-amber-300 mb-6 text-sm font-bold">
-              <ArrowLeft className="w-4 h-4" /> Back to All Services
-            </button>
-            <div className="flex items-center gap-4 mb-3">
-              <div className="w-14 h-14 rounded-2xl bg-amber-500 flex items-center justify-center shadow-lg">
-                <Icon className="w-7 h-7 text-white" />
-              </div>
-              <div className="text-amber-400 font-black text-xs uppercase tracking-widest">Service</div>
-            </div>
-            <h1 className="text-4xl lg:text-6xl font-black text-white tracking-tight">{current.name}</h1>
-            <p className="mt-4 text-lg text-red-200/80 max-w-3xl">{current.shortDescription}</p>
-          </div>
-        </section>
-
-        <div className="max-w-[1100px] mx-auto px-4 lg:px-8 py-16">
-          <div className="bg-white rounded-3xl p-8 lg:p-12 border border-slate-200 shadow-xl mb-8">
-            <p className="text-lg text-slate-700 leading-relaxed">{current.fullDescription}</p>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm">
-              <h2 className="text-2xl font-black text-slate-900 mb-5">Key Benefits</h2>
-              <div className="space-y-3">
-                {current.benefits.map((b, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-slate-700 font-semibold">{b}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-8 text-white shadow-xl">
-              <h3 className="text-2xl font-black mb-3">Ready to Get Started?</h3>
-              <p className="text-amber-50 mb-6">Contact our service team to schedule your consultation, installation, or maintenance service.</p>
-              <button onClick={() => onNavigate('contact')} className="w-full px-6 py-3.5 bg-white text-amber-600 hover:bg-amber-50 font-bold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
-                Request Service <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-br from-slate-900 to-red-950 text-white rounded-3xl p-8 lg:p-10 shadow-xl">
-            <h2 className="text-2xl font-black mb-6">Our Service Process</h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {current.process.map(p => (
-                <div key={p.step} className="bg-white/5 rounded-2xl p-5 border border-white/10">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center font-black text-white mb-3">{p.step}</div>
-                  <h3 className="font-black text-white mb-2">{p.title}</h3>
-                  <p className="text-xs text-red-100/70 leading-relaxed">{p.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-slate-50 pb-20">
-      <section className="page-hero bg-gradient-to-br from-slate-900 via-red-950 to-slate-900 py-20">
-        <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
-          <div className="text-amber-400 font-black text-xs uppercase tracking-widest mb-3">Our Services</div>
-          <h1 className="text-4xl lg:text-6xl font-black text-white tracking-tight">World-Class Service</h1>
-          <p className="mt-4 text-lg text-red-200/80 max-w-3xl">
-            Our company was founded on service and our mission today is to provide the best service and support available. Our 24/7 service sets us apart through our ability to handle the pressure when you need it most.
-          </p>
-        </div>
-      </section>
-
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-16">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map(s => {
-            const Icon = iconMap[s.iconName] || Wrench;
-            return (
-              <button key={s.id} onClick={() => onNavigate('service-detail', s.slug)}
-                className="group bg-white rounded-2xl border border-slate-200 hover:border-amber-300 overflow-hidden text-left hover:shadow-2xl hover:-translate-y-1 transition-all flex flex-col h-full min-h-[420px] lg:h-[420px]">
-                <div className="h-56 overflow-hidden relative flex-shrink-0">
-                  <img src={s.imageUrl} alt={s.name} onError={(event) => { event.currentTarget.style.display = 'none'; }} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent" />
-                  <div className="absolute top-4 left-4 w-12 h-12 rounded-xl bg-amber-500/90 backdrop-blur-sm flex items-center justify-center shadow-lg">
-                    <Icon className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-                <div className="p-5 flex-1 flex flex-col">
-                  <h3 className="font-black text-slate-900 text-xl group-hover:text-red-700 transition-colors">{s.name}</h3>
-                  <p className="text-sm text-slate-600 mt-2 line-clamp-3 leading-relaxed flex-1">{s.shortDescription}</p>
-                  <div className="mt-auto pt-4 flex items-center gap-1.5 text-amber-600 font-black text-xs uppercase tracking-wider">
-                    Learn More <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                  </div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
+  return <div className="min-h-screen bg-slate-50 pb-20"><main className="mx-auto max-w-[1280px] px-5 py-12 lg:px-8">
+    <section className="grid overflow-hidden bg-slate-950 text-white lg:grid-cols-[1fr_360px]"><div className="p-8 lg:p-10"><div className="text-xs font-black uppercase tracking-[0.22em] text-amber-400">{String(listCopy.heroEyebrow)}</div><h1 className="mt-3 text-4xl font-black">{String(listCopy.heroTitle)}</h1><p className="mt-4 max-w-2xl leading-7 text-slate-300">{String(listCopy.heroIntro)}</p></div><div className="flex items-center justify-between bg-amber-400 p-8 text-slate-950"><div><strong className="block text-5xl font-black">{services.length}</strong><span className="text-xs font-black uppercase tracking-widest">{String(listCopy.countLabel)}</span></div><Wrench className="h-12 w-12"/></div></section>
+    <section className="mt-10"><div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><div className="text-xs font-black uppercase tracking-[0.2em] text-red-700">{String(listCopy.directoryEyebrow)}</div><h2 className="mt-2 text-3xl font-black">{String(listCopy.directoryTitle)}</h2></div><p className="max-w-xl text-sm leading-6 text-slate-600">{String(listCopy.directoryIntro)}</p></div>
+      <div className="mt-7 grid gap-5 md:grid-cols-2 lg:grid-cols-3">{services.map((service, index) => { const Icon = iconMap[service.iconName] || Wrench; return <button key={service.id} onClick={() => onNavigate('service-detail', service.slug)} className="group flex min-h-[390px] flex-col overflow-hidden border border-slate-200 bg-white text-left transition hover:-translate-y-1 hover:border-amber-400 hover:shadow-xl"><div className="relative h-48 overflow-hidden bg-slate-100"><img src={service.imageUrl} alt={service.imageAlt || `${service.name} service`} loading="lazy" className="h-full w-full object-cover transition duration-500 group-hover:scale-105"/><span className="absolute left-4 top-4 flex h-11 w-11 items-center justify-center bg-slate-950 text-amber-400"><Icon className="h-5 w-5"/></span><span className="absolute right-4 top-4 bg-slate-950/80 px-2 py-1 text-xs font-black text-white">{String(index + 1).padStart(2, '0')}</span></div><div className="flex flex-1 flex-col p-6"><h3 className="text-xl font-black group-hover:text-red-700">{service.name}</h3><p className="mt-3 text-sm leading-6 text-slate-600">{service.shortDescription}</p><span className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-black text-red-700">{String(listCopy.exploreLabel)}<ArrowRight className="h-4 w-4 group-hover:translate-x-1"/></span></div></button>})}</div>
+    </section>
+    <section className="mt-14 flex flex-col justify-between gap-6 bg-red-700 p-8 text-white sm:flex-row sm:items-center"><div><div className="text-xs font-black uppercase tracking-widest text-amber-300">{String(listCopy.ctaEyebrow)}</div><h2 className="mt-2 text-3xl font-black">{String(listCopy.ctaTitle)}</h2><p className="mt-2 text-sm text-red-100">{String(listCopy.ctaText)}</p></div><button onClick={() => onNavigate('request', 'Request Service Support')} className="shrink-0 bg-amber-400 px-6 py-4 text-sm font-black uppercase text-slate-950">{String(listCopy.ctaButton)}</button></section>
+  </main></div>;
 }
+
+function ServiceDetail({ service, copy, onNavigate }: { service: Service; copy: Record<string, unknown>; onNavigate: Props['onNavigate'] }) {
+  const Icon = iconMap[service.iconName] || Wrench;
+  return <div className="min-h-screen bg-slate-50 pb-20"><main className="mx-auto max-w-[1180px] px-5 py-12 lg:px-8">
+    <button onClick={() => onNavigate('services')} className="inline-flex items-center gap-2 text-sm font-black text-red-700"><ArrowLeft className="h-4 w-4"/>{String(copy.backLabel)}</button>
+    <section className="mt-6 grid overflow-hidden bg-white lg:grid-cols-[0.9fr_1.1fr]"><div className="flex flex-col justify-between bg-amber-400 p-8 lg:p-10"><div><span className="flex h-14 w-14 items-center justify-center bg-slate-950 text-amber-400"><Icon className="h-7 w-7"/></span><div className="mt-7 text-xs font-black uppercase tracking-[0.22em] text-red-800">{String(copy.eyebrow)}</div><h1 className="mt-3 text-4xl font-black leading-tight lg:text-5xl">{service.name}</h1><p className="mt-5 leading-7 text-slate-800">{service.shortDescription}</p></div><button onClick={() => onNavigate('request', `Request Service: ${service.name}`)} className="mt-8 inline-flex w-fit items-center gap-2 bg-slate-950 px-5 py-3 text-sm font-black text-white">{String(copy.ctaButton)}<ArrowRight className="h-4 w-4"/></button></div><div className="relative min-h-[420px]"><img src={service.imageUrl} alt={service.imageAlt || service.name} className="absolute inset-0 h-full w-full object-cover"/></div></section>
+
+    <section className="mt-10 grid gap-7 lg:grid-cols-2"><article className="border border-slate-200 bg-white p-7"><div className="text-xs font-black uppercase tracking-widest text-red-700">{String(copy.overviewEyebrow)}</div><h2 className="mt-2 text-2xl font-black">{String(copy.overviewTitle)}</h2><p className="mt-4 leading-7 text-slate-700">{service.fullDescription}</p><p className="mt-4 leading-7 text-slate-700">{service.serviceScope}</p></article><article className="bg-slate-950 p-7 text-white"><h2 className="text-2xl font-black">{String(copy.benefitsTitle)}</h2><div className="mt-5 space-y-3">{service.benefits.map(item => <div key={item} className="flex gap-3 border-b border-white/10 pb-3 text-sm text-slate-200"><Check className="h-5 w-5 shrink-0 text-amber-400"/>{item}</div>)}</div></article></section>
+
+    {service.process.length > 0 && <section className="mt-14"><div className="text-xs font-black uppercase tracking-widest text-red-700">{String(copy.processEyebrow)}</div><h2 className="mt-2 text-3xl font-black">{String(copy.processTitle)}</h2><div className="mt-7 grid gap-4 md:grid-cols-2 lg:grid-cols-4">{service.process.map(step => <article key={step.step} className="border border-slate-200 bg-white p-6"><span className="flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-sm font-black text-white">{String(step.step).padStart(2, '0')}</span><h3 className="mt-5 font-black">{step.title}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{step.description}</p></article>)}</div></section>}
+
+    <section id="service-request" className="mt-14 scroll-mt-28 bg-slate-950 p-8 text-white lg:p-10"><div className="grid gap-10 lg:grid-cols-[0.75fr_1.25fr]"><div><PhoneCall className="h-9 w-9 text-amber-400"/><div className="mt-5 text-xs font-black uppercase tracking-widest text-amber-400">{String(copy.formEyebrow)}</div><h2 className="mt-2 text-3xl font-black">{String(copy.formTitle)}</h2><p className="mt-4 text-sm leading-6 text-slate-300">{String(copy.formText)}</p></div><button onClick={() => onNavigate('request', `Request Service: ${service.name}`)} className="self-center rounded bg-red-600 px-6 py-4 font-bold">{String(copy.ctaButton)}</button></div></section>
+  </main></div>;
+}
+
+function PageState({ children }: { children: React.ReactNode }) { return <section className="flex min-h-[55vh] items-center justify-center bg-slate-50 px-5 text-center"><div className="max-w-lg">{children}</div></section>; }
