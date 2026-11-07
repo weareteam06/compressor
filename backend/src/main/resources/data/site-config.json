@@ -58,20 +58,7 @@
         "id": "about",
         "label": "About Us",
         "active": true,
-        "children": [
-          {
-            "id": "about-story",
-            "label": "About firstAir",
-            "page": "about-story",
-            "active": true
-          },
-          {
-            "id": "about-careers",
-            "label": "Careers",
-            "page": "about-careers",
-            "active": true
-          }
-        ]
+        "page": "about-story"
       },
       {
         "id": "products",
@@ -80,36 +67,37 @@
         "children": [
           {
             "id": "fas",
-            "label": "FAS fixed-speed compressors",
+            "label": "FAS 4-11 kW Fixed Speed",
+            "page": "products",
+            "param": "fas-small",
+            "active": true
+          },
+          {
+            "id": "fas-large",
+            "label": "FAS 15-250 kW Fixed Speed",
             "page": "products",
             "param": "fas",
             "active": true
           },
           {
             "id": "fasm",
-            "label": "FASM variable-speed compressors",
+            "label": "FASM Variable Speed",
             "page": "products",
             "param": "fasm",
             "active": true
           },
           {
             "id": "fsl",
-            "label": "FSL / FSLV low-pressure compressors",
+            "label": "FSL Low Pressure",
             "page": "products",
             "param": "fsl",
             "active": true
           },
           {
             "id": "fsg",
-            "label": "FSG high-capacity compressors",
+            "label": "FSG High Capacity",
             "page": "products",
             "param": "fsg",
-            "active": true
-          },
-          {
-            "id": "all-products",
-            "label": "View all products",
-            "page": "products",
             "active": true
           }
         ]
@@ -276,18 +264,18 @@
       },
       {
         "id": "oil-free",
-        "title": "Oil-Free Compressors",
-        "description": "Oil-free compressed-air technologies for applications requiring high air quality.",
+        "title": "Ultra Pack",
+        "description": "FAS 4–11 kW compact compressor packages for general industrial compressed-air applications.",
         "imageUrl": "/api/media/hero-products-showcase.png",
         "imageAlt": "Oil-free industrial compressor",
-        "url": "https://www.fscurtis.com/",
-        "external": true,
+        "page": "products",
+        "param": "fas-small",
         "active": true
       },
       {
         "id": "variable-speed",
         "title": "Variable Speed Compressors",
-        "description": "Variable-speed systems that match compressor output to changing air demand.",
+        "description": "FASM VFD models with variable-speed control for changing air demand.",
         "imageUrl": "/api/media/hero-products-showcase.png",
         "imageAlt": "Variable-speed firstAir compressor",
         "page": "products",
@@ -297,7 +285,7 @@
       {
         "id": "pm-motor",
         "title": "Permanent Magnet Motor Compressors",
-        "description": "Permanent-magnet motor technology designed for efficient variable-demand operation.",
+        "description": "Variable-speed compressor models with permanent-magnet motor and VFD control.",
         "imageUrl": "/api/media/hero-products-showcase.png",
         "imageAlt": "Permanent magnet motor compressor",
         "page": "products",
@@ -311,15 +299,17 @@
         "imageUrl": "/api/media/hero-products-showcase.png",
         "imageAlt": "Low-pressure industrial compressor",
         "page": "products",
+        "param": "fsl",
         "active": true
       },
       {
         "id": "portable",
-        "title": "Portable Compressors",
+        "title": "Electric Portable Compressors",
         "description": "Mobile compressed-air solutions for site, maintenance and demanding field applications.",
         "imageUrl": "/api/media/hero-products-showcase.png",
         "imageAlt": "Portable industrial compressor",
         "page": "products",
+        "param": "fsg",
         "active": true
       }
     ],
@@ -414,7 +404,7 @@
     "customerLogosEyebrow": "Customer trust",
     "customerLogosTitle": "Trusted by Industries Across India",
     "customerLogos": [],
-    "industriesLimit": 8
+    "industriesLimit": 6
   },
   "pageContent": {
     "products": {
@@ -472,8 +462,8 @@
       "ctaText": "Share your pressure, FAD, operating hours and application requirements with FirstAir."
     },
     "services": {
-      "heroEyebrow": "Service & support",
-      "heroTitle": "Complete Service & Support",
+      "heroEyebrow": "",
+      "heroTitle": "Complete Service Support",
       "heroIntro": "Support throughout the equipment lifecycle—from installation and commissioning to preventive maintenance, breakdown response, genuine parts, AMC and energy audits.",
       "countLabel": "Service solutions",
       "directoryEyebrow": "Equipment lifecycle support",
@@ -542,7 +532,7 @@
       "motorLabel": "Motor Efficiency",
       "datasheetLabel": "Technical Datasheet",
       "brochureLabel": "Product Brochure",
-      "expertButton": "Talk to Our Expert",
+      "expertButton": "Request A Quote",
       "featuresTitle": "Key Features",
       "benefitsTitle": "Key Benefits",
       "specificationsTitle": "Technical Specifications",
@@ -595,10 +585,10 @@
     "mission": "To help industrial customers select and operate dependable compressed-air systems suited to their pressure, FAD, duty cycle and application requirements.",
     "vision": "To be a trusted compressed-air solutions partner through clear technical guidance, reliable equipment and responsive lifecycle support.",
     "heroEyebrow": "About FirstAir",
-    "heroTitle": "Industrial experience. Application-focused compressed-air solutions.",
-    "heroIntro": "FirstAir helps industries across India evaluate, select and support compressed-air equipment around real operating requirements.",
-    "heroImageUrl": "/api/media/hero-products-showcase.png",
-    "heroImageAlt": "FirstAir industrial compressor solutions",
+    "heroTitle": "FirstAir – Powering Industries with Reliable Compressed Air Solutions",
+    "heroIntro": "FirstAir delivers reliable, energy-efficient and cost-effective compressed air solutions, designed to meet the diverse needs of modern industries",
+    "heroImageUrl": "/api/media/about-products-showcase.png",
+    "heroImageAlt": "FirstAir five-series compressor product range",
     "highlights": [
       {
         "title": "Application Engineering",
@@ -645,10 +635,12 @@
   },
   "contact": {
     "salesPhone": "+91 7420056998",
+    "servicePhone": "+91 8600875555",
     "email": "info@fscurtis.in",
+    "serviceEmail": "service@fscurtis.in",
     "headquarters": {
-      "name": "firstAir Compressor",
-      "address": "Contact firstAir for sales, service, parts, and warranty information."
+      "name": "FS Compressors India Pvt. Ltd.",
+      "address": "Plot No. S-3, Phase-II, Chakan MIDC, Village Sawardari, Khed, Pune 410501, Maharashtra"
     },
     "regionalOffices": [
       {
@@ -696,7 +688,7 @@
         "Use genuine firstAir parts during recommended service intervals",
         "Keep maintenance records for warranty support",
         "Contact the support team for service, parts, and warranty guidance",
-        "Support email: support@firstaircompressor.com"
+        "Support email: info@fscurtis.in"
       ]
     }
   },
@@ -710,11 +702,7 @@
         "range": "4-11 kW",
         "title": "Screw Air\nCompressor Range",
         "background": "/api/media/hero-fas-background.jpg",
-        "preferredModels": [
-          "FAS-8",
-          "FAS-4",
-          "FAS-11"
-        ],
+        "preferredModels": ["FAS-8", "FAS-4", "FAS-11"],
         "intro": "Compact compressed-air systems built for continuous industrial duty.",
         "highlights": [
           "IE3 efficiency-class electric motors",
@@ -722,7 +710,7 @@
           "Integrated oil separator and two-stage suction filtration",
           "Cooling designed for ambient temperatures up to 45 deg C"
         ],
-        "imageUrl": "/api/media/hero-fas-small-product.png"
+        "imageUrl": "/api/media/catalogs-fas-4-11-product-transparent-v2.png"
       },
       {
         "id": "fas-large",
@@ -731,11 +719,7 @@
         "range": "15-250 kW",
         "title": "Built for\nIndustrial Demand",
         "background": "/api/media/hero-fas-background.jpg",
-        "preferredModels": [
-          "FAS-30",
-          "FAS-37",
-          "FAS-45"
-        ],
+        "preferredModels": ["FAS-30", "FAS-37", "FAS-45"],
         "intro": "Air-cooled screw compressors designed for 24/7 operation.",
         "highlights": [
           "IE3 premium-efficiency drive",
@@ -743,7 +727,7 @@
           "EUCOMP airend technology",
           "Intelligent control with maintenance and fault indication"
         ],
-        "imageUrl": ""
+        "imageUrl": "/api/media/catalogs-fas-15-250-product-transparent.png"
       },
       {
         "id": "fasm",
@@ -752,11 +736,7 @@
         "range": "7.5-37 kW",
         "title": "Performance without\nCompromise",
         "background": "/api/media/hero-fasm-background.jpg",
-        "preferredModels": [
-          "FASM22A",
-          "FASM30A",
-          "FASM37A"
-        ],
+        "preferredModels": ["FASM22A", "FASM30A", "FASM37A"],
         "intro": "Permanent magnet variable-speed technology for lower operating costs.",
         "highlights": [
           "IE4 permanent magnet motor",
@@ -773,11 +753,7 @@
         "range": "30-220 kW",
         "title": "Low Pressure,\nHigh Efficiency",
         "background": "/api/media/hero-fas-background.jpg",
-        "preferredModels": [
-          "FSL185A-4.5",
-          "FSL110A-4.5",
-          "FSL75A-4.5"
-        ],
+        "preferredModels": ["FSL185A-4.5", "FSL110A-4.5", "FSL75A-4.5"],
         "intro": "Purpose-built screw compressors for high-volume air at 3.5 to 4.5 bar.",
         "highlights": [
           "Dedicated low-pressure screw airend",
@@ -785,7 +761,7 @@
           "Air-cooled package for continuous industrial duty",
           "Fixed-speed and VFD configurations from 30 to 220 kW"
         ],
-        "imageUrl": "/api/media/catalogs-fsl-product-transparent.png"
+        "imageUrl": "/api/media/catalogs-fsl-product-hero-clean.png"
       },
       {
         "id": "fsg",
@@ -794,11 +770,7 @@
         "range": "45-185 kW",
         "title": "Electric Portable\nScrew Air Compressor",
         "background": "/api/media/hero-fsg-background.jpg",
-        "preferredModels": [
-          "FSG340A",
-          "FSG460A",
-          "FSG760A"
-        ],
+        "preferredModels": ["FSG340A", "FSG460A", "FSG760A"],
         "intro": "Electric-powered compressed air for quarrying and demanding site applications.",
         "highlights": [
           "Three-phase TEFC motor with Class F insulation",
@@ -911,7 +883,7 @@
           "Use genuine firstAir parts during recommended service intervals",
           "Keep maintenance records for warranty support",
           "Contact the support team for service, parts, and warranty guidance",
-          "Support email: support@firstaircompressor.com"
+          "Support email: info@fscurtis.in"
         ]
       }
     },
@@ -1079,7 +1051,7 @@
       {
         "key": "fasm",
         "title": "FASM Series",
-        "range": "7.5-37 kW Permanent Magnet VFD",
+        "range": "7.5-37 kW with Permanent Magnet motor and VFD",
         "family": "FASM",
         "min": 7.5,
         "max": 37
@@ -1090,24 +1062,39 @@
     },
     "productLinks": [
       {
-        "label": "All Compressors",
-        "page": "products"
+        "label": "FAS 4-11 kW Fixed Speed",
+        "page": "products",
+        "param": "fas-small"
       },
       {
-        "label": "FAS Fixed Speed",
-        "page": "products"
+        "label": "FAS 4-11 kW Variable Speed",
+        "page": "products",
+        "param": "variable-fas-small"
+      },
+      {
+        "label": "FAS 15-250 kW Fixed Speed",
+        "page": "products",
+        "param": "fas"
+      },
+      {
+        "label": "FAS 15-250 kW Variable Speed",
+        "page": "products",
+        "param": "variable-fas-large"
       },
       {
         "label": "FASM Variable Speed",
-        "page": "products"
+        "page": "products",
+        "param": "variable-fasm"
       },
       {
-        "label": "FSG High Capacity",
-        "page": "products"
+        "label": "FSLV Low Pressure",
+        "page": "products",
+        "param": "variable-fsl"
       },
       {
-        "label": "Technical Information",
-        "page": "technical"
+        "label": "FSG Electric Portable",
+        "page": "products",
+        "param": "fsg"
       }
     ],
     "companyLinks": [
@@ -1122,14 +1109,6 @@
       {
         "label": "Services",
         "page": "services"
-      },
-      {
-        "label": "Dealer Finder",
-        "page": "distributors"
-      },
-      {
-        "label": "Careers",
-        "page": "about-careers"
       },
       {
         "label": "Warranty",
@@ -1402,6 +1381,8 @@
         "company": "Company",
         "email": "Email",
         "phone": "Phone *",
+        "city": "City *",
+        "state": "State *",
         "how_can_we_help": "How can we help? *",
         "industry": "Industry",
         "product_service_of_interest": "Product / Service of Interest",
@@ -1421,7 +1402,7 @@
         "company_about": "Company / About"
       },
       "Footer": {
-        "fixed_speed_fas_permanent_magnet_variable_speed_fasm_and_high_capacity": "Fixed-speed FAS, permanent-magnet variable-speed FASM, and high-capacity FSG rotary screw compressors for workshops and demanding industrial plants.",
+        "fixed_speed_fas_permanent_magnet_variable_speed_fasm_and_high_capacity": "FirstAir offers reliable, energy-efficient rotary screw air compressors designed for industrial applications, delivering dependable performance, operational efficiency, and cost-effective compressed air solutions.",
         "4_250_kw": "4–250 kW",
         "5_16_bar": "5–16 bar",
         "up_to_1_130_cfm": "Up to 1,130 CFM",
@@ -1446,8 +1427,8 @@
         "our_team_will_contact_you_about_your_requirement": "Our team will contact you about your requirement.",
         "close": "Close",
         "urgency": "Urgency",
-        "application_and_technical_details_optional": "Application and technical details (optional)",
-        "requirement_details": "Requirement details",
+        "application_and_technical_details_optional": "Requirement In Detail",
+        "requirement_details": "Remarks",
         "we_could_not_submit_your_request_your_details_are_saved_here_please_tr": "We could not submit your request. Your details are saved here; please try again."
       },
       "Chatbot": {

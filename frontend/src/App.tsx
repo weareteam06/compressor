@@ -6,8 +6,8 @@ import { Navigate, Route, Routes, useLocation, useNavigate, useParams } from 're
 import type { SiteConfig } from '@/lib/data';
 import Navbar from '@/components/NavbarOverlay';
 import Footer from '@/components/Footer';
-import Chatbot from '@/components/Chatbot';
 import FloatingWhatsAppButton from '@/components/FloatingWhatsAppButton';
+import OfferAlertBanner from '@/components/OfferAlertBanner';
 import SeoHead from '@/components/SeoHead';
 import HomePage from '@/components/HomePage';
 import ProductsPage from '@/components/ProductsPage';
@@ -36,6 +36,7 @@ const AdminDistributorsPage = lazy(() => import('@/admin/pages/AdminDistributors
 const AdminLeadsPage = lazy(() => import('@/admin/pages/AdminLeadsPage'));
 const AdminMediaPage = lazy(() => import('@/admin/pages/AdminMediaPage'));
 const AdminSettingsPage = lazy(() => import('@/admin/pages/AdminSettingsPage'));
+const AdminOffersPage = lazy(() => import('@/admin/pages/AdminOffersPage'));
 
 const pagePaths: Record<string, string> = {
   home: '/',
@@ -102,7 +103,7 @@ function WebsiteLayout({ config, children }: { config: SiteConfig; children: Rea
   const currentPage = currentPageFromPath(location.pathname);
 
   const navigatePage = (page: string, param?: string) => {
-    if (page === 'request') { openRequest({ title: param || 'Request a Quote', type: param?.toLowerCase().includes('service') ? 'Service Request' : 'Quote Request' }); return; }
+    if (page === 'request') { openRequest({ title: param || 'Request Quote', type: param?.toLowerCase().includes('service') ? 'Service Request' : 'Quote Request' }); return; }
     let path = pagePaths[page];
     if (page === 'search') path = `/products?q=${encodeURIComponent(param || '')}`;
     if (page === 'products' && param) path = `/products?series=${encodeURIComponent(param)}`;
@@ -119,10 +120,10 @@ function WebsiteLayout({ config, children }: { config: SiteConfig; children: Rea
     <div className={`min-h-screen bg-white flex flex-col ${currentPage === 'home' ? 'home-theme' : 'interior-theme'}`}>
       <SeoHead config={config} />
       <Navbar onNavigate={navigatePage} currentPage={currentPage} config={config} />
+      <OfferAlertBanner />
       <main className="flex-1">{children}</main>
       <Footer config={config} onNavigate={navigatePage} />
       <FloatingWhatsAppButton config={config} />
-      <Chatbot config={config} onNavigate={navigatePage} />
     </div>
   );
 }
@@ -158,7 +159,7 @@ function AppRoutes() {
   const { config, refreshConfig } = useSiteConfig();
 
   const navigatePage = (page: string, param?: string) => {
-    if (page === 'request') { openRequest({ title: param || 'Request a Quote', type: param?.toLowerCase().includes('service') ? 'Service Request' : 'Quote Request' }); return; }
+    if (page === 'request') { openRequest({ title: param || 'Request Quote', type: param?.toLowerCase().includes('service') ? 'Service Request' : 'Quote Request' }); return; }
     let path = pagePaths[page];
     if (page === 'search') path = `/products?q=${encodeURIComponent(param || '')}`;
     if (page === 'products' && param) path = `/products?series=${encodeURIComponent(param)}`;
@@ -195,6 +196,7 @@ function AppRoutes() {
       <Route path="/admin/news" element={<Suspense fallback={<LoadingScreen />}><AdminNewsPage refreshConfig={refreshConfig} /></Suspense>} />
       <Route path="/admin/timeline" element={<Suspense fallback={<LoadingScreen />}><AdminTimelinePage refreshConfig={refreshConfig} /></Suspense>} />
       <Route path="/admin/careers" element={<Suspense fallback={<LoadingScreen />}><AdminCareersPage refreshConfig={refreshConfig} /></Suspense>} />
+      <Route path="/admin/offers" element={<Suspense fallback={<LoadingScreen />}><AdminOffersPage refreshConfig={refreshConfig} /></Suspense>} />
       <Route path="/admin/distributors" element={<Suspense fallback={<LoadingScreen />}><AdminDistributorsPage refreshConfig={refreshConfig} /></Suspense>} />
       <Route path="/admin/leads" element={<Suspense fallback={<LoadingScreen />}><AdminLeadsPage refreshConfig={refreshConfig} /></Suspense>} />
       <Route path="/admin/media" element={<Suspense fallback={<LoadingScreen />}><AdminMediaPage refreshConfig={refreshConfig} /></Suspense>} />

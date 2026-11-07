@@ -15,7 +15,7 @@ export default function CompressorSeriesGuide({ variant = 'cards', onNavigate }:
   if (variant === 'table') {
     return (
       <section className="bg-white py-16 lg:py-20">
-        <div className="mx-auto max-w-[1280px] px-5 lg:px-8">
+        <div className="mx-auto max-w-[1400px] px-3 sm:px-5 lg:px-8">
           <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <div className="mb-3 text-xs font-black uppercase tracking-[0.25em] text-red-600"><SiteText section="CompressorSeriesGuide" name="selection_guide" /></div>
@@ -75,7 +75,7 @@ export default function CompressorSeriesGuide({ variant = 'cards', onNavigate }:
 
   return (
     <section className="border-y border-amber-200 bg-[#fff8df] py-16 lg:py-24">
-      <div className="mx-auto max-w-[1180px] px-5 lg:px-8">
+      <div className="mx-auto max-w-[1400px] px-3 sm:px-5 lg:px-8">
         <div className="mb-10 max-w-3xl">
           <div className="mb-3 text-xs font-black uppercase tracking-[0.25em] text-red-600"><SiteText section="CompressorSeriesGuide" name="selection_guide" /></div>
           <h2 className="brand-display text-4xl font-black leading-tight text-slate-950 lg:text-5xl"><SiteText section="CompressorSeriesGuide" name="choose_the_right_compressor_series" /></h2>

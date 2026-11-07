@@ -11,6 +11,18 @@ interface HomePageProps {
   onNavigate: (page: string, param?: string) => void;
 }
 
+const homeIndustryDisplayOrder = [
+  'general-manufacturing',
+  'automotive-auto-components',
+  'textile',
+  'cement',
+  'mining',
+  'power-ash-handling',
+  'steel-metal',
+  'semiconductor-electronics',
+  'solar',
+];
+
 export default function HomePage({ onNavigate }: HomePageProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [industries, setIndustries] = useState<Industry[]>([]);
@@ -37,7 +49,21 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   if (!config) return <div className="flex min-h-[55vh] items-center justify-center"><div className="h-11 w-11 animate-spin rounded-full border-4 border-slate-200 border-t-red-600" /></div>;
 
   const home = config.home!;
+  const industryOrder = new Map(homeIndustryDisplayOrder.map((slug, index) => [slug, index]));
+  const orderedIndustries = [...industries].sort((a, b) => (industryOrder.get(a.slug) ?? Number.MAX_SAFE_INTEGER) - (industryOrder.get(b.slug) ?? Number.MAX_SAFE_INTEGER));
   const openSolution = (solution: NonNullable<SiteConfig['home']>['solutionCards'][number]) => {
+    if (solution.id === 'oil-free') {
+      onNavigate('products', solution.param || 'fas-small');
+      return;
+    }
+    if (solution.id === 'low-pressure') {
+      onNavigate('products', 'fsl');
+      return;
+    }
+    if (solution.id === 'portable') {
+      onNavigate('products', 'fsg');
+      return;
+    }
     if (solution.url) {
       if (solution.external) window.open(solution.url, '_blank', 'noopener,noreferrer');
       else window.location.assign(solution.url);
@@ -53,16 +79,16 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
       <section className="py-16 lg:py-20">
         <Container>
-          <Heading eyebrow={home.rangeEyebrow} title={home.rangeTitle}>{home.rangeIntro}</Heading>
+          <Heading title={home.rangeTitle}>{home.rangeIntro}</Heading>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {home.solutionCards.filter(card => card.active !== false).map(card => <button key={card.id} onClick={() => openSolution(card)} className="group relative flex min-h-[255px] flex-col overflow-hidden rounded-xl border border-slate-200 bg-white text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-red-200 hover:shadow-xl">
               <div className="absolute inset-y-0 left-0 w-1 bg-red-600 opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true" />
               <div className="flex h-28 items-center border-b border-slate-100 bg-slate-50 px-6">{(() => { const Icon = solutionIcons[card.id as keyof typeof solutionIcons] || SolutionSettings; return <span className="flex h-14 w-14 items-center justify-center rounded-xl border border-red-100 bg-white text-red-700 shadow-sm transition duration-300 group-hover:border-red-600 group-hover:bg-red-600 group-hover:text-white"><Icon aria-hidden="true" className="h-7 w-7" /></span>; })()}</div>
-              <div className="flex flex-1 flex-col p-6"><h3 className="text-lg font-extrabold leading-snug text-slate-900">{card.id === 'oil-free' ? 'Ultra Pack' : card.title}</h3><p className="mt-3 text-sm leading-6 text-slate-600">{card.description}</p><span className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-bold text-red-700">{home.viewSeriesLabel} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span></div>
+              <div className="flex flex-1 flex-col p-6"><h3 className="text-lg font-extrabold leading-snug text-slate-900">{card.id === 'oil-free' ? 'Ultra Pack' : card.id === 'portable' ? 'Electric Portable Compressors' : card.title}</h3><p className="mt-3 text-sm leading-6 text-slate-600">{card.description}</p><span className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-bold text-red-700">{home.viewSeriesLabel} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" /></span></div>
             </button>)}
           </div>
-          <div className="mt-9 text-center"><button onClick={() => onNavigate('products')} className="inline-flex items-center gap-2 rounded-md border border-slate-300 px-6 py-3 text-sm font-bold hover:bg-slate-50">{home.viewAllProductsLabel} <ArrowRight className="h-4 w-4" /></button></div>
         </Container>
+          {/* <div className="mt-9 text-center"><button onClick={() => onNavigate('products')} className="inline-flex items-center gap-2 rounded-md border border-slate-300 px-6 py-3 text-sm font-bold hover:bg-slate-50">{home.viewAllProductsLabel} <ArrowRight className="h-4 w-4" /></button></div> */}
       </section>
 
       <section className="bg-slate-950 py-16 text-white lg:py-20"><Container><div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
@@ -73,7 +99,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       <section className="py-16 lg:py-20"><Container>
         <Heading eyebrow="Solutions for your industry" title={`${home.industriesTitle} — Every Industrial Application`}>{home.industriesIntro}</Heading>
         <div className="mt-10 grid gap-1 overflow-hidden rounded-xl bg-white sm:grid-cols-2 lg:grid-cols-3">
-          {industries.slice(0, home.industriesLimit).map((industry, index) => {
+          {orderedIndustries.slice(0, 6).map((industry, index) => {
             const Icon = [Factory, Settings, ShieldCheck, Gauge, Wrench, CheckCircle2][index % 6];
             return <button key={industry.id} onClick={() => onNavigate('industry-detail', industry.slug)} className="group relative min-h-[280px] overflow-hidden bg-slate-950 p-7 text-left text-white">
               <img src={industry.imageUrl} alt="" className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105" onError={event => { event.currentTarget.style.display = 'none'; }} />
@@ -86,6 +112,11 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               </span>
             </button>;
           })}
+        </div>
+        <div className="mt-8 flex justify-center">
+          <button onClick={() => onNavigate('industries')} className="inline-flex items-center gap-2 bg-red-600 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-slate-950">
+            View all industries <ArrowRight className="h-4 w-4" />
+          </button>
         </div>
       </Container></section>
 
@@ -103,9 +134,8 @@ export default function HomePage({ onNavigate }: HomePageProps) {
 
       {home.customerLogos.some(logo => logo.approved && logo.active !== false) && <section className="border-y border-slate-200 bg-slate-50 py-14"><Container><Heading eyebrow={home.customerLogosEyebrow} title={home.customerLogosTitle}>{home.whyIntro}</Heading><div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">{home.customerLogos.filter(logo => logo.approved && logo.active !== false).map(logo => <a key={logo.name} href={logo.url || undefined} target={logo.url ? '_blank' : undefined} rel={logo.url ? 'noopener noreferrer' : undefined} className="flex h-24 items-center justify-center rounded-lg border border-slate-200 bg-white p-4"><img src={logo.imageUrl} alt={logo.imageAlt} loading="lazy" className="max-h-full max-w-full object-contain" /></a>)}</div></Container></section>}
 
-      <section className="py-16 lg:py-20"><Container><div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
-        <div className="grid grid-cols-2 gap-3">{home.statistics.filter(stat => stat.verified && stat.active !== false).map((stat, index) => <div key={stat.label} className={`rounded-xl p-6 ${index % 2 ? 'bg-red-600 text-white' : 'bg-slate-950 text-white'}`}><div className="text-3xl font-extrabold text-amber-400">{stat.value}</div><div className="mt-2 text-sm text-white/75">{stat.label}</div></div>)}</div>
-        <div><Eyebrow>{home.aboutEyebrow}</Eyebrow><h2 className="mt-3 text-3xl font-extrabold sm:text-4xl">{home.aboutTitle}</h2><p className="mt-5 leading-7 text-slate-600">{config.about.storyShort}</p><button onClick={() => onNavigate('about-story')} className="mt-7 inline-flex items-center gap-2 text-sm font-bold text-red-700">{home.aboutButton} <ArrowRight className="h-4 w-4" /></button></div>
+      <section className="py-12 lg:py-16"><Container><div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+        <Eyebrow>{home.aboutEyebrow}</Eyebrow><h2 className="mt-3 text-3xl font-extrabold sm:text-4xl">{home.aboutTitle}</h2><p className="mt-5 leading-7 text-slate-600">{config.about.storyShort}</p><p className="mt-4 leading-7 text-slate-600">{config.about.storyLong}</p><button onClick={() => onNavigate('about-story')} className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-red-700">{home.aboutButton} <ArrowRight className="h-4 w-4" /></button>
       </div></Container></section>
 
       <section className="bg-red-600 py-12 text-white"><Container><div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between"><div><h2 className="text-2xl font-extrabold sm:text-3xl">{home.ctaTitle}</h2><p className="mt-2 text-red-100">{home.ctaText}</p></div><button onClick={() => onNavigate('request')} className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-white px-6 py-3.5 text-sm font-bold text-red-700">{home.ctaButton} <ArrowRight className="h-4 w-4" /></button></div></Container></section>
@@ -113,7 +143,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   );
 }
 
-function Container({ children }: { children: React.ReactNode }) { return <div className="mx-auto max-w-[1180px] px-5 lg:px-8">{children}</div>; }
+function Container({ children }: { children: React.ReactNode }) { return <div className="mx-auto max-w-[1400px] px-3 sm:px-5 lg:px-8">{children}</div>; }
 function Eyebrow({ children }: { children: React.ReactNode }) { return <div className="flex items-center gap-3 text-xs font-extrabold uppercase tracking-[0.18em] text-red-600"><span className="h-0.5 w-8 bg-red-600" />{children}</div>; }
-function Heading({ eyebrow, title, children }: { eyebrow: string; title: string; children: React.ReactNode }) { return <div className="mx-auto max-w-2xl text-center"><div className="text-xs font-extrabold uppercase tracking-[0.18em] text-red-600">{eyebrow}</div><h2 className="mt-3 text-3xl font-extrabold sm:text-4xl">{title}</h2><p className="mt-4 leading-7 text-slate-600">{children}</p></div>; }
+function Heading({ eyebrow, title, children }: { eyebrow?: string; title: string; children: React.ReactNode }) { return <div className="mx-auto max-w-2xl text-center">{eyebrow && <div className="text-xs font-extrabold uppercase tracking-[0.18em] text-red-600">{eyebrow}</div>}<h2 className={`${eyebrow ? 'mt-3' : ''} text-3xl font-extrabold sm:text-4xl`}>{title}</h2><p className="mt-4 leading-7 text-slate-600">{children}</p></div>; }
 function Benefit({ icon: Icon, title, children }: { icon: typeof Leaf; title: string; children: React.ReactNode }) { return <div className="border-l border-slate-700 pl-5"><Icon className="h-7 w-7 text-amber-400" /><h3 className="mt-4 text-lg font-extrabold">{title}</h3><p className="mt-2 text-sm leading-6 text-slate-400">{children}</p></div>; }

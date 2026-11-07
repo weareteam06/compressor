@@ -28,7 +28,7 @@ export default function NewsPage({ onNavigate, slug }: Props) {
     return (
       <div className="min-h-screen bg-slate-50 pb-20">
         <div className="bg-slate-900 text-white py-4">
-          <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
+          <div className="max-w-[1400px] mx-auto px-3 sm:px-5 lg:px-8">
             <button onClick={() => onNavigate('news')} className="flex items-center gap-2 text-amber-400 hover:text-amber-300 text-sm font-bold">
               <ArrowLeft className="w-4 h-4" />{" "}<SiteText section="NewsPage" name="back_to_news" />{" "}</button>
           </div>
@@ -76,7 +76,7 @@ export default function NewsPage({ onNavigate, slug }: Props) {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-12">
+      <div className="max-w-[1400px] mx-auto px-3 sm:px-5 lg:px-8 py-12">
         <div className="mb-8 grid gap-4 border-b border-slate-300 pb-6 md:grid-cols-[1fr_1fr] md:items-end"><div><div className="text-xs font-black uppercase tracking-widest text-red-700"><SiteText section="NewsPage" name="news_insights" /></div><h1 className="mt-2 text-3xl font-black text-slate-950">{String(copy.heroTitle)}</h1></div><p className="text-sm leading-6 text-slate-600"><SiteText section="NewsPage" name="product_launches_industry_events_technical_insights_and_company_news" /></p></div>
         <div className="flex flex-wrap gap-2 mb-8">
           {categories.map(c => (

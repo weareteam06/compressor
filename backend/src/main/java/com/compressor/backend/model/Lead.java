@@ -31,11 +31,16 @@ public class Lead extends BaseEntity {
   public String notes;
   public String assignedTo;
   public String requiredPressure;
+  public String existingWorkingPressure;
   public String requiredFad;
+  public String existingFad;
+  public String existingInstallationMake;
   public String operatingHours;
+  public String existingCompressorPower;
   public String currentCompressor;
   public String application;
   public String location;
+  public String state;
   @Column(columnDefinition = "TEXT")
   public String requirementDetails;
 }

@@ -7,6 +7,7 @@ import com.compressor.backend.model.Industry;
 import com.compressor.backend.model.JobOpening;
 import com.compressor.backend.model.Lead;
 import com.compressor.backend.model.NewsArticle;
+import com.compressor.backend.model.OfferAlert;
 import com.compressor.backend.model.Product;
 import com.compressor.backend.model.ProductCategory;
 import com.compressor.backend.model.ServiceOffering;
@@ -18,6 +19,7 @@ import com.compressor.backend.repository.IndustryRepository;
 import com.compressor.backend.repository.JobOpeningRepository;
 import com.compressor.backend.repository.LeadRepository;
 import com.compressor.backend.repository.NewsArticleRepository;
+import com.compressor.backend.repository.OfferAlertRepository;
 import com.compressor.backend.repository.ProductCategoryRepository;
 import com.compressor.backend.repository.ProductRepository;
 import com.compressor.backend.repository.ServiceOfferingRepository;
@@ -28,6 +30,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.time.LocalDate;
+import java.time.Instant;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -52,6 +55,7 @@ public class ContentService {
       Map.entry("jobs", "job"),
       Map.entry("distributors", "dist"),
       Map.entry("leads", "lead"),
+      Map.entry("offers", "offer"),
       Map.entry("images", "img"));
 
   private final ProductCategoryRepository categories;
@@ -64,6 +68,7 @@ public class ContentService {
   private final JobOpeningRepository jobs;
   private final DistributorRepository distributors;
   private final LeadRepository leads;
+  private final OfferAlertRepository offers;
   private final SiteContentSectionRepository siteSections;
   private final ImageAssetRepository images;
   private final ObjectMapper objectMapper;
@@ -79,6 +84,7 @@ public class ContentService {
       JobOpeningRepository jobs,
       DistributorRepository distributors,
       LeadRepository leads,
+      OfferAlertRepository offers,
       SiteContentSectionRepository siteSections,
       ImageAssetRepository images,
       ObjectMapper objectMapper) {
@@ -92,6 +98,7 @@ public class ContentService {
     this.jobs = jobs;
     this.distributors = distributors;
     this.leads = leads;
+    this.offers = offers;
     this.siteSections = siteSections;
     this.images = images;
     this.objectMapper = objectMapper;
@@ -147,6 +154,7 @@ public class ContentService {
     summary.put("jobOpenings", jobs.count());
     summary.put("distributors", distributors.count());
     summary.put("leads", leads.count());
+    summary.put("offers", offers.count());
     summary.put("siteContentSections", siteSections.count());
     summary.put("imageAssets", images.count());
     return summary;
@@ -199,6 +207,11 @@ public class ContentService {
     };
   }
 
+  public List<OfferAlert> activeOffers() {
+    Instant now = Instant.now();
+    return offers.findAllByActiveTrueAndStartsAtLessThanEqualAndEndsAtGreaterThanOrderByStartsAtDesc(now, now);
+  }
+
   public List<?> listAdmin(String collection) {
     return switch (collection) {
       case "categories" -> categories.findAll();
@@ -210,6 +223,7 @@ public class ContentService {
       case "jobs" -> jobs.findAll();
       case "distributors" -> distributors.findAll();
       case "leads" -> visibleLeads();
+      case "offers" -> offers.findAll();
       case "images" -> images.findAll().stream().filter(image -> image.data != null && image.data.length > 0).toList();
       default -> throw notFound();
     };
@@ -231,6 +245,7 @@ public class ContentService {
       case "jobs" -> jobs.findById(requiredId(id)).orElseThrow(this::notFound);
       case "distributors" -> distributors.findById(requiredId(id)).orElseThrow(this::notFound);
       case "leads" -> leads.findById(requiredId(id)).orElseThrow(this::notFound);
+      case "offers" -> offers.findById(requiredId(id)).orElseThrow(this::notFound);
       case "images" -> images.findById(requiredId(id)).orElseThrow(this::notFound);
       default -> throw notFound();
     };
@@ -308,6 +323,7 @@ public class ContentService {
       case "jobs" -> jobs.deleteById(numericId);
       case "distributors" -> distributors.deleteById(numericId);
       case "leads" -> leads.deleteById(numericId);
+      case "offers" -> offers.deleteById(numericId);
       case "images" -> deleteMedia(numericId);
       default -> throw notFound();
     }
@@ -325,6 +341,7 @@ public class ContentService {
       case "jobs" -> jobs.save(objectMapper.convertValue(normalized, JobOpening.class));
       case "distributors" -> distributors.save(objectMapper.convertValue(normalized, Distributor.class));
       case "leads" -> saveLead(normalized);
+      case "offers" -> saveOffer(normalized);
       case "images" -> images.save(objectMapper.convertValue(normalized, ImageAsset.class));
       default -> throw notFound();
     };
@@ -341,6 +358,7 @@ public class ContentService {
       case "jobs" -> jobs;
       case "distributors" -> distributors;
       case "leads" -> leads;
+      case "offers" -> offers;
       case "images" -> images;
       default -> throw notFound();
     };
@@ -457,6 +475,7 @@ public class ContentService {
     industries.findAll().forEach(item -> { if (replacements.containsKey(item.imageUrl)) { item.imageUrl = replacements.get(item.imageUrl); industries.save(item); } });
     services.findAll().forEach(item -> { if (replacements.containsKey(item.imageUrl)) { item.imageUrl = replacements.get(item.imageUrl); services.save(item); } });
     news.findAll().forEach(item -> { if (replacements.containsKey(item.imageUrl)) { item.imageUrl = replacements.get(item.imageUrl); news.save(item); } });
+    offers.findAll().forEach(item -> { if (replacements.containsKey(item.imageUrl)) { item.imageUrl = replacements.get(item.imageUrl); offers.save(item); } });
     siteSections.findAll().forEach(section -> {
       JsonNode replaced = replaceUrls(section.content, replacements);
       if (!replaced.equals(section.content)) { section.content = replaced; siteSections.save(section); }
@@ -471,6 +490,7 @@ public class ContentService {
         || industries.findAll().stream().anyMatch(item -> url.equals(item.imageUrl))
         || services.findAll().stream().anyMatch(item -> url.equals(item.imageUrl))
         || news.findAll().stream().anyMatch(item -> url.equals(item.imageUrl))
+        || offers.findAll().stream().anyMatch(item -> url.equals(item.imageUrl))
         || siteSections.findAll().stream().anyMatch(section -> containsText(section.content, url));
     if (used) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, "This media file is currently used by website content. Replace it there before deleting it.");
@@ -530,6 +550,21 @@ public class ContentService {
       normalized.put("priority", "Medium");
     }
     return leads.save(objectMapper.convertValue(normalized, Lead.class));
+  }
+
+  private OfferAlert saveOffer(ObjectNode normalized) {
+    OfferAlert offer = objectMapper.convertValue(normalized, OfferAlert.class);
+    if (offer.title == null || offer.title.isBlank()
+        || offer.message == null || offer.message.isBlank()
+        || offer.startsAt == null || offer.endsAt == null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+          "Offer title, message, start date/time, and end date/time are required");
+    }
+    if (!offer.endsAt.isAfter(offer.startsAt)) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+          "Offer end date/time must be after the start date/time");
+    }
+    return offers.save(offer);
   }
 
   private ProductCategory resolveCategory(JsonNode categoryNode) {

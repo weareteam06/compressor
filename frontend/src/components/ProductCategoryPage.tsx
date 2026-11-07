@@ -46,7 +46,7 @@ export default function ProductCategoryPage({ slug, onNavigate, onViewProduct }:
 
   return (
     <div className="min-h-screen pb-20">
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-16">
+      <div className="max-w-[1400px] mx-auto px-3 sm:px-5 lg:px-8 py-16">
         <div className="mb-10 border-b border-slate-300 pb-7"><button onClick={() => onNavigate('products')} className="mb-5 flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-red-700"><ArrowLeft className="h-4 w-4" /><SiteText section="ProductCategoryPage" name="back_to_all_products" /></button><div className="text-xs font-black uppercase tracking-widest text-red-700"><SiteText section="ProductCategoryPage" name="products" />{" "}{category.shortName}{" "}<SiteText section="ProductCategoryPage" name="series" /></div><h1 className="mt-2 text-3xl font-black text-slate-950">{category.name}</h1><p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600">{category.longDescription}</p><div className="mt-4 flex flex-wrap gap-2">{category.applications.map(app => <span key={app} className="border border-slate-300 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600">{app}</span>)}</div></div>
         <div className="grid lg:grid-cols-3 gap-12">
           {/* Features Sidebar */}

@@ -23,7 +23,7 @@ export default function FirstAirInfoPages({ page, config, onNavigate }: Props) {
   const points = configured?.points ?? content.points;
   return (
     <div className="min-h-screen bg-white">
-      <section className="max-w-[1180px] mx-auto px-5 lg:px-8 py-16 grid lg:grid-cols-[0.8fr_1.2fr] gap-12">
+      <section className="max-w-[1400px] mx-auto px-3 sm:px-5 lg:px-8 py-16 grid lg:grid-cols-[0.8fr_1.2fr] gap-12">
         <div>
           <div className="mb-8 border-b border-slate-300 pb-6"><div className="text-xs font-black uppercase tracking-[0.2em] text-red-700">{eyebrow}</div><h1 className="brand-display mt-2 text-3xl font-black text-slate-950">{title}</h1><p className="mt-3 text-sm leading-6 text-slate-600">{intro}</p></div>
           <Icon className="w-14 h-14 text-red-600 mb-6" />
@@ -43,10 +43,12 @@ export default function FirstAirInfoPages({ page, config, onNavigate }: Props) {
               ))}
             </div>
           )}
-          <div className="mt-7 flex flex-wrap gap-3">
-            <button onClick={() => onNavigate('products')} className="bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded-xl font-black text-sm uppercase tracking-wide">{" "}<SiteText section="FirstAirInfoPages" name="view_products" />{" "}</button>
-            <button onClick={() => onNavigate('request')} className="bg-amber-400 hover:bg-amber-300 text-slate-950 px-5 py-3 rounded-xl font-black text-sm uppercase tracking-wide">{" "}<SiteText section="FirstAirInfoPages" name="contact_us" />{" "}</button>
-          </div>
+          {page !== 'warranty' && (
+            <div className="mt-7 flex flex-wrap gap-3">
+              <button onClick={() => onNavigate('products')} className="bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded-xl font-black text-sm uppercase tracking-wide">{" "}<SiteText section="FirstAirInfoPages" name="view_products" />{" "}</button>
+              <button onClick={() => onNavigate('request')} className="bg-amber-400 hover:bg-amber-300 text-slate-950 px-5 py-3 rounded-xl font-black text-sm uppercase tracking-wide">{" "}<SiteText section="FirstAirInfoPages" name="contact_us" />{" "}</button>
+            </div>
+          )}
         </div>
 
         <div className="border border-red-100 rounded-xl p-8 shadow-sm">
@@ -63,7 +65,7 @@ export default function FirstAirInfoPages({ page, config, onNavigate }: Props) {
 
       {page === 'about' && (
         <section className="bg-slate-50 py-16 lg:py-20">
-          <div className="mx-auto max-w-[1180px] px-5 lg:px-8">
+          <div className="mx-auto max-w-[1400px] px-3 sm:px-5 lg:px-8">
             <div className="mb-10 max-w-3xl">
               <div className="mb-3 text-xs font-black uppercase tracking-[0.25em] text-red-600"><SiteText section="FirstAirInfoPages" name="how_we_help" /></div>
               <h2 className="brand-display text-3xl font-black text-slate-950 lg:text-5xl"><SiteText section="FirstAirInfoPages" name="clear_compressor_information_for_confident_buying" /></h2>
@@ -87,7 +89,7 @@ export default function FirstAirInfoPages({ page, config, onNavigate }: Props) {
           <CompressorSeriesGuide variant="table" onNavigate={onNavigate} />
 
           <section className="bg-slate-50 py-16 lg:py-20">
-            <div className="mx-auto max-w-[1180px] px-5 lg:px-8">
+            <div className="mx-auto max-w-[1400px] px-3 sm:px-5 lg:px-8">
               <div className="mb-9 max-w-3xl">
                 <div className="mb-3 text-xs font-black uppercase tracking-[0.25em] text-red-600"><SiteText section="FirstAirInfoPages" name="before_selection" /></div>
                 <h2 className="brand-display text-3xl font-black text-slate-950 lg:text-5xl"><SiteText section="FirstAirInfoPages" name="what_buyers_should_check_first" /></h2>
@@ -107,7 +109,7 @@ export default function FirstAirInfoPages({ page, config, onNavigate }: Props) {
           </section>
 
           <section className="bg-white py-16 lg:py-20">
-            <div className="mx-auto max-w-[1180px] px-5 lg:px-8">
+            <div className="mx-auto max-w-[1400px] px-3 sm:px-5 lg:px-8">
               <div className="mb-9 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                 <div>
                   <div className="mb-3 text-xs font-black uppercase tracking-[0.25em] text-red-600"><SiteText section="FirstAirInfoPages" name="catalog_downloads" /></div>
@@ -133,7 +135,7 @@ export default function FirstAirInfoPages({ page, config, onNavigate }: Props) {
 
       {page !== 'about' && (
         <section className="bg-slate-50 py-16 lg:py-20">
-          <div className="mx-auto max-w-[1180px] px-5 lg:px-8">
+          <div className="mx-auto max-w-[1400px] px-3 sm:px-5 lg:px-8">
             <div className="mb-9 max-w-3xl">
               <div className="mb-3 text-xs font-black uppercase tracking-[0.25em] text-red-600"><SiteText section="FirstAirInfoPages" name="faq" /></div>
               <h2 className="brand-display text-3xl font-black text-slate-950 lg:text-5xl">

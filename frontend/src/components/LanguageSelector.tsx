@@ -14,6 +14,14 @@ export default function LanguageSelector() {
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     if (!enabled) return;
+    const dismiss = (event: PointerEvent) => {
+      if (!(event.target as HTMLElement).closest('.notranslate')) setEnabled(false);
+    };
+    document.addEventListener('pointerdown', dismiss);
+    return () => document.removeEventListener('pointerdown', dismiss);
+  }, [enabled]);
+  useEffect(() => {
+    if (!enabled) return;
     let alive = true;
     const initialize = () => {
       if (!alive || !window.google?.translate) return;

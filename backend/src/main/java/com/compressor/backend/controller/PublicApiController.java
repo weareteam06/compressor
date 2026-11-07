@@ -119,6 +119,11 @@ public class PublicApiController {
     return contentService.listPublic("images", Optional.empty());
   }
 
+  @GetMapping("/offers/active")
+  public List<?> activeOffers() {
+    return contentService.activeOffers();
+  }
+
   @GetMapping("/media/{storageKey:.+}")
   public ResponseEntity<byte[]> media(@PathVariable String storageKey) {
     ImageAsset media = contentService.getMedia(storageKey);

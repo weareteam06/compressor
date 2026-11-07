@@ -16,33 +16,52 @@ type CatalogRow = {
   outlet?: string;
 };
 
-const fasSmallProductImage = '/hero/fas-small-product.png';
-const fasLargeCover = '/catalogs/FAS-15-250KW-cover.jpg';
+const fasSmallProductImage = '/catalogs/fas-4-11-product-transparent-v2.png';
+const fas6ProductImage = '/catalogs/fas-6-product-transparent.png';
+const fas8ProductImage = '/catalogs/fas-8-product-transparent.png';
+const fas11ProductImage = '/catalogs/fas-11-product-transparent.png';
+const fas11HeProductImage = '/catalogs/fas-11-he-product-transparent.png';
+const fas15ProductImage = '/catalogs/fas-15-product-transparent.png';
+const fas18ProductImage = '/catalogs/fas-18-product-transparent.png';
+const fas22ProductImage = '/catalogs/fas-22-product-transparent.png';
+const fas30ProductImage = '/catalogs/fas-30-product-transparent.png';
+const fas37ProductImage = '/catalogs/fas-37-product-transparent.png';
+const fas45ProductImage = '/catalogs/fas-45-product-transparent.png';
+const fas55ProductImage = '/catalogs/fas-55-product-transparent.png';
+const fas75ProductImage = '/catalogs/fas-75-product-transparent.png';
+const fas90ProductImage = '/catalogs/fas-90-product-transparent.png';
+const fas110ProductImage = '/catalogs/fas-110-product-transparent.png';
+const fas132ProductImage = '/catalogs/fas-132-product-transparent.png';
+const fas160ProductImage = '/catalogs/fas-160-product-transparent.png';
+const fas185ProductImage = '/catalogs/fas-185-product-transparent.png';
+const fas200ProductImage = '/catalogs/fas-200-product-transparent.png';
+const fas220ProductImage = '/catalogs/fas-220-product-transparent.png';
+const fas250ProductImage = '/catalogs/fas-250-product-transparent.png';
 const fsgCover = '/catalogs/FSG-product.png';
-const fasmCover = '/catalogs/FASM-product.png';
+const fasmCover = '/catalogs/FASM-product-cabinet-transparent.png';
 
 const rows: CatalogRow[] = [
   { id: 'fas4', model: 'FAS-4', series: 'FAS', powerKw: 4, powerHp: 5, pressureMin: 7, pressureMax: 16, flowRateCfm: '9-19', imageUrl: fasSmallProductImage, brochureUrl: '/catalogs/FAS-4-11.pdf' },
-  { id: 'fas6', model: 'FAS-6', series: 'FAS', powerKw: 5.5, powerHp: 7.5, pressureMin: 7, pressureMax: 16, flowRateCfm: '13-28', imageUrl: fasSmallProductImage, brochureUrl: '/catalogs/FAS-4-11.pdf' },
-  { id: 'fas7', model: 'FAS-8', series: 'FAS', powerKw: 7.5, powerHp: 10, pressureMin: 7, pressureMax: 16, flowRateCfm: '21-39', imageUrl: fasSmallProductImage, brochureUrl: '/catalogs/FAS-4-11.pdf' },
-  { id: 'fas11', model: 'FAS-11', series: 'FAS', powerKw: 11, powerHp: 15, pressureMin: 7, pressureMax: 16, flowRateCfm: '35-62', imageUrl: fasSmallProductImage, brochureUrl: '/catalogs/FAS-4-11.pdf' },
-  { id: 'fas11he', model: 'FAS-11(HE)', series: 'FAS', powerKw: 11, powerHp: 15, pressureMin: 7, pressureMax: 16, flowRateCfm: '40-76', imageUrl: fasSmallProductImage, brochureUrl: '/catalogs/FAS-4-11.pdf' },
-  { id: 'fas15', model: 'FAS-15', series: 'FAS', powerKw: 15, powerHp: 20, pressureMin: 5, pressureMax: 16, flowRateCfm: '51-108', imageUrl: 'https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS15-400x400.png', brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
-  { id: 'fas18', model: 'FAS-18', series: 'FAS', powerKw: 18.5, powerHp: 25, pressureMin: 5, pressureMax: 16, flowRateCfm: '60-131', imageUrl: 'https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS18-400x400.png', brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
-  { id: 'fas22', model: 'FAS-22', series: 'FAS', powerKw: 22, powerHp: 30, pressureMin: 5, pressureMax: 16, flowRateCfm: '78-145', imageUrl: 'https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS22-400x400.png', brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
-  { id: 'fas30', model: 'FAS-30', series: 'FAS', powerKw: 30, powerHp: 40, pressureMin: 5, pressureMax: 16, flowRateCfm: '102-212', imageUrl: 'https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS30-400x400.png', brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
-  { id: 'fas37', model: 'FAS-37', series: 'FAS', powerKw: 37, powerHp: 50, pressureMin: 5, pressureMax: 16, flowRateCfm: '134-263', imageUrl: 'https://www.firstaircompressor.com/wp-content/uploads/files/2024/FAS37-400x400.png', brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
-  { id: 'fas45', model: 'FAS-45', series: 'FAS', powerKw: 45, powerHp: 60, pressureMin: 5, pressureMax: 16, flowRateCfm: '171-304', imageUrl: fasLargeCover, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
-  { id: 'fas55', model: 'FAS-55', series: 'FAS', powerKw: 55, powerHp: 75, pressureMin: 5, pressureMax: 16, flowRateCfm: '207-415', imageUrl: fasLargeCover, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
-  { id: 'fas75', model: 'FAS-75', series: 'FAS', powerKw: 75, powerHp: 100, pressureMin: 5, pressureMax: 16, flowRateCfm: '279-540', imageUrl: fasLargeCover, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
-  { id: 'fas90', model: 'FAS-90', series: 'FAS', powerKw: 90, powerHp: 120, pressureMin: 5, pressureMax: 16, flowRateCfm: '350-622', imageUrl: fasLargeCover, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
-  { id: 'fas110', model: 'FAS-110', series: 'FAS', powerKw: 110, powerHp: 150, pressureMin: 5, pressureMax: 16, flowRateCfm: '408-812', imageUrl: fasLargeCover, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
-  { id: 'fas132', model: 'FAS-132', series: 'FAS', powerKw: 132, powerHp: 175, pressureMin: 5, pressureMax: 16, flowRateCfm: '487-975', imageUrl: fasLargeCover, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
-  { id: 'fas160', model: 'FAS-160', series: 'FAS', powerKw: 160, powerHp: 215, pressureMin: 5, pressureMax: 16, flowRateCfm: '572-1123', imageUrl: fasLargeCover, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
-  { id: 'fas185', model: 'FAS-185', series: 'FAS', powerKw: 185, powerHp: 250, pressureMin: 5, pressureMax: 16, flowRateCfm: '653-1254', imageUrl: fasLargeCover, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
-  { id: 'fas200', model: 'FAS-200', series: 'FAS', powerKw: 200, powerHp: 270, pressureMin: 5, pressureMax: 16, flowRateCfm: '706-1377', imageUrl: fasLargeCover, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
-  { id: 'fas220', model: 'FAS-220', series: 'FAS', powerKw: 220, powerHp: 300, pressureMin: 5, pressureMax: 16, flowRateCfm: '777-1430', imageUrl: fasLargeCover, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
-  { id: 'fas250', model: 'FAS-250', series: 'FAS', powerKw: 250, powerHp: 335, pressureMin: 5, pressureMax: 16, flowRateCfm: '936-1660', imageUrl: fasLargeCover, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
+  { id: 'fas6', model: 'FAS-6', series: 'FAS', powerKw: 5.5, powerHp: 7.5, pressureMin: 7, pressureMax: 16, flowRateCfm: '13-28', imageUrl: fas6ProductImage, brochureUrl: '/catalogs/FAS-4-11.pdf' },
+  { id: 'fas7', model: 'FAS-8', series: 'FAS', powerKw: 7.5, powerHp: 10, pressureMin: 7, pressureMax: 16, flowRateCfm: '21-39', imageUrl: fas8ProductImage, brochureUrl: '/catalogs/FAS-4-11.pdf' },
+  { id: 'fas11', model: 'FAS-11', series: 'FAS', powerKw: 11, powerHp: 15, pressureMin: 7, pressureMax: 16, flowRateCfm: '35-62', imageUrl: fas11ProductImage, brochureUrl: '/catalogs/FAS-4-11.pdf' },
+  { id: 'fas11he', model: 'FAS-11(HE)', series: 'FAS', powerKw: 11, powerHp: 15, pressureMin: 7, pressureMax: 16, flowRateCfm: '40-76', imageUrl: fas11HeProductImage, brochureUrl: '/catalogs/FAS-4-11.pdf' },
+  { id: 'fas15', model: 'FAS-15', series: 'FAS', powerKw: 15, powerHp: 20, pressureMin: 5, pressureMax: 16, flowRateCfm: '51-108', imageUrl: fas15ProductImage, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
+  { id: 'fas18', model: 'FAS-18', series: 'FAS', powerKw: 18.5, powerHp: 25, pressureMin: 5, pressureMax: 16, flowRateCfm: '60-131', imageUrl: fas18ProductImage, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
+  { id: 'fas22', model: 'FAS-22', series: 'FAS', powerKw: 22, powerHp: 30, pressureMin: 5, pressureMax: 16, flowRateCfm: '78-145', imageUrl: fas22ProductImage, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
+  { id: 'fas30', model: 'FAS-30', series: 'FAS', powerKw: 30, powerHp: 40, pressureMin: 5, pressureMax: 16, flowRateCfm: '102-212', imageUrl: fas30ProductImage, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
+  { id: 'fas37', model: 'FAS-37', series: 'FAS', powerKw: 37, powerHp: 50, pressureMin: 5, pressureMax: 16, flowRateCfm: '134-263', imageUrl: fas37ProductImage, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
+  { id: 'fas45', model: 'FAS-45', series: 'FAS', powerKw: 45, powerHp: 60, pressureMin: 5, pressureMax: 16, flowRateCfm: '171-304', imageUrl: fas45ProductImage, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
+  { id: 'fas55', model: 'FAS-55', series: 'FAS', powerKw: 55, powerHp: 75, pressureMin: 5, pressureMax: 16, flowRateCfm: '207-415', imageUrl: fas55ProductImage, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
+  { id: 'fas75', model: 'FAS-75', series: 'FAS', powerKw: 75, powerHp: 100, pressureMin: 5, pressureMax: 16, flowRateCfm: '279-540', imageUrl: fas75ProductImage, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
+  { id: 'fas90', model: 'FAS-90', series: 'FAS', powerKw: 90, powerHp: 120, pressureMin: 5, pressureMax: 16, flowRateCfm: '350-622', imageUrl: fas90ProductImage, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
+  { id: 'fas110', model: 'FAS-110', series: 'FAS', powerKw: 110, powerHp: 150, pressureMin: 5, pressureMax: 16, flowRateCfm: '408-812', imageUrl: fas110ProductImage, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
+  { id: 'fas132', model: 'FAS-132', series: 'FAS', powerKw: 132, powerHp: 175, pressureMin: 5, pressureMax: 16, flowRateCfm: '487-975', imageUrl: fas132ProductImage, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
+  { id: 'fas160', model: 'FAS-160', series: 'FAS', powerKw: 160, powerHp: 215, pressureMin: 5, pressureMax: 16, flowRateCfm: '572-1123', imageUrl: fas160ProductImage, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
+  { id: 'fas185', model: 'FAS-185', series: 'FAS', powerKw: 185, powerHp: 250, pressureMin: 5, pressureMax: 16, flowRateCfm: '653-1254', imageUrl: fas185ProductImage, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
+  { id: 'fas200', model: 'FAS-200', series: 'FAS', powerKw: 200, powerHp: 270, pressureMin: 5, pressureMax: 16, flowRateCfm: '706-1377', imageUrl: fas200ProductImage, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
+  { id: 'fas220', model: 'FAS-220', series: 'FAS', powerKw: 220, powerHp: 300, pressureMin: 5, pressureMax: 16, flowRateCfm: '777-1430', imageUrl: fas220ProductImage, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
+  { id: 'fas250', model: 'FAS-250', series: 'FAS', powerKw: 250, powerHp: 335, pressureMin: 5, pressureMax: 16, flowRateCfm: '936-1660', imageUrl: fas250ProductImage, brochureUrl: '/catalogs/FAS-15-250KW.pdf' },
   { id: 'fsg270a', model: 'FSG270A', series: 'FSG', powerKw: 45, powerHp: 60, pressureMin: 7, pressureMax: 8, flowRateCfm: '268-275', imageUrl: fsgCover, brochureUrl: '/catalogs/FSG-45-185KW.pdf' },
   { id: 'fsg340a', model: 'FSG340A', series: 'FSG', powerKw: 55, powerHp: 75, pressureMin: 7, pressureMax: 12, flowRateCfm: '286-378', imageUrl: fsgCover, brochureUrl: '/catalogs/FSG-45-185KW.pdf' },
   { id: 'fsg460a', model: 'FSG460A', series: 'FSG', powerKw: 75, powerHp: 100, pressureMin: 7, pressureMax: 12, flowRateCfm: '364-498', imageUrl: fsgCover, brochureUrl: '/catalogs/FSG-45-185KW.pdf' },

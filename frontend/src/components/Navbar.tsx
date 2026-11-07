@@ -29,11 +29,11 @@ const productOrder = [
 type MenuProduct = { id: number | string; model: string; powerKw: number; flowRateCfm: string; imageUrl: string };
 
 const productSeries = [
-  { title: 'FAS Series', range: '4-11 kW', family: 'FAS', min: 4, max: 11 },
-  { title: 'FAS Series', range: '15-250 kW', family: 'FAS', min: 15, max: 250 },
-  { title: 'FSL / FSLV Series', range: '30-220 kW', family: 'FSL', min: 30, max: 220 },
-  { title: 'FSG Series', range: '45-185 kW', family: 'FSG', min: 45, max: 185 },
-  { title: 'FASM Series', range: '7.5-37 kW', family: 'FASM', min: 7.5, max: 37 },
+  { label: 'FAS 4-11 kW Fixed Speed', title: 'FAS Series', range: '4-11 kW', family: 'FAS', min: 4, max: 11 },
+  { label: 'FAS 15-250 kW Fixed Speed', title: 'FAS Series', range: '15-250 kW', family: 'FAS', min: 15, max: 250 },
+  { label: 'FASM Variable Speed', title: 'FASM Series', range: '7.5-37 kW', family: 'FASM', min: 7.5, max: 37 },
+  { label: 'FSL Low Pressure', title: 'FSL / FSLV Series', range: '30-220 kW', family: 'FSL', min: 30, max: 220 },
+  { label: 'FSG High Capacity', title: 'FSG Series', range: '45-185 kW', family: 'FSG', min: 45, max: 185 },
 ];
 
 const accessoryOptions = ['Air Receiver', 'Dryer', 'Filters', 'VFD'];
@@ -148,7 +148,7 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, email, soc
           <button onClick={() => handleNav('distributors')} className="uppercase tracking-[0.1em] text-slate-200">Find a dealer</button>
         </div>
         <div className="hidden bg-slate-950 text-white lg:block">
-          <div className="mx-auto flex h-10 max-w-[1400px] items-center justify-between px-6 text-[11px] font-semibold">
+          <div className="mx-auto flex h-10 max-w-[1400px] items-center justify-between px-3 text-[11px] font-semibold sm:px-5 lg:px-8">
             <div className="flex items-center gap-2 text-slate-300"><MapPin className="h-3.5 w-3.5 text-amber-400" />Industrial compressed-air solutions across India</div>
             <div className="flex h-full items-center divide-x divide-white/15">
               <a href={`tel:${salesPhone.replace(/\s/g, '')}`} className="flex h-full items-center gap-2 px-4 text-slate-200 transition hover:bg-white/10 hover:text-white"><Phone className="h-3.5 w-3.5 text-amber-400" />{salesPhone}</a>
@@ -159,7 +159,7 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, email, soc
             </div>
           </div>
         </div>
-        <div className="mx-auto max-w-[1400px] px-4 lg:px-6">
+        <div className="mx-auto max-w-[1400px] px-3 sm:px-5 lg:px-8">
           <div className="flex h-16 items-center justify-between lg:h-[86px]">
             <button onClick={() => handleNav('home')} className="flex items-center gap-3 flex-shrink-0">
               <img src={logoUrl} alt="firstAir Compressor" className="h-9 w-auto lg:h-12" />
@@ -198,9 +198,6 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, email, soc
                                 <div className="text-amber-300 font-black text-[10px] uppercase tracking-[0.25em] mb-2">Product Series</div>
                                 <h3 className="text-2xl font-black leading-tight">FirstAir Compressor Series</h3>
                                 {/* <p className="text-white/65 text-sm mt-3 leading-relaxed">Browse FAS and FSG compressors by the same three series shown in the product brochures.</p> */}
-                                <button onClick={() => handleNav('products')} className="mt-5 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-xs font-black uppercase tracking-wide">
-                                  View all products
-                                </button>
                               </div>
                               <div className="border-r border-amber-100 p-3">
                                 <div className="px-1 pb-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Choose a series</div>
@@ -215,7 +212,7 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, email, soc
                                         className={`flex w-full items-center justify-between px-3 py-3 text-left text-black transition-colors ${isSeriesOpen ? 'bg-amber-400 ring-2 ring-inset ring-red-600/20' : 'bg-[#f9b916] hover:bg-amber-400'}`}
                                         aria-expanded={isSeriesOpen}
                                       >
-                                        <span><span className="block text-[11px] font-black uppercase tracking-[0.2em]">{series.title}</span><span className="text-xs font-bold">{series.range}</span></span>
+                                        <span className="block text-[11px] font-black uppercase tracking-[0.2em]">{series.label}</span>
                                         <ChevronDown className={`h-4 w-4 -rotate-90 transition-transform ${isSeriesOpen ? 'translate-x-0.5 text-red-700' : ''}`} />
                                       </button>
                                     </div>
@@ -256,7 +253,7 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, email, soc
                               {selectedSeries && (
                                 <div className="max-h-[420px] overflow-y-auto bg-[#fffdf7] p-3">
                                   <div className="sticky top-0 z-10 mb-2 border-b border-amber-200 bg-[#fffdf7] px-2 pb-3 pt-1">
-                                    <div className="text-[10px] font-black uppercase tracking-[0.2em] text-red-700">{selectedSeries.title}</div>
+                                    <div className="text-[10px] font-black uppercase tracking-[0.2em] text-red-700">{selectedSeries.label}</div>
                                     <div className="mt-0.5 text-sm font-black text-slate-950">Products from {selectedSeries.range}</div>
                                   </div>
                                   {selectedSeriesProducts.length > 0 ? <div className="grid grid-cols-3 gap-2">{selectedSeriesProducts.map(product => (
@@ -441,7 +438,7 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, email, soc
                             const isSeriesOpen = mobileOpenSeries === seriesKey;
                             return <div key={`${seriesKey}-mobile`}>
                               <button type="button" onClick={() => setMobileOpenSeries(isSeriesOpen ? null : seriesKey)} className="mt-2 flex w-full items-center justify-between rounded-md bg-[#f9b916] px-3 py-3 text-[10px] font-black uppercase tracking-widest text-black" aria-expanded={isSeriesOpen}>
-                                <span>{series.title} <span className="normal-case tracking-normal">({series.range})</span></span>
+                                <span>{series.label}</span>
                                 <ChevronDown className={`h-4 w-4 transition-transform ${isSeriesOpen ? 'rotate-180' : ''}`} />
                               </button>
                               {isSeriesOpen && productsForSeries(products, series).map(product => (
@@ -490,9 +487,6 @@ export default function Navbar({ onNavigate, currentPage, salesPhone, email, soc
                               </div>
                             )}
                           </div>
-                          <button onClick={() => handleNav('products')} className="w-full text-left px-3 py-2 text-xs font-black uppercase tracking-wide text-red-700">
-                            View all products
-                          </button>
                         </div>
                       )}
                     </div>

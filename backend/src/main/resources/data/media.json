@@ -21,6 +21,13 @@
     "altText": "firstAir compressor product range"
   },
   {
+    "path": "about-products-showcase.png",
+    "key": "about-products-showcase.png",
+    "contentType": "image/png",
+    "usageType": "public-content",
+    "altText": "FirstAir five-series compressor product range"
+  },
+  {
     "path": "products/fas-4-11-product.png",
     "key": "fas-4-11-product.png",
     "contentType": "image/png",
@@ -28,11 +35,95 @@
     "altText": "FAS 4 to 11 kW compressor"
   },
   {
+    "path": "catalogs/fas-4-11-product-transparent-v2.png",
+    "key": "catalogs-fas-4-11-product-transparent-v2.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS 4 to 11 kW compressor with complete receiver and feet"
+  },
+  {
+    "path": "catalogs/fas-6-product-transparent.png",
+    "key": "catalogs-fas-6-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-6 compressor with complete receiver and feet"
+  },
+  {
+    "path": "catalogs/fas-8-product-transparent.png",
+    "key": "catalogs-fas-8-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-8 compressor with complete receiver and feet"
+  },
+  {
+    "path": "catalogs/fas-11-product-transparent.png",
+    "key": "catalogs-fas-11-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-11 compressor with complete receiver and feet"
+  },
+  {
+    "path": "catalogs/fas-11-he-product-transparent.png",
+    "key": "catalogs-fas-11-he-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-11 HE compressor with complete receiver and feet"
+  },
+  {
     "path": "catalogs/FAS-15-250KW-cover.jpg",
     "key": "catalogs-fas-15-250kw-cover.jpg",
     "contentType": "image/jpeg",
     "usageType": "products",
     "altText": "FAS 15 to 250 kW compressor range"
+  },
+  {
+    "path": "catalogs/fas-15-250-product-transparent.png",
+    "key": "catalogs-fas-15-250-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS 15 to 250 kW compressor"
+  },
+  {
+    "path": "catalogs/fas-15-product-transparent.png",
+    "key": "catalogs-fas-15-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-15 compressor"
+  },
+  {
+    "path": "catalogs/fas-18-product-transparent.png",
+    "key": "catalogs-fas-18-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-18 compressor"
+  },
+  {
+    "path": "catalogs/fas-22-product-transparent.png",
+    "key": "catalogs-fas-22-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-22 compressor"
+  },
+  {
+    "path": "catalogs/fas-30-product-transparent.png",
+    "key": "catalogs-fas-30-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-30 compressor"
+  },
+  {
+    "path": "catalogs/fas-37-product-transparent.png",
+    "key": "catalogs-fas-37-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-37 compressor"
+  },
+  {
+    "path": "catalogs/fas-45-product-transparent.png",
+    "key": "catalogs-fas-45-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-45 compressor"
   },
   {
     "path": "catalogs/FAS-4-11-cover.jpg",
@@ -54,6 +145,13 @@
     "contentType": "image/png",
     "usageType": "products",
     "altText": "FASM 37 compressor"
+  },
+  {
+    "path": "catalogs/FASM-product-cabinet-transparent.png",
+    "key": "catalogs-fasm-product-cabinet-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FASM 37 compressor cabinet without pallet"
   },
   {
     "path": "catalogs/FSL-product.png",
@@ -119,6 +217,62 @@
     "altText": "Automotive production"
   },
   {
+    "path": "industries/automotive-industry-india.png",
+    "key": "industry-automotive-industry-india.png",
+    "contentType": "image/png",
+    "usageType": "industries",
+    "altText": "Indian automotive and auto-components manufacturing facility"
+  },
+  {
+    "path": "industries/semiconductor-electronics-india.png",
+    "key": "industry-semiconductor-electronics-india.png",
+    "contentType": "image/png",
+    "usageType": "industries",
+    "altText": "Indian semiconductor and electronics manufacturing facility"
+  },
+  {
+    "path": "industries/solar-manufacturing-india.png",
+    "key": "industry-solar-manufacturing-india.png",
+    "contentType": "image/png",
+    "usageType": "industries",
+    "altText": "Indian solar panel manufacturing facility"
+  },
+  {
+    "path": "industries/steel-metal-india.png",
+    "key": "industry-steel-metal-india.png",
+    "contentType": "image/png",
+    "usageType": "industries",
+    "altText": "Indian steel and metal manufacturing plant"
+  },
+  {
+    "path": "industries/cement-industry-india.png",
+    "key": "industry-cement-industry-india.png",
+    "contentType": "image/png",
+    "usageType": "industries",
+    "altText": "Indian cement manufacturing plant"
+  },
+  {
+    "path": "industries/power-ash-india.png",
+    "key": "industry-power-ash-india.png",
+    "contentType": "image/png",
+    "usageType": "industries",
+    "altText": "Indian power generation and ash-handling facility"
+  },
+  {
+    "path": "industries/mining-industry-india.png",
+    "key": "industry-mining-industry-india.png",
+    "contentType": "image/png",
+    "usageType": "industries",
+    "altText": "Indian mining and mineral-processing operation"
+  },
+  {
+    "path": "industries/general-manufacturing-india.png",
+    "key": "industry-general-manufacturing-india.png",
+    "contentType": "image/png",
+    "usageType": "industries",
+    "altText": "Indian general manufacturing and engineering facility"
+  },
+  {
     "path": "industries/cement.jpg",
     "key": "industry-cement.jpg",
     "contentType": "image/jpeg",
@@ -138,6 +292,13 @@
     "contentType": "image/jpeg",
     "usageType": "industries",
     "altText": "General manufacturing"
+  },
+  {
+    "path": "industries/textile-industry-india.png",
+    "key": "industry-textile-industry-india.png",
+    "contentType": "image/png",
+    "usageType": "industries",
+    "altText": "Indian textile manufacturing facility"
   },
   {
     "path": "industries/general-plant-air.jpg",
@@ -238,10 +399,318 @@
     "altText": "FSL product transparent png"
   },
   {
+    "path": "catalogs/FSL-product-hero-clean.png",
+    "key": "catalogs-fsl-product-hero-clean.png",
+    "contentType": "image/png",
+    "usageType": "public-content",
+    "altText": "FSL 185A compressor hero image without reflection"
+  },
+  {
     "path": "hero/fsg-background.jpg",
     "key": "hero-fsg-background.jpg",
     "contentType": "image/jpeg",
     "usageType": "public-content",
     "altText": "fsg background jpg"
+  },
+  {
+    "path": "catalogs/fas-55-product-transparent.png",
+    "key": "catalogs-fas-55-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-55 compressor"
+  },
+  {
+    "path": "catalogs/fas-75-product-transparent.png",
+    "key": "catalogs-fas-75-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-75 compressor"
+  },
+  {
+    "path": "catalogs/fas-90-product-transparent.png",
+    "key": "catalogs-fas-90-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-90 compressor"
+  },
+  {
+    "path": "catalogs/fas-110-product-transparent.png",
+    "key": "catalogs-fas-110-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-110 compressor"
+  },
+  {
+    "path": "catalogs/fas-132-product-transparent.png",
+    "key": "catalogs-fas-132-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-132 compressor"
+  },
+  {
+    "path": "catalogs/fas-160-product-transparent.png",
+    "key": "catalogs-fas-160-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-160 compressor"
+  },
+  {
+    "path": "catalogs/fas-185-product-transparent.png",
+    "key": "catalogs-fas-185-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-185 compressor"
+  },
+  {
+    "path": "catalogs/fas-200-product-transparent.png",
+    "key": "catalogs-fas-200-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-200 compressor"
+  },
+  {
+    "path": "catalogs/fas-220-product-transparent.png",
+    "key": "catalogs-fas-220-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-220 compressor"
+  },
+  {
+    "path": "catalogs/fas-250-product-transparent.png",
+    "key": "catalogs-fas-250-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FAS-250 compressor"
+  },
+  {
+    "path": "catalogs/fsl30a-4-5-product-transparent.png",
+    "key": "catalogs-fsl30a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSL30A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fsl37a-4-5-product-transparent.png",
+    "key": "catalogs-fsl37a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSL37A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fsl55a-4-5-product-transparent.png",
+    "key": "catalogs-fsl55a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSL55A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fsl75a-4-5-product-transparent.png",
+    "key": "catalogs-fsl75a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSL75A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fsl90a-4-5-product-transparent.png",
+    "key": "catalogs-fsl90a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSL90A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fsl110a-4-5-product-transparent.png",
+    "key": "catalogs-fsl110a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSL110A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fsl132a-4-5-product-transparent.png",
+    "key": "catalogs-fsl132a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSL132A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fsl160a-4-5-product-transparent.png",
+    "key": "catalogs-fsl160a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSL160A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fsl185a-4-5-product-transparent.png",
+    "key": "catalogs-fsl185a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSL185A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fsl220a-4-5-product-transparent.png",
+    "key": "catalogs-fsl220a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSL220A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fslv30a-4-5-product-transparent.png",
+    "key": "catalogs-fslv30a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSLV30A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fslv37a-4-5-product-transparent.png",
+    "key": "catalogs-fslv37a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSLV37A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fslv55a-4-5-product-transparent.png",
+    "key": "catalogs-fslv55a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSLV55A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fslv75-4-5-product-transparent.png",
+    "key": "catalogs-fslv75-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSLV75-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fslv90a-4-5-product-transparent.png",
+    "key": "catalogs-fslv90a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSLV90A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fslv110a-4-5-product-transparent.png",
+    "key": "catalogs-fslv110a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSLV110A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fslv132a-4-5-product-transparent.png",
+    "key": "catalogs-fslv132a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSLV132A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fslv160a-4-5-product-transparent.png",
+    "key": "catalogs-fslv160a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSLV160A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fslv185a-4-5-product-transparent.png",
+    "key": "catalogs-fslv185a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSLV185A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fslv220a-4-5-product-transparent.png",
+    "key": "catalogs-fslv220a-4-5-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSLV220A-4.5 compressor"
+  },
+  {
+    "path": "catalogs/fsg270a-product-transparent.png",
+    "key": "catalogs-fsg270a-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSG270A compressor"
+  },
+  {
+    "path": "catalogs/fsg340a-product-transparent.png",
+    "key": "catalogs-fsg340a-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSG340A compressor"
+  },
+  {
+    "path": "catalogs/fsg460a-product-transparent.png",
+    "key": "catalogs-fsg460a-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSG460A compressor"
+  },
+  {
+    "path": "catalogs/fsg760a-product-transparent.png",
+    "key": "catalogs-fsg760a-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSG760A compressor"
+  },
+  {
+    "path": "catalogs/fsg860a-product-transparent.png",
+    "key": "catalogs-fsg860a-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSG860A compressor"
+  },
+  {
+    "path": "catalogs/fsg1060a-product-transparent.png",
+    "key": "catalogs-fsg1060a-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FSG1060A compressor"
+  },
+  {
+    "path": "catalogs/fasm08a-product-transparent.png",
+    "key": "catalogs-fasm08a-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FASM08A compressor"
+  },
+  {
+    "path": "catalogs/fasm11a-product-transparent.png",
+    "key": "catalogs-fasm11a-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FASM11A compressor"
+  },
+  {
+    "path": "catalogs/fasm15a-product-transparent.png",
+    "key": "catalogs-fasm15a-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FASM15A compressor"
+  },
+  {
+    "path": "catalogs/fasm18a-product-transparent.png",
+    "key": "catalogs-fasm18a-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FASM18A compressor"
+  },
+  {
+    "path": "catalogs/fasm22a-product-transparent.png",
+    "key": "catalogs-fasm22a-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FASM22A compressor"
+  },
+  {
+    "path": "catalogs/fasm30a-product-transparent.png",
+    "key": "catalogs-fasm30a-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FASM30A compressor"
+  },
+  {
+    "path": "catalogs/fasm37a-product-transparent.png",
+    "key": "catalogs-fasm37a-product-transparent.png",
+    "contentType": "image/png",
+    "usageType": "products",
+    "altText": "FASM37A compressor"
   }
 ]

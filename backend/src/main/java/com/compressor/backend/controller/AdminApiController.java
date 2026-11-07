@@ -26,7 +26,7 @@ import com.compressor.backend.model.ImageAsset;
 public class AdminApiController {
   private final ContentService contentService;
   private static final String COLLECTION_PATTERN =
-      "{collection:categories|products|industries|services|news|timeline|jobs|distributors|leads|images}";
+      "{collection:categories|products|industries|services|news|timeline|jobs|distributors|leads|offers|images}";
 
   public AdminApiController(ContentService contentService) {
     this.contentService = contentService;

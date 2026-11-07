@@ -344,6 +344,8 @@
       "company": "string",
       "email": "string",
       "phone": "string",
+      "city": "string",
+      "state": "string",
       "how_can_we_help": "string",
       "industry": "string",
       "product_service_of_interest": "string",

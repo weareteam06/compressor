@@ -4,11 +4,11 @@ import { validateSiteConfig } from '@/lib/configValidation';
 import {
   Plus, Trash2, X, LayoutDashboard, Package, FileText, LogOut, Building2, Users,
   CheckCircle2, AlertCircle, ChevronRight, Globe, Briefcase, Newspaper, Calendar,
-  MapPin, Wrench, Edit2, Search, Bell, ShieldCheck, Images, Upload, Video, Layers,
+  MapPin, Wrench, Edit2, Search, Bell, Megaphone, ShieldCheck, Images, Upload, Video, Layers,
 } from 'lucide-react';
 import type {
   Product, ProductCategory, Industry, Service, NewsArticle, TimelineEvent,
-  JobOpening, Distributor, Lead, SiteConfig, UserAccount, UserPayload, MediaAsset, CmsAudit, NavigationItem
+  JobOpening, Distributor, Lead, OfferAlert, SiteConfig, UserAccount, UserPayload, MediaAsset, CmsAudit, NavigationItem
 } from '@/lib/data';
 import { defaultPageContent } from '@/lib/pageContent';
 import {
@@ -21,6 +21,7 @@ import {
   adminGetJobs, adminCreateJob, adminUpdateJob, adminDeleteJob,
   adminGetDistributors, adminCreateDistributor, adminUpdateDistributor, adminDeleteDistributor,
   adminGetLeads, adminUpdateLead, adminDeleteLead,
+  adminGetOffers, adminCreateOffer, adminUpdateOffer, adminDeleteOffer,
   adminGetUsers, adminCreateUser, adminUpdateUser, adminDeleteUser, getCurrentUser,
   adminGetMedia, adminUploadMedia, adminDeleteMedia,
   getSiteConfig, adminUpdateSiteConfig, adminGetCmsAudit,
@@ -33,7 +34,7 @@ interface Props {
   onNavigateFrontend: (page: string) => void;
 }
 
-export type Tab = 'dashboard' | 'users' | 'categories' | 'products' | 'brochures' | 'industries' | 'services' | 'news' | 'timeline' | 'careers' | 'distributors' | 'leads' | 'media' | 'settings';
+export type Tab = 'dashboard' | 'users' | 'categories' | 'products' | 'brochures' | 'industries' | 'services' | 'news' | 'timeline' | 'careers' | 'offers' | 'distributors' | 'leads' | 'media' | 'settings';
 export type AdminTab = Tab;
 
 const adminProductSeries = [
@@ -41,7 +42,7 @@ const adminProductSeries = [
   { key: 'fas-large', title: 'FAS Series', range: '15–250 kW', family: 'FAS', min: 15, max: 250 },
   { key: 'fsl', title: 'FSL / FSLV Series', range: '30–220 kW · Low Pressure', family: 'FSL', min: 30, max: 220 },
   { key: 'fsg', title: 'FSG Series', range: '45–185 kW', family: 'FSG', min: 45, max: 185 },
-  { key: 'fasm', title: 'FASM Series', range: '7.5–37 kW · Permanent Magnet VFD', family: 'FASM', min: 7.5, max: 37 },
+  { key: 'fasm', title: 'FASM Series', range: '7.5-37 kW with Permanent Magnet motor and VFD', family: 'FASM', min: 7.5, max: 37 },
 ];
 
 function productsInAdminSeries(products: Product[], series: typeof adminProductSeries[number]) {
@@ -396,6 +397,41 @@ const NavigationEditor = ({ items, onChange }: { items: NavigationItem[]; onChan
   </div>;
 };
 
+function toDateTimeLocal(value?: string) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value.slice(0, 16);
+  const pad = (part: number) => String(part).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function offerFormValue(offer: Partial<OfferAlert>) {
+  return { ...offer, startsAt: toDateTimeLocal(offer.startsAt), endsAt: toDateTimeLocal(offer.endsAt) };
+}
+
+function offerPayloadValue(offer: Record<string, any>): Omit<OfferAlert, 'id' | 'createdAt' | 'updatedAt'> {
+  const startsAt = new Date(offer.startsAt);
+  const endsAt = new Date(offer.endsAt);
+  if (Number.isNaN(startsAt.getTime()) || Number.isNaN(endsAt.getTime()) || endsAt <= startsAt) {
+    throw new Error('Offer end date/time must be after the start date/time');
+  }
+  return { ...offer, startsAt: startsAt.toISOString(), endsAt: endsAt.toISOString() } as Omit<OfferAlert, 'id' | 'createdAt' | 'updatedAt'>;
+}
+
+function offerState(offer: OfferAlert) {
+  const now = Date.now();
+  if (!offer.active) return 'Paused';
+  if (new Date(offer.endsAt).getTime() <= now) return 'Expired';
+  if (new Date(offer.startsAt).getTime() > now) return 'Scheduled';
+  return 'Live';
+}
+
+function formatOfferDate(value?: string) {
+  if (!value) return 'Not set';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : new Intl.DateTimeFormat('en-IN', { dateStyle: 'medium', timeStyle: 'short' }).format(date);
+}
+
 export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigateFrontend }: Props) {
   const { refreshConfig } = useSiteConfig();
   const tab = activeTab;
@@ -412,6 +448,7 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
   const [jobs, setJobs] = useState<JobOpening[]>([]);
   const [distributors, setDistributors] = useState<Distributor[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
+  const [offers, setOffers] = useState<OfferAlert[]>([]);
   const [config, setConfig] = useState<SiteConfig | null>(null);
   const [currentUser, setCurrentUser] = useState<UserAccount | null>(null);
   const [users, setUsers] = useState<UserAccount[]>([]);
@@ -452,12 +489,13 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
 
     switch (tab) {
       case 'dashboard': {
-        const [c, p, i, s, n, j, d, l, audit] = await Promise.all([
+        const [c, p, i, s, n, j, d, l, audit, offerItems] = await Promise.all([
           adminGetCategories(), adminGetProducts(), adminGetIndustries(), adminGetServices(),
-          adminGetNews(), adminGetJobs(), adminGetDistributors(), adminGetLeads(), adminGetCmsAudit(),
+          adminGetNews(), adminGetJobs(), adminGetDistributors(), adminGetLeads(), adminGetCmsAudit(), adminGetOffers(),
         ]);
         setCategories(c); setProducts(p); setIndustries(i); setServices(s);
         setNews(n); setJobs(j); setDistributors(d); setLeads(l);
+        setOffers(offerItems);
         setCmsAudit(audit);
         break;
       }
@@ -491,6 +529,9 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
         break;
       case 'careers':
         setJobs(await adminGetJobs());
+        break;
+      case 'offers':
+        setOffers(await adminGetOffers());
         break;
       case 'distributors':
         setDistributors(await adminGetDistributors());
@@ -555,6 +596,11 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
           isNew ? await adminCreateDistributor(data) : await adminUpdateDistributor(editing.id, data); break;
         case 'user':
           isNew ? await adminCreateUser(data as UserPayload) : await adminUpdateUser(editing.id, data as Partial<UserPayload>); break;
+        case 'offer': {
+          const offerData = offerPayloadValue(data);
+          isNew ? await adminCreateOffer(offerData) : await adminUpdateOffer(editing.id, offerData);
+          break;
+        }
       }
       notify('success', `${editType} saved successfully`);
       setEditing(null);
@@ -595,6 +641,7 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
     { id: 'news', label: 'News & Events', icon: Newspaper, color: 'text-rose-600', show: canManageContent },
     { id: 'timeline', label: 'Company Timeline', icon: Calendar, color: 'text-indigo-600', show: canManageContent },
     { id: 'careers', label: 'Job Openings', icon: Briefcase, color: 'text-cyan-600', show: canManageContent },
+    { id: 'offers', label: 'Offer Alerts', icon: Megaphone, color: 'text-red-600', show: canManageContent },
     { id: 'distributors', label: 'Distributors', icon: MapPin, color: 'text-red-600', show: true },
     { id: 'leads', label: 'CRM Leads', icon: Users, color: 'text-green-600', show: true },
     { id: 'media', label: 'Media Library', icon: Images, color: 'text-violet-600', show: canManageContent },
@@ -607,6 +654,7 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
     { label: 'Services', count: services.length, tab: 'services' as Tab, icon: Wrench, color: 'from-orange-500 to-orange-700' },
     { label: 'News Articles', count: news.length, tab: 'news' as Tab, icon: Newspaper, color: 'from-rose-500 to-rose-700' },
     { label: 'Job Openings', count: jobs.filter(j => j.status === 'Open').length, tab: 'careers' as Tab, icon: Briefcase, color: 'from-cyan-500 to-cyan-700' },
+    { label: 'Offer Alerts', count: offers.length, tab: 'offers' as Tab, icon: Megaphone, color: 'from-red-500 to-red-700' },
     { label: 'Distributors', count: distributors.length, tab: 'distributors' as Tab, icon: MapPin, color: 'from-red-500 to-red-700' },
     { label: 'Open Leads', count: leads.filter(l => !['Won', 'Lost', 'Closed'].includes(l.status)).length, tab: 'leads' as Tab, icon: Users, color: 'from-green-500 to-green-700' },
   ];
@@ -650,7 +698,7 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
   };
 
   const startCreate = (type: string, template: any) => { setEditing(template); setEditType(type); };
-  const startEdit = (type: string, item: any) => { setEditing({ ...item }); setEditType(type); };
+  const startEdit = (type: string, item: any) => { setEditing(type === 'offer' ? offerFormValue(item) : { ...item }); setEditType(type); };
 
   if (loading || !config) return (
     <div className="min-h-screen bg-[#fff8df] text-slate-900 lg:flex">
@@ -1080,6 +1128,47 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
             </ListView>
           )}
 
+          {/* OFFER ALERTS */}
+          {tab === 'offers' && (
+            <ListView title="Offer Alerts" subtitle="Schedule a flashing offer banner with content, an image, and an active date/time window"
+              onAdd={() => {
+                const start = new Date();
+                const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+                start.setSeconds(0, 0); end.setSeconds(0, 0);
+                startCreate('offer', {
+                  title: '', message: '', content: '', imageUrl: '',
+                  startsAt: toDateTimeLocal(start.toISOString()), endsAt: toDateTimeLocal(end.toISOString()), active: true,
+                });
+              }}
+              addLabel="Add Offer Alert">
+              <div className="space-y-4">
+                {offers.length ? offers.map(offer => {
+                  const state = offerState(offer);
+                  const stateClass = state === 'Live' ? 'bg-green-100 text-green-700' : state === 'Scheduled' ? 'bg-amber-100 text-amber-800' : state === 'Paused' ? 'bg-slate-200 text-slate-600' : 'bg-red-100 text-red-700';
+                  return (
+                    <article key={offer.id} className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-4 transition hover:border-red-300 hover:shadow-md md:flex-row">
+                      {offer.imageUrl ? <img src={offer.imageUrl} alt="" className="h-28 w-full rounded-lg bg-slate-100 object-cover md:w-44" /> : <div className="flex h-28 w-full items-center justify-center rounded-lg bg-red-50 text-red-600 md:w-44"><Megaphone className="h-9 w-9" /></div>}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className={`rounded-full px-2.5 py-1 text-[10px] font-black uppercase tracking-wider ${stateClass}`}>{state}</span>
+                          {!offer.active && <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-slate-500">Hidden</span>}
+                        </div>
+                        <h3 className="mt-2 text-lg font-black text-slate-950">{offer.title || 'Untitled offer'}</h3>
+                        <p className="mt-1 text-sm font-semibold text-slate-700">{offer.message}</p>
+                        {offer.content && <p className="mt-1 line-clamp-2 text-xs text-slate-500">{offer.content}</p>}
+                        <p className="mt-3 text-[11px] font-bold text-slate-400">{formatOfferDate(offer.startsAt)} → {formatOfferDate(offer.endsAt)}</p>
+                        <div className="mt-3 flex gap-2">
+                          <button onClick={() => startEdit('offer', offer)} className="rounded bg-amber-100 px-3 py-1.5 text-xs font-bold text-amber-800 hover:bg-amber-200"><Edit2 className="mr-1 inline h-3 w-3" />Edit</button>
+                          <button onClick={() => handleDelete('offer alert', offer.id, adminDeleteOffer)} className="rounded bg-red-100 p-1.5 text-red-700 hover:bg-red-200" aria-label={`Delete ${offer.title}`}><Trash2 className="h-3.5 w-3.5" /></button>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                }) : <div className="rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 px-6 py-14 text-center"><Megaphone className="mx-auto h-12 w-12 text-slate-300" /><h2 className="mt-4 font-black text-slate-800">No offer alerts created</h2><p className="mt-2 text-sm text-slate-500">Create an offer and set its start and end date/time. It will appear publicly only during that window.</p></div>}
+              </div>
+            </ListView>
+          )}
+
           {/* DISTRIBUTORS */}
           {tab === 'distributors' && (
             <ListView title="Distributors" subtitle="Regional distribution network"
@@ -1142,9 +1231,9 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
                           {lead.followUpDate ? ` · Follow-up ${lead.followUpDate}` : ''}
                         </p>
                         <div className="mt-3 p-3 bg-slate-50 rounded-lg text-sm text-slate-700 italic">"{lead.message}"</div>
-                        {(lead.requiredPressure || lead.requiredFad || lead.application || lead.location) && <div className="mt-3 grid gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs sm:grid-cols-2 lg:grid-cols-3">
-                          <div><b>Required pressure:</b> {lead.requiredPressure || 'Not provided'}</div><div><b>Required FAD:</b> {lead.requiredFad || 'Not provided'}</div><div><b>Operating hours/day:</b> {lead.operatingHours || 'Not provided'}</div>
-                          <div><b>Current compressor:</b> {lead.currentCompressor || 'Not provided'}</div><div><b>Application:</b> {lead.application || 'Not provided'}</div><div><b>Location:</b> {lead.location || 'Not provided'}</div>
+                        {(lead.requiredPressure || lead.existingWorkingPressure || lead.requiredFad || lead.existingFad || lead.existingInstallationMake || lead.existingCompressorPower || lead.application || lead.location || lead.state) && <div className="mt-3 grid gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs sm:grid-cols-2 lg:grid-cols-3">
+                          <div><b>Required pressure:</b> {lead.requiredPressure || 'Not provided'}</div><div><b>Existing working pressure:</b> {lead.existingWorkingPressure || 'Not provided'}</div><div><b>Required FAD:</b> {lead.requiredFad || 'Not provided'}</div><div><b>Existing FAD:</b> {lead.existingFad || 'Not provided'}</div><div><b>Existing installation:</b> {lead.existingInstallationMake || 'Not provided'}</div><div><b>Operating hours/day:</b> {lead.operatingHours || 'Not provided'}</div>
+                          <div><b>Existing compressor power:</b> {lead.existingCompressorPower || lead.currentCompressor || 'Not provided'}</div><div><b>Application:</b> {lead.application || 'Not provided'}</div><div><b>City:</b> {lead.location || 'Not provided'}</div><div><b>State:</b> {lead.state || 'Not provided'}</div>
                           {lead.requirementDetails && <div className="sm:col-span-2 lg:col-span-3"><b>Requirement:</b> {lead.requirementDetails}</div>}
                         </div>}
                         <div className="mt-3">
@@ -1511,9 +1600,10 @@ export default function AdminPanel({ activeTab, onTabChange, onLogout, onNavigat
                   </div>
                 );
               }
-              const isLong = typeof val === 'string' && (key.includes('description') || key.includes('content') || key.includes('Description'));
-              const type = typeof val === 'number' ? 'number' : 'text';
-              return <div key={key} className={isLong ? 'sm:col-span-2' : ''}><FormField label={key} value={val} onChange={(v: any) => setEditing({ ...editing, [key]: v })} type={type} textarea={isLong} /></div>;
+              const isLong = typeof val === 'string' && (key.includes('description') || key.includes('content') || key.includes('Description') || (editType === 'offer' && key === 'message'));
+              const type = typeof val === 'number' ? 'number' : editType === 'offer' && /At$/i.test(key) ? 'datetime-local' : 'text';
+              const required = editType === 'offer' && ['title', 'message', 'startsAt', 'endsAt'].includes(key);
+              return <div key={key} className={isLong ? 'sm:col-span-2' : ''}><FormField label={key} value={val} onChange={(v: any) => setEditing({ ...editing, [key]: v })} type={type} textarea={isLong} required={required} /></div>;
             })}
           </div>
         </Modal>

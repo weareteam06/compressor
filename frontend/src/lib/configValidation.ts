@@ -19,7 +19,8 @@ export function validateSiteConfig(value: unknown): void {
   const contact = value.contact as Record<string, unknown>;
   if (!object(contact.headquarters) || !Array.isArray(contact.regionalOffices)
       || typeof contact.headquarters.address !== 'string'
-      || typeof contact.salesPhone !== 'string' || typeof contact.email !== 'string') {
+      || typeof contact.salesPhone !== 'string' || typeof contact.servicePhone !== 'string'
+      || typeof contact.email !== 'string') {
     throw new Error('Invalid contact configuration');
   }
   if (!matchesContentShape(value.publicContent, publicContentSchema)) throw new Error('Incomplete or invalid public content');

@@ -34,7 +34,7 @@ export default function AboutPages({ config, page, onNavigate }: Props) {
       )}
 
       {page === 'about-timeline' && (
-        <div className="max-w-[1000px] mx-auto px-4 lg:px-8 py-16">
+        <div className="max-w-[1400px] mx-auto px-3 sm:px-5 lg:px-8 py-16">
           <PageTitle title={pageTitle} subtitle={pageSubtitle} />
           <div className="relative">
             <div className="absolute left-4 lg:left-1/2 lg:-translate-x-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-amber-300 via-red-400 to-red-700 rounded-full" />
@@ -63,7 +63,7 @@ export default function AboutPages({ config, page, onNavigate }: Props) {
       )}
 
       {page === 'about-careers' && (
-        <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-16">
+        <div className="max-w-[1400px] mx-auto px-3 sm:px-5 lg:px-8 py-16">
           <PageTitle title={pageTitle} subtitle={pageSubtitle} />
           <div className="bg-white rounded-3xl shadow-xl p-8 lg:p-12 border border-slate-200 mb-10">
             <h2 className="text-3xl font-black text-slate-900 mb-4">{String(careersCopy.introTitle)}</h2>
@@ -118,16 +118,21 @@ export default function AboutPages({ config, page, onNavigate }: Props) {
 function AboutStory({ config, copy, onNavigate }: { config: SiteConfig; copy: Record<string, unknown>; onNavigate: (page: string) => void }) {
   const openRequest = useRequest();
   const highlights = (config.about.highlights || []).filter(item => item.active !== false);
-  const statistics = (config.about.statistics || []).filter(item => item.active !== false && item.verified);
-  const aboutHeroImage = '/hero-products-showcase-transparent.png';
+  const aboutHeroTitle = config.about.heroTitle === 'Industrial experience. Application-focused compressed-air solutions.'
+    ? 'FirstAir – Powering Industries with Reliable Compressed Air Solutions'
+    : config.about.heroTitle;
+  const aboutHeroIntro = config.about.heroIntro === 'FirstAir helps industries across India evaluate, select and support compressed-air equipment around real operating requirements.'
+    ? 'FirstAir delivers reliable, energy-efficient and cost-effective compressed air solutions, designed to meet the diverse needs of modern industries'
+    : config.about.heroIntro;
+  const aboutHeroImage = config.about.heroImageUrl === '/api/media/about-products-showcase.png'
+    ? config.about.heroImageUrl
+    : '/hero/about-products-showcase.png';
   return <main>
-    <section className="mx-auto max-w-[1200px] px-5 py-12 lg:px-8"><div className="grid overflow-hidden bg-white lg:grid-cols-[0.9fr_1.1fr]"><div className="flex flex-col justify-between bg-amber-400 p-8 lg:p-10"><div><div className="text-xs font-black uppercase tracking-[0.22em] text-red-800">{config.about.heroEyebrow || String(copy.heroEyebrow)}</div><h1 className="mt-4 text-4xl font-black leading-tight text-slate-950 lg:text-5xl">{config.about.heroTitle}</h1><p className="mt-5 leading-7 text-slate-800">{config.about.heroIntro}</p></div><div className="mt-8 flex flex-wrap gap-3"><button onClick={() => onNavigate('products')} className="bg-slate-950 px-5 py-3 text-sm font-black text-white">{String(copy.productsButton)}</button><button onClick={() => openRequest({ title: 'Talk to Our Team', type: 'General Inquiry' })} className="border-2 border-slate-950 px-5 py-3 text-sm font-black text-slate-950">{String(copy.contactButton)}</button></div></div><div className="relative flex min-h-[420px] items-center justify-center overflow-hidden bg-amber-400 p-6 lg:p-10"><img src={aboutHeroImage} alt={config.about.heroImageAlt || 'FirstAir industrial compressor solutions'} className="h-full w-full object-contain"/></div></div></section>
+    <section className="mx-auto max-w-[1400px] px-3 py-12 sm:px-5 lg:px-8"><div className="grid overflow-hidden bg-white lg:grid-cols-2"><div className="flex flex-col justify-between bg-amber-400 p-8 text-left lg:p-10"><div><h1 className="mt-0 max-w-[650px] text-3xl font-black leading-[1.12] text-slate-950 sm:text-4xl lg:text-[44px]">{aboutHeroTitle.startsWith('FirstAir – ') ? <>{'FirstAir –'}<br />{aboutHeroTitle.slice('FirstAir – '.length)}</> : aboutHeroTitle}</h1><p className="mt-5 max-w-[600px] text-base leading-7 text-slate-800">{aboutHeroIntro}</p></div><div className="mt-8 flex flex-wrap gap-3"><button onClick={() => onNavigate('products')} className="bg-slate-950 px-5 py-3 text-sm font-black text-white">{String(copy.productsButton)}</button></div></div><div className="relative flex min-h-[420px] items-center justify-center overflow-hidden bg-amber-400 p-5 lg:p-8"><img src={aboutHeroImage} alt={config.about.heroImageAlt || 'FirstAir five-series compressor product range'} className="h-full w-full object-contain"/></div></div></section>
 
-    <section className="mx-auto max-w-[1100px] px-5 py-12 lg:px-8"><div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]"><article><div className="text-xs font-black uppercase tracking-[0.22em] text-red-700">{String(copy.storyEyebrow)}</div><h2 className="mt-3 text-3xl font-black">{String(copy.storyTitle)}</h2><p className="mt-5 text-lg leading-8 text-slate-700">{config.about.storyLong}</p></article><div className="grid gap-4"><div className="bg-red-800 p-6 text-white"><Target className="h-7 w-7 text-amber-400"/><h3 className="mt-4 text-xl font-black">{String(copy.missionTitle)}</h3><p className="mt-3 text-sm leading-6 text-red-100">{config.about.mission}</p></div><div className="bg-slate-950 p-6 text-white"><Eye className="h-7 w-7 text-amber-400"/><h3 className="mt-4 text-xl font-black">{String(copy.visionTitle)}</h3><p className="mt-3 text-sm leading-6 text-slate-300">{config.about.vision}</p></div></div></div></section>
+    <section className="mx-auto max-w-[1400px] px-3 py-12 sm:px-5 lg:px-8"><div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]"><article><div className="text-xs font-black uppercase tracking-[0.22em] text-red-700">{String(copy.storyEyebrow)}</div><h2 className="mt-3 text-3xl font-black">{String(copy.storyTitle)}</h2><p className="mt-5 text-lg leading-8 text-slate-700">{config.about.storyLong}</p></article><div className="grid gap-4"><div className="bg-red-800 p-6 text-white"><Target className="h-7 w-7 text-amber-400"/><h3 className="mt-4 text-xl font-black">{String(copy.missionTitle)}</h3><p className="mt-3 text-sm leading-6 text-red-100">{config.about.mission}</p></div><div className="bg-slate-950 p-6 text-white"><Eye className="h-7 w-7 text-amber-400"/><h3 className="mt-4 text-xl font-black">{String(copy.visionTitle)}</h3><p className="mt-3 text-sm leading-6 text-slate-300">{config.about.vision}</p></div></div></div></section>
 
-    {highlights.length > 0 && <section className="bg-white py-14"><div className="mx-auto max-w-[1100px] px-5 lg:px-8"><div className="text-xs font-black uppercase tracking-[0.22em] text-red-700">{String(copy.highlightsEyebrow)}</div><h2 className="mt-2 text-3xl font-black">{String(copy.highlightsTitle)}</h2><div className="mt-7 grid gap-5 md:grid-cols-3">{highlights.map(item => <article key={item.title} className="border border-slate-200 p-6"><CheckCircle2 className="h-7 w-7 text-red-600"/><h3 className="mt-4 text-xl font-black">{item.title}</h3><p className="mt-3 text-sm leading-6 text-slate-600">{item.description}</p></article>)}</div></div></section>}
-
-    {statistics.length > 0 && <section className="bg-slate-950 py-12 text-white"><div className="mx-auto max-w-[1100px] px-5 lg:px-8"><div className="text-xs font-black uppercase tracking-[0.22em] text-amber-400">{String(copy.statisticsEyebrow)}</div><h2 className="mt-2 text-3xl font-black">{String(copy.statisticsTitle)}</h2><div className="mt-7 grid gap-px bg-white/15 sm:grid-cols-2 lg:grid-cols-4">{statistics.map(item => <div key={item.label} className="bg-slate-950 p-6"><div className="text-3xl font-black text-amber-400">{item.value}</div><div className="mt-2 text-xs font-black uppercase tracking-widest text-slate-300">{item.label}</div></div>)}</div></div></section>}
+    {highlights.length > 0 && <section className="bg-white py-14"><div className="mx-auto max-w-[1400px] px-3 sm:px-5 lg:px-8"><div className="text-xs font-black uppercase tracking-[0.22em] text-red-700">{String(copy.highlightsEyebrow)}</div><h2 className="mt-2 text-3xl font-black">{String(copy.highlightsTitle)}</h2><div className="mt-7 grid gap-5 md:grid-cols-3">{highlights.map(item => <article key={item.title} className="border border-slate-200 p-6"><CheckCircle2 className="h-7 w-7 text-red-600"/><h3 className="mt-4 text-xl font-black">{item.title}</h3><p className="mt-3 text-sm leading-6 text-slate-600">{item.description}</p></article>)}</div></div></section>}
 
   </main>;
 }

@@ -56,7 +56,7 @@ export default function HeroSlider({ products, onNavigate, onViewProduct }: Hero
         <div className="absolute top-1/3 left-0 w-[400px] h-[400px] rounded-full bg-amber-500/[0.04] blur-3xl" />
       </div>
 
-      <div className="relative flex-1 flex items-center max-w-[1400px] mx-auto w-full px-4 sm:px-8 lg:px-16 py-12 lg:py-0">
+      <div className="relative flex-1 flex items-center max-w-[1400px] mx-auto w-full px-3 sm:px-5 lg:px-8 py-12 lg:py-0">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center w-full">
           {/* LEFT: Text */}
           <div className="z-10 order-2 lg:order-1">
@@ -170,7 +170,7 @@ export default function HeroSlider({ products, onNavigate, onViewProduct }: Hero
 
       {/* Bottom navigation */}
       <div className="relative z-20 border-t border-white/[0.06] bg-white/[0.03] backdrop-blur-md">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-16 py-4 flex items-center justify-between gap-4">
+        <div className="max-w-[1400px] mx-auto px-3 sm:px-5 lg:px-8 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <button onClick={goPrev} className="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center text-white transition-all hover:scale-110">
               <ChevronLeft className="w-5 h-5" />

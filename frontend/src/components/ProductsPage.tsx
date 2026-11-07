@@ -2,7 +2,7 @@ import { SiteText } from '@/lib/SiteText';
 import { usePublicContent, type PublicContent } from '@/lib/publicContent';
 import { productFamily, matchesCategory, categoryDisplay } from '@/lib/productSelection';
 ﻿import { useEffect, useMemo, useState } from 'react';
-import { Activity, ArrowRight, Gauge, RotateCcw, Search, SlidersHorizontal, Zap } from 'lucide-react';
+import { Activity, ArrowRight, ChevronDown, Gauge, RotateCcw, Search, SlidersHorizontal, Zap } from 'lucide-react';
 import type { Product, ProductCategory } from '@/lib/data';
 import { getProductCategories, getProducts } from '@/lib/data';
 import { cfmMax, pressureLabel } from '@/lib/productGuidance';
@@ -33,50 +33,67 @@ function productsForSeries(products: Product[], series: PublicContent['productSe
   });
 }
 
-function ProductCard({ product, onNavigate }: { product: Product; onNavigate: (page: string, param?: string) => void }) {
-  const { productGuidance } = usePublicContent();
-  const guidance = productGuidance.find(rule => (!rule.family || rule.family === productFamily(product)) && product.powerKw >= rule.minPowerKw);
-  const badge = guidance?.duty || '';
+function variableSpeedModelName(model: string) {
+  if (/^FASMV/i.test(model)) return model.replace(/^FASMV/i, 'FASM');
+  if (/^FASM/i.test(model)) return model;
+  if (/^FASMV|^FASV|^FSLV/i.test(model)) return model;
+  if (/^FAS/i.test(model)) return model.replace(/^FAS/i, 'FASV');
+  if (/^FSL/i.test(model)) return model.replace(/^FSL/i, 'FSLV');
+  return `${model}V`;
+}
+
+function ProductCard({ product, onNavigate, imageUrl, variableSpeedView }: { product: Product; onNavigate: (page: string, param?: string) => void; imageUrl?: string; variableSpeedView?: boolean }) {
+  const family = productFamily(product);
+  const cardImageUrl = family === 'FAS' || family === 'FSL' || family === 'FSG' || family === 'FASM'
+    ? product.imageUrl
+    : imageUrl || product.imageUrl;
+  const visibleModel = variableSpeedView ? variableSpeedModelName(product.model) : product.model;
+  const pressureRange = pressureLabel(product).replace(/\s+Bar\(g\)$/, '');
+  const cardFeatures = family === 'FSL'
+    ? ['Dedicated low-pressure screw airend', 'Enlarged oil separator', 'Low-pressure minimum pressure valve']
+    : family === 'FAS' && product.powerKw >= 15 && product.powerKw <= 250
+      ? ['High efficient rotary screw air compressor', product.features[1] || 'Air cooled', 'Maintenance free design']
+      : product.features.slice(0, 3);
   return (
     <article className="group bg-white border border-red-100 rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-red-950/10 hover:border-amber-300 transition-all">
       <button onClick={() => onNavigate('product-detail', String(product.id))} className="w-full text-left">
-        <div className="relative aspect-[1.35] bg-gradient-to-br from-[#fff7df] via-white to-red-50 flex items-center justify-center p-8 border-b border-red-50">
-          <span className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold border ${
-            badge === 'Heavy duty industrial' ? 'bg-amber-100 text-amber-800 border-amber-200' :
-            badge === 'Factory plant air' ? 'bg-red-100 text-red-700 border-red-200' :
-            'bg-white text-slate-700 border-slate-200'
-          }`}>
-            {badge}
-          </span>
-          <img src={product.imageUrl} alt={product.model} onError={(event) => { event.currentTarget.style.display = 'none'; }} className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
+        <div className="bg-[#fff7df] px-6 pt-5">
+          <h3 className="brand-display font-black text-slate-950 text-2xl group-hover:text-red-700 transition-colors leading-tight">{visibleModel}</h3>
+        </div>
+        <div className="relative aspect-[1.35] bg-[#fff7df] flex items-center justify-center p-8 border-b border-red-50">
+          <img src={cardImageUrl} alt={visibleModel} onError={(event) => { event.currentTarget.style.display = 'none'; }} className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-105" />
         </div>
 
         <div className="p-6">
-          <h3 className="brand-display font-black text-slate-950 text-2xl group-hover:text-red-700 transition-colors leading-tight">{product.model}</h3>
-          <p className="text-sm text-slate-600 mt-2 leading-relaxed line-clamp-2">{product.description}</p>
-          <div className="mt-3 rounded-md bg-amber-50 px-3 py-2 text-xs font-bold leading-relaxed text-amber-900">{" "}<SiteText section="ProductsPage" name="best_for" />{" "}{guidance?.bestFor || ''}
-          </div>
-
-          <div className="grid grid-cols-3 gap-3 mt-5 text-sm">
-            <div className="rounded-lg bg-slate-50 p-3">
+          <div className="mt-5 grid grid-cols-3 gap-2 text-sm">
+            <div className="min-w-0 rounded-lg bg-slate-50 p-2.5">
               <Zap className="mb-1 h-4 w-4 text-red-600" />
               <div className="text-[9px] font-black uppercase tracking-widest text-slate-500"><SiteText section="ProductsPage" name="power" /></div>
-              <div className="mt-1 font-black text-slate-950">{product.powerKw}{" "}<SiteText section="ProductsPage" name="kw" /></div>
+              <div className="mt-1 font-black leading-tight text-slate-950">
+                <span className="block whitespace-nowrap text-[13px]">{product.powerKw}</span>
+                <span className="block text-[10px] uppercase tracking-wide"><SiteText section="ProductsPage" name="kw" /></span>
+              </div>
             </div>
-            <div className="rounded-lg bg-slate-50 p-3">
+            <div className="min-w-0 rounded-lg bg-slate-50 p-2.5">
               <Activity className="mb-1 h-4 w-4 text-red-600" />
               <div className="text-[9px] font-black uppercase tracking-widest text-slate-500"><SiteText section="ProductsPage" name="fad" /></div>
-              <div className="mt-1 font-black text-slate-950">{product.flowRateCfm}</div>
+              <div className="mt-1 font-black leading-tight text-slate-950">
+                <span className="block whitespace-nowrap text-[12px] tracking-tight">{product.flowRateCfm}</span>
+                <span className="block text-[10px] uppercase tracking-wide">CFM</span>
+              </div>
             </div>
-            <div className="rounded-lg bg-slate-50 p-3">
+            <div className="min-w-0 rounded-lg bg-slate-50 p-2.5">
               <Gauge className="mb-1 h-4 w-4 text-red-600" />
               <div className="text-[9px] font-black uppercase tracking-widest text-slate-500"><SiteText section="ProductsPage" name="pressure" /></div>
-              <div className="mt-1 font-black text-slate-950">{pressureLabel(product)}</div>
+              <div className="mt-1 font-black leading-tight text-slate-950">
+                <span className="block whitespace-nowrap text-[13px]">{pressureRange}</span>
+                <span className="block text-[10px] tracking-tight">Bar(g)</span>
+              </div>
             </div>
           </div>
 
           <ul className="mt-5 space-y-1.5 text-xs text-slate-600">
-            {product.features.slice(0, 3).map(feature => (
+            {cardFeatures.map(feature => (
               <li key={feature} className="flex gap-2">
                 <span className="mt-1.5 w-1 h-1 rounded-full bg-red-600 flex-shrink-0" />
                 <span className="line-clamp-1">{feature}</span>
@@ -93,7 +110,11 @@ function ProductCard({ product, onNavigate }: { product: Product; onNavigate: (p
 }
 
 export default function ProductsPage({ onNavigate }: ProductsPageProps) {
-  const { productOrder, productSeries, categoryDisplayNames } = usePublicContent();
+  const { productOrder, productSeries, categoryDisplayNames, heroSlides } = usePublicContent();
+  const heroSlideImages = useMemo<Record<string, string>>(
+    () => Object.fromEntries(heroSlides.filter(slide => slide.imageUrl).map(slide => [slide.series.toUpperCase(), slide.imageUrl])),
+    [heroSlides],
+  );
   const [searchParams, setSearchParams] = useSearchParams();
   const copy = usePageContent('products', defaultPageContent.products);
   const [products, setProducts] = useState<Product[]>([]);
@@ -106,6 +127,8 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
   const [sort, setSort] = useState('power-asc');
   const [quickFilter, setQuickFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [filtersOpen, setFiltersOpen] = useState(true);
+  const variableSpeedView = seriesFilter.startsWith('variable-');
 
   useEffect(() => {
     Promise.all([getProducts(), getProductCategories()]).then(([p, categoryItems]) => {
@@ -118,7 +141,8 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
   useEffect(() => {
     if (loading) return;
     const requestedSeries = searchParams.get('series')?.toLowerCase();
-    setSeriesFilter(requestedSeries && ['fas', 'fas-small', 'fasm', 'fsl', 'fsg'].includes(requestedSeries) ? requestedSeries : 'all');
+    const variableSpeedFilter = requestedSeries === 'fasm' ? 'variable-all' : requestedSeries;
+    setSeriesFilter(variableSpeedFilter && ['fas', 'fas-small', 'fasm', 'fsl', 'fsg', 'variable-all', 'variable-fas-small', 'variable-fas-large', 'variable-fsl', 'variable-fasm'].includes(variableSpeedFilter) ? variableSpeedFilter : 'all');
     setQuery(searchParams.get('q') || '');
     setCategoryFilter('all'); setPowerFilter('all'); setPressureFilter('all'); setQuickFilter('all');
   }, [loading, searchParams]);
@@ -126,14 +150,14 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
   useEffect(() => {
     if (loading) return;
     const requestedSeries = searchParams.get('series')?.toLowerCase();
-    if (!requestedSeries || requestedSeries !== seriesFilter) return;
+    if (!requestedSeries || requestedSeries !== seriesFilter || variableSpeedView) return;
     const firstFrame = requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         document.getElementById(`series-${requestedSeries}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
     return () => cancelAnimationFrame(firstFrame);
-  }, [loading, searchParams, seriesFilter]);
+  }, [loading, searchParams, seriesFilter, variableSpeedView]);
 
   const filtered = useMemo(() => {
     const text = query.trim().toLowerCase();
@@ -149,7 +173,19 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
           ...product.applications,
           ...product.features,
         ].join(' ').toLowerCase().includes(text);
-        const matchesSeries = seriesFilter === 'all'
+        const matchesSeries = variableSpeedView
+          ? seriesFilter === 'variable-all'
+            ? productFamily(product) !== 'FSG'
+            : seriesFilter === 'variable-fas-small'
+              ? productFamily(product) === 'FAS' && product.powerKw <= 11
+              : seriesFilter === 'variable-fas-large'
+                ? productFamily(product) === 'FAS' && product.powerKw >= 15 && product.powerKw <= 250
+                : seriesFilter === 'variable-fsl'
+                  ? productFamily(product) === 'FSL'
+                  : seriesFilter === 'variable-fasm'
+                    ? productFamily(product) === 'FASM'
+                    : productFamily(product) !== 'FSG'
+          : seriesFilter === 'all'
           || (seriesFilter === 'fas-small' && productFamily(product) === 'FAS' && product.powerKw <= 11)
           || productFamily(product).toLowerCase() === seriesFilter;
         const selectedCategory = categories.find(category => category.slug === categoryFilter);
@@ -176,7 +212,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
         if (sort === 'model') return a.model.localeCompare(b.model, undefined, { numeric: true });
         return b.powerKw - a.powerKw;
       });
-  }, [categories, categoryFilter, powerFilter, pressureFilter, products, query, quickFilter, seriesFilter, sort]);
+  }, [categories, categoryFilter, powerFilter, pressureFilter, products, query, quickFilter, seriesFilter, sort, variableSpeedView]);
 
   const hasActiveFilters = Boolean(query) || categoryFilter !== 'all' || seriesFilter !== 'all' || powerFilter !== 'all' || pressureFilter !== 'all' || quickFilter !== 'all';
   const clearFilters = () => {
@@ -201,14 +237,18 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
 
   return (
     <div className="min-h-screen bg-white pb-20">
-      <section className="relative z-10 mx-auto max-w-[1280px] px-5 pb-10 pt-10 lg:px-8">
-        <div className="mb-6 border-b border-slate-200 pb-6">
-          <div><div className="text-xs font-black uppercase tracking-[0.22em] text-red-700">{String(copy.heroEyebrow)}</div><h1 className="brand-display mt-2 text-3xl font-black text-slate-950 sm:text-4xl">{String(copy.heroTitle)}</h1><p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">{String(copy.heroIntro)}</p></div>
-        </div>
-
-        <div className="mb-3 rounded-xl border border-slate-200 bg-slate-50/70 p-3 sm:p-4">
-          <div className="mb-3 flex items-center gap-2 text-slate-700"><SlidersHorizontal className="h-4 w-4 text-red-600" /><h2 className="text-xs font-bold">{String(copy.selectionTitle)}</h2></div>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[1.5fr_1.2fr_1.1fr_1fr_1fr_1fr]">
+      <section className="relative z-10 mx-auto max-w-[1400px] px-3 pb-10 pt-10 sm:px-5 lg:px-8">
+        <div className="grid gap-8 lg:grid-cols-[250px_minmax(0,1fr)]">
+          <aside className="lg:sticky lg:top-24 lg:self-start">
+        <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-2 sm:p-3">
+          <button type="button" onClick={() => setFiltersOpen(open => !open)} aria-expanded={filtersOpen} className="flex w-full items-center gap-2 px-1 py-1 text-left text-slate-700">
+            <SlidersHorizontal className="h-4 w-4 text-red-600" />
+            <h2 className="text-xs font-bold">{String(copy.selectionTitle)}</h2>
+            {hasActiveFilters && <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-red-700">Active</span>}
+            <span className="ml-auto inline-flex items-center gap-1 text-[11px] font-bold text-slate-500">{filtersOpen ? 'Hide filters' : 'Show filters'}<ChevronDown className={`h-4 w-4 transition-transform ${filtersOpen ? 'rotate-180' : ''}`} /></span>
+          </button>
+          {filtersOpen && <>
+          <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-1">
             <div className="relative min-w-0 sm:col-span-2 lg:col-span-1">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input
@@ -226,13 +266,22 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
             <select aria-label="Compressor series" value={seriesFilter} onChange={event => {
               const value = event.target.value;
               if (value === 'all') showAllProducts();
+              else if (value.startsWith('variable-')) setSeriesFilter(value);
               else setSearchParams({ series: value }, { replace: true });
             }} className="h-10 w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 outline-none transition focus:border-red-400 focus:ring-2 focus:ring-red-100">
-              <option value="all">All series</option>
-              <option value="fas">FAS · Fixed speed</option>
-              <option value="fasm">FASM · Variable speed</option>
-              <option value="fsl">FSL · Low pressure</option>
-              <option value="fsg">FSG · High capacity</option>
+              {variableSpeedView ? <>
+                <option value="variable-all">All variable speed compressors</option>
+                <option value="variable-fas-small">FAS 4-11 kW Variable Speed</option>
+                <option value="variable-fas-large">FAS 15-250 kW Variable Speed</option>
+                <option value="variable-fsl">FSL Variable Speed</option>
+                <option value="variable-fasm">FASM Variable Speed</option>
+              </> : <>
+                <option value="all">All series</option>
+                <option value="fas">FAS · Fixed speed</option>
+                <option value="fasm">FASM · Variable speed</option>
+                <option value="fsl">FSL · Low pressure</option>
+                <option value="fsg">FSG · High capacity</option>
+              </>}
             </select>
             <select aria-label="Motor power range" value={powerFilter} onChange={event => setPowerFilter(event.target.value)} className="h-10 w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 outline-none transition focus:border-red-400 focus:ring-2 focus:ring-red-100">
               <option value="all">All power ranges</option>
@@ -256,9 +305,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
               <option value="model">Model Name</option>
             </select>
           </div>
-        </div>
-
-        <div className="mb-8 flex flex-wrap items-center gap-2">
+          <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-slate-200 pt-2">
           {[
             { id: 'all', label: 'All models' },
             { id: 'compact', label: 'Up to 11 kW' },
@@ -269,7 +316,7 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
             <button
               key={item.id}
               onClick={() => setQuickFilter(item.id)}
-              className={`rounded-md border px-4 py-2 text-xs font-black uppercase tracking-wide transition-colors ${
+              className={`rounded-md border px-3 py-1.5 text-[11px] font-black uppercase tracking-wide transition-colors ${
                 quickFilter === item.id
                   ? 'border-red-600 bg-red-600 text-white'
                   : 'border-slate-200 bg-white text-slate-700 hover:border-red-300 hover:text-red-700'
@@ -278,22 +325,12 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
               {item.label}
             </button>
           ))}
-          {hasActiveFilters && <button type="button" onClick={showAllProducts} className="ml-auto inline-flex items-center gap-2 rounded-md px-4 py-2 text-xs font-black uppercase tracking-wide text-slate-600 hover:bg-slate-100 hover:text-red-700"><RotateCcw className="h-3.5 w-3.5" /><SiteText section="ProductsPage" name="clear_filters" /></button>}
-        </div>
-
-        {seriesFilter !== 'all' && (
-          <div className="mb-6 flex flex-col gap-3 border-l-4 border-red-600 bg-red-50 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm font-bold text-slate-800"><SiteText section="ProductsPage" name="showing_only_the" />{" "}{seriesFilter === 'fas-small' ? 'FAS 4–11 kW' : seriesFilter.toUpperCase()}{" "}<SiteText section="ProductsPage" name="product_series" /></p>
-            <button type="button" onClick={showAllProducts} className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-wide text-red-700 hover:text-red-800">
-              <RotateCcw className="h-4 w-4" /><SiteText section="ProductsPage" name="view_all_product_series" />{" "}</button>
+          {hasActiveFilters && <button type="button" onClick={showAllProducts} className="ml-auto inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-[11px] font-black uppercase tracking-wide text-slate-600 hover:bg-slate-100 hover:text-red-700"><RotateCcw className="h-3.5 w-3.5" /><SiteText section="ProductsPage" name="clear_filters" /></button>}
           </div>
-        )}
-
-        <div className="flex items-center justify-between mb-6">
-          <div className="text-sm text-slate-500 font-bold"><SiteText section="ProductsPage" name="showing" />{" "}{filtered.length}{" "}<SiteText section="ProductsPage" name="of" />{" "}{products.length} {String(copy.resultsLabel)}</div>
-          <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500 font-bold">
-            <SlidersHorizontal className="w-4 h-4 text-red-600" />{" "}<SiteText section="ProductsPage" name="filter_by_series_power_pressure_and_airflow" />{" "}</div>
+          </>}
         </div>
+          </aside>
+          <div className="min-w-0">
 
         <div className="space-y-12">
           {grouped.filter(series => series.products.length > 0).map(series => (
@@ -301,13 +338,12 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
               <div className="mb-5 flex flex-col gap-2 border-l-4 border-red-600 bg-slate-50 px-5 py-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <div className="text-xs font-black uppercase tracking-[0.22em] text-red-700">{series.title}</div>
-                  <h2 className="brand-display text-3xl font-black text-slate-950">{series.range}</h2>
+                  <h2 className="brand-display text-3xl font-black text-slate-950">{variableSpeedView ? `${series.key === 'fasm' ? '7.5-37 kW' : series.range.replace(/\s+Low Pressure$/i, '')} with Permanent Magnet Motor and VFD` : series.range}</h2>
                 </div>
-                <div className="text-sm font-bold text-slate-500">{series.products.length}{" "}<SiteText section="ProductsPage" name="products" /></div>
               </div>
               <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-7">
                 {series.products.map(product => (
-                  <ProductCard key={product.id} product={product} onNavigate={onNavigate} />
+                  <ProductCard key={product.id} product={product} imageUrl={heroSlideImages[productFamily(product)]} onNavigate={onNavigate} variableSpeedView={variableSpeedView} />
                 ))}
               </div>
             </section>
@@ -321,6 +357,8 @@ export default function ProductsPage({ onNavigate }: ProductsPageProps) {
             <button type="button" onClick={showAllProducts} className="mt-5 inline-flex items-center gap-2 rounded-md bg-red-600 px-5 py-3 text-sm font-bold text-white hover:bg-red-700"><RotateCcw className="h-4 w-4" />{String(copy.clearFiltersLabel)}</button>
           </div>
         )}
+          </div>
+        </div>
       </section>
     </div>
   );

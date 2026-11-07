@@ -85,6 +85,7 @@ export interface PublicContent {
 "productLinks": ({
 "label": string;
 "page": string;
+"param"?: string;
 })[];
 "companyLinks": ({
 "label": string;

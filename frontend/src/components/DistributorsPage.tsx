@@ -102,7 +102,7 @@ export default function DistributorsPage(_props: Props) {
 
   return (
     <div className="min-h-screen bg-white pb-20">
-      <section className="relative z-10 mx-auto max-w-[1280px] px-5 pt-12 lg:px-8">
+      <section className="relative z-10 mx-auto max-w-[1400px] px-3 pt-12 sm:px-5 lg:px-8">
         <div className="mb-7 grid gap-4 border-b border-slate-300 pb-6 md:grid-cols-[1fr_1fr] md:items-end"><div><div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-red-700"><Building2 className="h-4 w-4" /><SiteText section="DistributorsPage" name="authorized_distribution_network" /></div><h1 className="mt-3 text-3xl font-black text-slate-950">{String(copy.heroTitle)}</h1></div><p className="text-sm leading-6 text-slate-600"><SiteText section="DistributorsPage" name="find_certified_representatives_for_equipment_sales_package_guidance_in" /></p></div>
         <div className="rounded-xl border border-amber-400 bg-white p-5 shadow-2xl shadow-amber-900/15">
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-[1.5fr_.7fr_.55fr_.55fr_.8fr]">
@@ -147,7 +147,7 @@ export default function DistributorsPage(_props: Props) {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1280px] px-5 py-10 lg:px-8">
+      <section className="mx-auto max-w-[1400px] px-3 py-10 sm:px-5 lg:px-8">
         <div className="grid overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl lg:grid-cols-[390px_1fr]">
           <div className="max-h-[620px] overflow-y-auto border-b border-slate-200 lg:border-b-0 lg:border-r">
             {filtered.map(dealer => {

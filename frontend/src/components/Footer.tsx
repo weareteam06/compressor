@@ -1,5 +1,5 @@
 import { SiteText } from '@/lib/SiteText';
-import { Mail, MapPin, Phone, ShieldCheck } from 'lucide-react';
+import { Mail, MapPin, Phone } from 'lucide-react';
 import type { SiteConfig } from '@/lib/data';
 import { OPEN_COOKIE_PREFERENCES_EVENT } from '@/lib/cookieConsent';
 
@@ -8,30 +8,56 @@ interface FooterProps {
   onNavigate: (page: string, param?: string) => void;
 }
 
+const socialDefaults = {
+  linkedin: 'https://www.linkedin.com/company/fs-compressors-india/',
+  facebook: 'https://www.facebook.com/profile.php?id=61590244457735',
+  instagram: 'https://www.instagram.com/fscompressors_india/',
+};
+
+const productMenu = [
+  {
+    prefix: 'FAS 4-11 kW',
+    options: [
+      { label: 'Fixed Speed', param: 'fas-small' },
+      { label: 'Variable Speed', param: 'variable-fas-small' },
+    ],
+  },
+  {
+    prefix: 'FAS 15-250 kW',
+    options: [
+      { label: 'Fixed Speed', param: 'fas' },
+      { label: 'Variable Speed', param: 'variable-fas-large' },
+    ],
+  },
+  { prefix: 'FASM', options: [{ label: 'Variable Speed', param: 'variable-fasm' }] },
+  { prefix: 'FSLV', options: [{ label: 'Low Pressure', param: 'variable-fsl' }] },
+  { prefix: 'FSG', options: [{ label: 'Electric Portable', param: 'fsg' }] },
+];
+
 export default function Footer({ config, onNavigate }: FooterProps) {
-  const { productLinks, companyLinks } = config.publicContent;
+  const { companyLinks } = config.publicContent;
+  const visibleCompanyLinks = companyLinks.filter(link => !['Careers', 'Dealer Finder'].includes(link.label.trim()));
+  const configuredFooterBrief = config.publicContent.text.Footer?.fixed_speed_fas_permanent_magnet_variable_speed_fasm_and_high_capacity ?? '';
+  const footerBrief = configuredFooterBrief.startsWith('Fixed-speed FAS,')
+    ? 'FirstAir offers reliable, energy-efficient rotary screw air compressors designed for industrial applications, delivering dependable performance, operational efficiency, and cost-effective compressed air solutions.'
+    : configuredFooterBrief;
   const salesPhone = config.contact.salesPhone;
   const logoWhiteUrl = config.publicContent.footer.logoUrl;
   const hasPhysicalAddress = !/^contact\b/i.test(config.contact.headquarters.address.trim());
   const socialLinks = [
-    { label: 'LinkedIn', href: config.social.linkedin, icon: LinkedInIcon },
-    { label: 'Facebook', href: config.social.facebook, icon: FacebookIcon },
-    { label: 'Instagram', href: config.social.instagram, icon: InstagramIcon },
+    { label: 'LinkedIn', href: config.social?.linkedin || socialDefaults.linkedin, icon: LinkedInIcon },
+    { label: 'Facebook', href: config.social?.facebook || socialDefaults.facebook, icon: FacebookIcon },
+    { label: 'Instagram', href: config.social?.instagram || socialDefaults.instagram, icon: InstagramIcon },
   ].filter(link => link.href);
 
   return (
     <footer className="bg-slate-950 text-white">
-      <div className="mx-auto grid max-w-[1280px] gap-10 px-5 py-12 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.75fr_0.75fr_1.1fr] lg:px-8 lg:py-14">
+      <div className="mx-auto grid max-w-[1400px] gap-10 px-3 py-12 sm:grid-cols-2 sm:px-5 lg:grid-cols-[1.3fr_0.75fr_0.75fr_1.1fr] lg:px-8 lg:py-14">
         <div className="sm:col-span-2 lg:col-span-1">
           <button type="button" onClick={() => onNavigate('home')} className="block" aria-label="Go to homepage">
             <img src={logoWhiteUrl} alt="firstAir Compressor" className="h-12 w-auto" />
           </button>
-          <p className="mt-5 max-w-sm text-[15px] leading-7 text-slate-300"><SiteText section="Footer" name="fixed_speed_fas_permanent_magnet_variable_speed_fasm_and_high_capacity" /></p>
-          <div className="mt-6 flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-300">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2"><ShieldCheck className="h-4 w-4 text-amber-400" />{" "}<SiteText section="Footer" name="4_250_kw" /></span>
-            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2"><SiteText section="Footer" name="5_16_bar" /></span>
-            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-2"><SiteText section="Footer" name="up_to_1_130_cfm" /></span>
-          </div>
+          <p className="mt-5 max-w-sm text-[15px] leading-7 text-slate-300">{footerBrief}</p>
           <div className="mt-6 flex items-center gap-3">
             {socialLinks.map(({ label, href, icon: Icon }) => (
               <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} title={label} className="flex h-10 w-10 items-center justify-center rounded-full border border-white/25 text-slate-200 transition hover:-translate-y-0.5 hover:border-amber-400 hover:bg-amber-400 hover:text-slate-950">
@@ -41,8 +67,8 @@ export default function Footer({ config, onNavigate }: FooterProps) {
           </div>
         </div>
 
-        <FooterLinks title="Products" links={productLinks} onNavigate={onNavigate} />
-        <FooterLinks title="Company" links={companyLinks} onNavigate={onNavigate} />
+        <ProductFooterLinks onNavigate={onNavigate} />
+        <FooterLinks title="Company" links={visibleCompanyLinks} onNavigate={onNavigate} />
 
         <div>
           <FooterHeading><SiteText section="Footer" name="contact" /></FooterHeading>
@@ -68,12 +94,10 @@ export default function Footer({ config, onNavigate }: FooterProps) {
       </div>
 
       <div className="border-t border-white/10 bg-black/20">
-        <div className="mx-auto flex max-w-[1280px] flex-col gap-3 px-5 py-5 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between lg:px-8">
+        <div className="mx-auto flex max-w-[1400px] flex-col gap-3 px-3 py-5 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between sm:px-5 lg:px-8">
           <span>© {new Date().getFullYear()} {config.company.name}<SiteText section="Footer" name="all_rights_reserved" /></span>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
             <button type="button" onClick={() => onNavigate('faq')} className="transition hover:text-white"><SiteText section="Footer" name="faq" /></button>
-            <button type="button" onClick={() => onNavigate('warranty')} className="transition hover:text-white"><SiteText section="Footer" name="warranty" /></button>
-            <button type="button" onClick={() => onNavigate('contact')} className="transition hover:text-white"><SiteText section="Footer" name="contact" /></button>
             <button type="button" onClick={() => window.dispatchEvent(new Event(OPEN_COOKIE_PREFERENCES_EVENT))} className="transition hover:text-white"><SiteText section="Footer" name="cookie_preferences" /></button>
           </div>
         </div>
@@ -82,12 +106,35 @@ export default function Footer({ config, onNavigate }: FooterProps) {
   );
 }
 
-function FooterLinks({ title, links, onNavigate }: { title: string; links: Array<{ label: string; page: string }>; onNavigate: (page: string) => void }) {
+function FooterLinks({ title, links, onNavigate }: { title: string; links: Array<{ label: string; page: string; param?: string }>; onNavigate: (page: string, param?: string) => void }) {
   return (
     <div>
       <FooterHeading>{title}</FooterHeading>
       <nav className="space-y-3" aria-label={`${title} footer navigation`}>
-        {links.map(link => <button key={link.label} type="button" onClick={() => onNavigate(link.page)} className="group flex items-center gap-2 text-left text-[15px] text-slate-300 transition hover:text-white"><span className="h-px w-0 bg-amber-400 transition-all group-hover:w-3" />{link.label}</button>)}
+        {links.map(link => <button key={link.label} type="button" onClick={() => onNavigate(link.page, link.param)} className="group flex items-center gap-2 text-left text-[15px] text-slate-300 transition hover:text-white"><span className="h-px w-0 bg-amber-400 transition-all group-hover:w-3" />{link.label}</button>)}
+      </nav>
+    </div>
+  );
+}
+
+function ProductFooterLinks({ onNavigate }: { onNavigate: (page: string, param?: string) => void }) {
+  return (
+    <div>
+      <FooterHeading>Products</FooterHeading>
+      <nav className="space-y-3" aria-label="Products footer navigation">
+        {productMenu.map(item => (
+          <div key={item.prefix} className="text-[15px] text-slate-300">
+            <span>{item.prefix} </span>
+            {item.options.map((option, index) => (
+              <span key={option.param}>
+                {index > 0 && <span className="mx-1 text-slate-500">/</span>}
+                <button type="button" onClick={() => onNavigate('products', option.param)} className="transition hover:text-white">
+                  {option.label}
+                </button>
+              </span>
+            ))}
+          </div>
+        ))}
       </nav>
     </div>
   );

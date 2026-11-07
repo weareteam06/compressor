@@ -161,11 +161,16 @@ export interface Lead {
   notes: string;
   assignedTo?: string;
   requiredPressure?: string;
+  existingWorkingPressure?: string;
   requiredFad?: string;
+  existingFad?: string;
+  existingInstallationMake?: string;
   operatingHours?: string;
+  existingCompressorPower?: string;
   currentCompressor?: string;
   application?: string;
   location?: string;
+  state?: string;
   requirementDetails?: string;
 }
 
@@ -194,6 +199,19 @@ export interface MediaAsset {
   sizeBytes: number;
   altText: string;
   usageType: string;
+}
+
+export interface OfferAlert {
+  id: number;
+  title: string;
+  message: string;
+  content?: string;
+  imageUrl?: string;
+  startsAt: string;
+  endsAt: string;
+  active: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface SiteConfig {
@@ -307,7 +325,9 @@ export interface SiteConfig {
   contact: {
     factoryPhone: string;
     salesPhone: string;
+    servicePhone: string;
     email: string;
+    serviceEmail: string;
     headquarters: {
       name: string;
       address: string;
@@ -488,7 +508,11 @@ export async function getIndustryBySlug(slug: string): Promise<Industry | undefi
 function withIndustryMedia(industry: Industry, media: MediaAsset[]): Industry {
   const mediaSlug = industry.slug === 'manufacturing' ? 'general-manufacturing' : industry.slug;
   const expectedKey = `industry-${mediaSlug}.`;
-  const asset = media.find(item => item.usageType === 'industries' && item.storageKey?.startsWith(expectedKey));
+  const storedKey = industry.imageUrl?.startsWith('/api/media/')
+    ? industry.imageUrl.slice('/api/media/'.length)
+    : '';
+  const asset = media.find(item => item.usageType === 'industries' && item.storageKey === storedKey)
+    || media.find(item => item.usageType === 'industries' && item.storageKey?.startsWith(expectedKey));
   return asset ? { ...industry, imageUrl: asset.url } : industry;
 }
 
@@ -518,6 +542,10 @@ export function getJobOpenings(): Promise<JobOpening[]> {
 
 export function getDistributors(): Promise<Distributor[]> {
   return api('/distributors');
+}
+
+export function getActiveOffers(): Promise<OfferAlert[]> {
+  return api('/offers/active');
 }
 
 export function submitLead(leadData: Omit<Lead, 'id' | 'date' | 'status' | 'notes'>): Promise<Lead> {
@@ -701,6 +729,22 @@ export function adminUpdateLead(id: number | string, updates: Partial<Lead>) {
 
 export function adminDeleteLead(id: number | string) {
   return api<{ success: boolean }>(`/admin/leads/${encodeURIComponent(id)}`, { method: 'DELETE' }).then(r => r.success);
+}
+
+export function adminGetOffers() {
+  return api<OfferAlert[]>('/admin/offers');
+}
+
+export function adminCreateOffer(data: Omit<OfferAlert, 'id' | 'createdAt' | 'updatedAt'>) {
+  return api<OfferAlert>('/admin/offers', { method: 'POST', body: jsonBody(data) });
+}
+
+export function adminUpdateOffer(id: number | string, updates: Partial<OfferAlert>) {
+  return api<OfferAlert | undefined>(`/admin/offers/${encodeURIComponent(id)}`, { method: 'PUT', body: jsonBody(updates) });
+}
+
+export function adminDeleteOffer(id: number | string) {
+  return api<{ success: boolean }>(`/admin/offers/${encodeURIComponent(id)}`, { method: 'DELETE' }).then(r => r.success);
 }
 
 export function adminGetUsers() {
